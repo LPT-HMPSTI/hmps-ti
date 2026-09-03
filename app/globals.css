@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+@theme {
+  --color-spotify-base: #0B0D14;
+  --color-spotify-surface: #121520;
+  --color-spotify-elevated: #181C2A;
+  --color-spotify-green: #1DB954;
+  --color-cyber-cyan: #00F2FE;
+  --color-neon-emerald: #00E676;
+}
+
+:root {
+  /* Spotify Cyber Glass Colors - Pure Dark Obsidian & Glass */
+  --bg-spotify-base: #0B0D14;
+  --bg-spotify-surface: #121520;
+  --bg-spotify-card: #161A26;
+  
+  /* Glassmorphism Tokens - Frosted, Subdued & Clean */
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-bg-hover: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-hover: rgba(29, 185, 84, 0.35);
+  --glass-blur: blur(16px);
+  --glass-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.4);
+
+  /* Primary Brand Accents (Solid Colors) */
+  --spotify-green: #1DB954;
+  --accent-cyan: #00F2FE;
+  --accent-emerald: #00E676;
+
+  /* Typography Colors */
+  --text-primary: #FFFFFF;
+  --text-secondary: #B3B3B3;
+  --text-muted: #6A6A6A;
+  --text-accent: #1DB954;
+}
+
+html, body {
+  background-color: var(--bg-spotify-base);
+  color: var(--text-primary);
+  font-family: var(--font-sans, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif);
+  overflow-x: clip;
+  min-height: 100vh;
+}
+
+/* Glassmorphism Panel - Soft & Refined */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-panel-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel-hover:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-hover);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
+  transform: translateY(-3px);
+}
+
+/* Spotify Card Styling - Subdued Frosted Glass */
+.spotify-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.spotify-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(29, 185, 84, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
+}
+
+/* Solid Text Highlights (Replacing Gradients) */
+.text-highlight-spotify {
+  color: #1DB954;
+  font-weight: inherit;
+}
+
+.text-highlight-cyan {
+  color: #00F2FE;
+  font-weight: inherit;
+}
+
+.text-highlight-emerald {
+  color: #00E676;
+  font-weight: inherit;
+}
+
+/* Spotify Play/Explore Button - Invisible initially, reveal on card hover, scale on direct button hover */
+.spotify-play-btn {
+  opacity: 0 !important;
+  transform: translateY(8px) scale(1) !important;
+  pointer-events: none !important;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.2s ease,
+              box-shadow 0.2s ease !important;
+}
+
+/* 1. When parent card is hovered: Reveal button in place (Scale stays 1.0) */
+.group:hover .spotify-play-btn,
+.spotify-card:hover .spotify-play-btn,
+.glass-panel:hover .spotify-play-btn,
+[class*="group"]:hover .spotify-play-btn {
+  opacity: 1 !important;
+  transform: translateY(0px) scale(1) !important;
+  pointer-events: auto !important;
+}
+
+/* 2. When cursor specifically hovers over the button itself: Scale up */
+.spotify-play-btn:hover {
+  transform: translateY(0px) scale(1.15) !important;
+  box-shadow: 0 8px 24px rgba(29, 185, 84, 0.45) !important;
+  cursor: pointer !important;
+}
+
+/* 3. Click active state */
+.spotify-play-btn:active {
+  transform: translateY(0px) scale(0.95) !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0B0D14;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(29, 185, 84, 0.5);
+}
+
+/* Dark theme filter for Google Maps embed */
+.dark-map-embed {
+  filter: invert(90%) hue-rotate(180deg) brightness(95%) contrast(90%) saturate(85%);
+  transition: filter 0.3s ease;
+}
+.dark-map-embed:hover {
+  filter: invert(90%) hue-rotate(180deg) brightness(100%) contrast(95%) saturate(100%);
+}
