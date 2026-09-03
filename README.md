@@ -13,15 +13,7 @@ Pusat warta informasi, showcase karya teknologi mahasiswa, direktori kepengurusa
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-12.4-black?style=flat-square&logo=framer&logoColor=white)](https://www.framer.com/motion/)
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen?style=flat-square)](#-hasil-verifikasi-kualitas)
 
-[Fitur Utama](#-fitur-utama) • [Arsitektur MVC](#-arsitektur-mvc-di-nextjs-app-router) • [Struktur Direktori](#-struktur-folder-proyek) • [Skema Data](#-skema-data--entitas-supabase) • [Instalasi Lokal](#-panduan-instalasi--pengembangan)
-
 </div>
-
----
-
-## Ringkasan Proyek
-
-Website HMPSTI STMIK Widya Utama dirancang menggunakan perpaduan estetika visual **Neubrutalism Modern** bertema cyber-dark dengan nuansa aksen *Spotify green*, *cyan glow*, dan kontras tipografi tegas. Dibangun di atas **Next.js 15 App Router** dengan pemisahan tanggung jawab berbasis pola **Model-View-Controller (MVC)**, menjamin performa render tinggi, SEO dinamis, serta kemudahan pemeliharaan kode jangka panjang.
 
 ---
 
@@ -170,39 +162,6 @@ hmpsti-swu-website/
     ├── supabase.ts                   # Inisialisasi Supabase client & timeout helper
     └── utils/                        # Utility helper terisolasi (cn, dateParser, slugify)
 ```
-
----
-
-## Alur Komunikasi Data & Likes Atomik
-
-Sistem mengadopsi mekanisme **Optimistic UI Update** dengan fallback proteksi balapan kondisi (*race condition*):
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Pengunjung
-    participant View as UI Component (View)
-    participant Hook as useLikes (Controller)
-    participant Storage as localStorage
-    participant Service as likes.service (Model)
-    participant DB as Supabase PostgreSQL
-
-    Pengunjung->>View: Klik tombol Hati / Like
-    View->>Hook: toggleLike(table, id)
-    Hook->>Storage: Set status like lokal pengunjung
-    Hook-->>View: Render UI instan (+1 like / -1 like)
-    Note over View: Zero-lag UI, pengunjung langsung melihat feedback visual
-    Hook->>Service: toggleDatabaseLike(table, id, nextStatus)
-    Service->>DB: Eksekusi RPC increment_like_atomic(delta)
-    alt RPC Sukses
-        DB-->>Service: Return likes_count terverifikasi
-        Service-->>Hook: Sync counter akhir ke state
-    else Koneksi Offline / Fallback
-        Service->>DB: Update row manual likes_count
-        Note over Service: Fallback gracefully tanpa memutus interaksi pengguna
-    end
-```
-
 ---
 
 ## Skema Data & Entitas Supabase
@@ -305,18 +264,6 @@ erDiagram
 
 ---
 
-## SEO, Metadata & Open Graph Dinamis
-
-Aplikasi dikonfigurasi penuh untuk pengindeksan optimal pada mesin pencari (*Google Bot*) dan pratinjau tautan media sosial (*Open Graph / Twitter Card*):
-
-- **Kanonikal & Metadata Base**: Didefinisikan di `app/layout.tsx` menggunakan variabel lingkungan `NEXT_PUBLIC_SITE_URL`.
-- **Dynamic Open Graph Cards**: Rute dinamis (`/berita/[slug]`, `/karya/[slug]`, dan `/divisi/[slug]`) menggunakan fungsi server `generateMetadata` untuk menyuplai judul spesifik, kutipan artikel, dan gambar thumbnail secara dinamis saat tautan dibagikan.
-- **Sitemap Dinamis (`/sitemap.xml`)**: Dibuat melalui `app/sitemap.ts`, memetakan seluruh rute statis, 6 sub-divisi, serta seluruh daftar berita dan showcase karya dengan prioritas indeks terkalibrasi.
-- **Robots Policy (`/robots.txt`)**: Dibuat melalui `app/robots.ts`, mengizinkan perayapan seluruh halaman publik sekaligus memblokir rute internal (`/admin` dan `/login`).
-- **Noindex Protection**: Halaman autentikasi login dan dashboard backoffice dibekali proteksi `robots: { index: false, follow: false }`.
-
----
-
 ## Panduan Instalasi & Pengembangan
 
 ### Prasyarat Sistem
@@ -347,7 +294,7 @@ Aplikasi dikonfigurasi penuh untuk pengindeksan optimal pada mesin pencari (*Goo
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
    NEXT_PUBLIC_SITE_URL=http://localhost:3000
    ```
-   > **Catatan:** Jika variabel lingkungan Supabase dikosongkan, website akan secara otomatis berjalan dalam mode **Offline / Fallback Data** tanpa mengalami crash.
+   > **Catatan:** Jika variabel lingkungan Supabase dikosongkan, website akan secara otomatis berjalan dalam mode **Offline / Fallback Data** tanpa mengalami crash (chat owner untuk mendapatkan kode sql).
 
 4. **Jalankan Server Pengembangan**:
    ```bash
@@ -377,55 +324,14 @@ Aplikasi dikonfigurasi penuh untuk pengindeksan optimal pada mesin pencari (*Goo
 
 Untuk mengakses dashboard manajemen pengurus di rute `/admin`, sistem memvalidasi passcode resmi:
 
-- **Passcode Default**: `admin123` atau `hmpsti2026`
+- **Passcode Default**: `admin123`
 - **Mekanisme Validasi**: Passcode diverifikasi pada halaman `/login`. Setelah sukses, token sesi disimpan secara terisolasi pada `sessionStorage` browser (*hmpsti_admin_session*).
 - **Proteksi Rute**: Hook `useAdminSession` secara otomatis memeriksa integritas sesi pada setiap siklus mount halaman dan mengalihkan pengguna yang tidak sah kembali ke `/login`.
-
----
-
-## Rekapitulasi Tahapan Refactoring
-
-Proyek ini telah melalui 19 tahapan refactoring arsitektur terstruktur tanpa mengubah estetika visual asli maupun fungsionalitas aplikasi:
-
-```
-[REFAC-01] Konsolidasi Utility & Helper Functions (lib/utils/)
-[REFAC-02] Pembuatan Definisi Tipe Data Terpusat (types/)
-[REFAC-03] Sentralisasi Konstanta & Mock Fallback Data (constants/)
-[REFAC-04] Ekstraksi Data Access Layer (services/)
-[REFAC-05] Pembuatan Custom Hooks Terisolasi (hooks/)
-[REFAC-06] Modularisasi Halaman Berita & Event (components/modules/berita/)
-[REFAC-07] Modularisasi Halaman Showcase Karya (components/modules/karya/)
-[REFAC-08] Modularisasi Halaman Galeri Dokumentasi (components/modules/galeri/)
-[REFAC-09] Modularisasi Halaman Struktur Organisasi (components/modules/struktur/)
-[REFAC-10] Modularisasi Halaman Direktori Keanggotaan (components/modules/keanggotaan/)
-[REFAC-11] Modularisasi Halaman Visi & Misi (components/modules/visi-misi/)
-[REFAC-12] Modularisasi Halaman Kontak & Aspirasi (components/modules/kontak/)
-[REFAC-13] Modularisasi Halaman Autentikasi Login (components/modules/login/)
-[REFAC-14] Modularisasi Admin Dashboard (app/admin/page.tsx: 3.580 -> 1.139 baris)
-[REFAC-15] Standarisasi Import Shell Layout (components/layout/)
-[REFAC-16] Standardisasi & JSDoc Polish UI Primitives (components/ui/)
-[REFAC-17] Perapihan Supabase Client & Rampingkan Import Langsung
-[REFAC-18] Optimalisasi SEO, Metadata & Open Graph Dinamis (robots.ts & sitemap.ts)
-[REFAC-19] Pembersihan Kode Mati, Verifikasi Akhir & Dokumentasi Lengkap
-```
-
----
-
-## Hasil Verifikasi Kualitas
-
-| Parameter Pengujian | Perintah Eksekusi | Status | Indikator |
-|---|---|:---:|---|
-| **Pengecekan Tipe Statis** | `npx tsc --noEmit` | **PASSED** | 0 error, validasi tipe 100% lulus |
-| **Kompilasi Produksi** | `npx next build` | **PASSED** | 15/15 rute tergenerasi ke static bundle |
-| **SEO Discovery Verification** | Build check | **PASSED** | `/robots.txt` dan `/sitemap.xml` aktif |
-| **Desain Neubrutalism** | Audit visual UI/UX | **PASSED** | Tampilan, warna, dan layout 100% konsisten |
 
 ---
 
 <div align="center">
 
 **HMPSTI STMIK Widya Utama Purwokerto**  
-Gedung Kampus STMIK Widya Utama, Purwokerto, Jawa Tengah  
-Kanal Komunikasi: [hmps-ti@stmik-widya-utama.ac.id](mailto:hmps-ti@stmik-widya-utama.ac.id)
 
 </div>
