@@ -1,15 +1,42 @@
 /**
- * Menu navigasi utama website yang tampil pada Navbar dan drawer mobile.
+ * Menu navigasi utama website (Top Navbar).
+ * Mendukung children untuk dropdown menu.
  */
 export const MAIN_NAV_LINKS = [
-  { name: "Beranda", href: "/" },
-  { name: "Berita", href: "/berita" },
-  { name: "Visi & Misi", href: "/visi-misi" },
-  { name: "Struktur", href: "/struktur" },
-  { name: "Keanggotaan", href: "/keanggotaan" },
-  { name: "Karya", href: "/karya" },
-  { name: "Galeri", href: "/galeri" },
-  { name: "Kontak", href: "/kontak" },
+  {
+    name: "Berita & Agenda",
+    href: "/berita",
+  },
+  {
+    name: "Tentang HMPS-TI",
+    href: "#",
+    children: [
+      { name: "Visi & Misi", href: "/visi-misi" },
+      { name: "Struktur Organisasi", href: "/struktur" },
+      { name: "Keanggotaan", href: "/keanggotaan" },
+      { name: "Galeri Kegiatan", href: "/galeri" },
+    ],
+  },
+  {
+    name: "Showcase Karya",
+    href: "/karya",
+  },
+  {
+    name: "Divisi HMPS-TI",
+    href: "#",
+    children: [
+      { name: "BPH", href: "/divisi/bph", color: "from-cyan-500 to-blue-500" },
+      { name: "PSDM", href: "/divisi/psdm", color: "from-emerald-500 to-teal-500" },
+      { name: "LPT", href: "/divisi/lpt", color: "from-cyan-400 to-emerald-400" },
+      { name: "MEDKOMINFO", href: "/divisi/medkominfo", color: "from-purple-500 to-cyan-400" },
+      { name: "HUMAS", href: "/divisi/humas", color: "from-blue-400 to-emerald-400" },
+      { name: "KWU", href: "/divisi/kwu", color: "from-amber-400 to-emerald-500" },
+    ],
+  },
+  {
+    name: "Kontak & Aspirasi",
+    href: "/kontak",
+  },
 ] as const;
 
 /**

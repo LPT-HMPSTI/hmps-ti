@@ -2,7 +2,6 @@
 
 import React from "react";
 import { LenisProvider } from "./LenisProvider";
-import { Sidebar } from "./Sidebar";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 import { BottomPlayerBar } from "./BottomPlayerBar";
@@ -14,19 +13,14 @@ const ShellContent: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const { isOpen, openDrawer, closeDrawer } = useDirectPortal();
 
   return (
-    <div className="relative flex min-h-screen bg-[#0B0D14] text-[#FFFFFF] antialiased">
-      {/* Spotify Left Fixed Sidebar (Desktop) */}
-      <Sidebar onOpenDirectLink={openDrawer} />
+    <div className="relative flex min-h-screen flex-col bg-[#0B0D14] text-[#FFFFFF] antialiased">
+      {/* Top Navbar */}
+      <Navbar onOpenDirectLink={openDrawer} />
 
-      {/* Main Right Content Area */}
-      <div className="flex flex-1 flex-col lg:pl-64">
-        <Navbar onOpenDirectLink={openDrawer} />
+      {/* Scrollable Main Content */}
+      <main className="flex-1 pb-28">{children}</main>
 
-        {/* Scrollable Center Canvas */}
-        <main className="flex-1 pb-28">{children}</main>
-
-        <Footer />
-      </div>
+      <Footer />
 
       {/* Spotify Sticky Bottom Academic Player Dock */}
       <BottomPlayerBar onOpenDirectLink={openDrawer} />

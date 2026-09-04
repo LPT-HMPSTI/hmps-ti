@@ -18,7 +18,7 @@ export const BottomPlayerBar: React.FC<BottomPlayerBarProps> = ({ onOpenDirectLi
   const currentItem = items[currentIndex % (items.length || 1)] || items[0];
 
   return (
-    <footer className="fixed bottom-0 left-0 right-0 z-40 h-20 border-t border-white/10 bg-[#0B0D14]/95 px-4 backdrop-blur-2xl shadow-[0_-10px_30px_rgba(0,0,0,0.8)] lg:left-64">
+    <footer className="fixed bottom-0 left-0 right-0 z-40 h-20 border-t border-white/10 bg-[#0B0D14]/95 px-4 backdrop-blur-2xl shadow-[0_-10px_30px_rgba(0,0,0,0.8)]">
       <div className="mx-auto flex h-full max-w-7xl items-center justify-between gap-4">
         {/* Left Section: Synchronized Single / Carousel Display */}
         <AnimatePresence mode="wait">

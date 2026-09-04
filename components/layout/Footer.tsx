@@ -54,7 +54,7 @@ export const Footer: React.FC = () => {
 
             <div className="flex items-center gap-3 pt-2">
               <a
-                href="https://github.com"
+                href="https://github.com/LPT-HMPSTI"
                 target="_blank"
                 rel="noreferrer"
                 className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-slate-400 transition-colors hover:border-cyan-400/40 hover:bg-white/[0.08] hover:text-cyan-400"
@@ -63,7 +63,7 @@ export const Footer: React.FC = () => {
                 <Github size={18} strokeWidth={1.5} />
               </a>
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/hmpsti.swu/"
                 target="_blank"
                 rel="noreferrer"
                 className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-slate-400 transition-colors hover:border-cyan-400/40 hover:bg-white/[0.08] hover:text-cyan-400"
@@ -126,7 +126,7 @@ export const Footer: React.FC = () => {
                 <Link href="/kontak" className="transition-colors hover:text-cyan-300">
                   Kontak & Aspirasi
                 </Link>
-              </li>              
+              </li>
             </ul>
           </div>
 
@@ -191,7 +191,7 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Bar */}
         <div className="mt-12 flex flex-col items-center justify-center gap-4 border-t border-white/10 pt-6 text-center text-xs text-slate-500 sm:flex-row sm:text-left">
-          <p>© {settings.current_period || "2026"} HMPSTI STMIK Widya Utama. All rights reserved.</p>          
+          <p>© {settings.current_period || "2026"} HMPSTI STMIK Widya Utama. All rights reserved.</p>
         </div>
       </div>
     </footer>
