@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Plus,
   MagnifyingGlass,
@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { CyberSelect } from "@/components/ui/CyberSelect";
 import { SocialLinksInput } from "@/components/ui/SocialIcon";
+import { AdminPagination } from "../AdminPagination";
 import {
   getMemberBadgeVariant,
   renderSocialIconsList,
@@ -64,6 +65,28 @@ export const KeanggotaanTab: React.FC<KeanggotaanTabProps> = ({
   onOpenEditModal,
   onDeleteMember,
 }) => {
+  const ITEMS_PER_PAGE = 6;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Reset ke halaman 1 saat pencarian berubah
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  const totalPages = Math.ceil(membersList.length / ITEMS_PER_PAGE) || 1;
+
+  // Pastikan currentPage tidak melebihi totalPages
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const paginatedMembers = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return membersList.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [membersList, currentPage]);
+
   return (
     <div className="space-y-6">
       <GlassCard glowColor="emerald" className="p-6 sm:p-7 space-y-5 sm:space-y-6">
@@ -281,7 +304,7 @@ export const KeanggotaanTab: React.FC<KeanggotaanTabProps> = ({
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4.5 sm:gap-5">
-          {membersList.map((m) => (
+          {paginatedMembers.map((m) => (
             <GlassCard
               key={m.id}
               glowColor="emerald"
@@ -342,6 +365,16 @@ export const KeanggotaanTab: React.FC<KeanggotaanTabProps> = ({
             </GlassCard>
           ))}
         </div>
+
+        {/* Neubrutalist Pagination Bar */}
+        <AdminPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={membersList.length}
+          itemsPerPage={ITEMS_PER_PAGE}
+          onPageChange={setCurrentPage}
+          itemName="anggota/alumni"
+        />
       </div>
     </div>
   );

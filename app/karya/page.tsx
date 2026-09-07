@@ -20,7 +20,18 @@ const FILTERS = ["Semua", "Web App", "Mobile App", "AI & ML", "IoT & Embedded"];
 export default function KaryaPage() {
   const [activeFilter, setActiveFilter] = useState<string>("Semua");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [projects, setProjects] = useState<StudentProject[]>([...(fallbackProjects as StudentProject[])]);
+  const [projects, setProjects] = useState<StudentProject[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const cached = localStorage.getItem("hmpsti_cached_projects");
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch {}
+    }
+    return [...(fallbackProjects as StudentProject[])];
+  });
   const [settings, setSettings] = useState<SiteSettings>(fallbackSiteSettings as SiteSettings);
   const [likedProjects, setLikedProjects] = useState<Record<string, boolean>>({});
 
@@ -30,6 +41,12 @@ export default function KaryaPage() {
         const [data, s] = await Promise.all([fetchProjectsList(), fetchSiteSettings()]);
         const list = (data && data.length > 0 ? data : fallbackProjects) as StudentProject[];
         setProjects(list);
+
+        if (typeof window !== "undefined" && data && data.length > 0) {
+          try {
+            localStorage.setItem("hmpsti_cached_projects", JSON.stringify(data));
+          } catch {}
+        }
 
         // Hydrate status like dari localStorage browser
         const initialLikes: Record<string, boolean> = {};
@@ -78,32 +95,34 @@ export default function KaryaPage() {
   );
 
   const filteredProjects = useMemo(() => {
-    return projects.filter((p) => {
-      const pCat = (p.category || "").toUpperCase();
-      const matchFilter =
-        activeFilter === "Semua" ||
-        pCat === activeFilter.toUpperCase() ||
-        (activeFilter === "Web App" && pCat.includes("WEB")) ||
-        (activeFilter === "Mobile App" && pCat.includes("MOBILE")) ||
-        (activeFilter === "AI & ML" && (pCat.includes("AI") || pCat.includes("ML"))) ||
-        (activeFilter === "IoT & Embedded" && (pCat.includes("IOT") || pCat.includes("EMBEDDED")));
+    return [...projects]
+      .sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())
+      .filter((p) => {
+        const pCat = (p.category || "").toUpperCase();
+        const matchFilter =
+          activeFilter === "Semua" ||
+          pCat === activeFilter.toUpperCase() ||
+          (activeFilter === "Web App" && pCat.includes("WEB")) ||
+          (activeFilter === "Mobile App" && pCat.includes("MOBILE")) ||
+          (activeFilter === "AI & ML" && (pCat.includes("AI") || pCat.includes("ML"))) ||
+          (activeFilter === "IoT & Embedded" && (pCat.includes("IOT") || pCat.includes("EMBEDDED")));
 
-      const q = searchQuery.toLowerCase().trim();
-      const techString = Array.isArray(p.tech_stack)
-        ? p.tech_stack.join(" ").toLowerCase()
-        : typeof p.tech_stack === "string"
-        ? (p.tech_stack as string).toLowerCase()
-        : "";
+        const q = searchQuery.toLowerCase().trim();
+        const techString = Array.isArray(p.tech_stack)
+          ? p.tech_stack.join(" ").toLowerCase()
+          : typeof p.tech_stack === "string"
+          ? (p.tech_stack as string).toLowerCase()
+          : "";
 
-      const matchSearch =
-        !q ||
-        (p.title || "").toLowerCase().includes(q) ||
-        (p.description || "").toLowerCase().includes(q) ||
-        (p.author_name || (p as any).author || "").toLowerCase().includes(q) ||
-        techString.includes(q);
+        const matchSearch =
+          !q ||
+          (p.title || "").toLowerCase().includes(q) ||
+          (p.description || "").toLowerCase().includes(q) ||
+          (p.author_name || (p as any).author || "").toLowerCase().includes(q) ||
+          techString.includes(q);
 
-      return matchFilter && matchSearch;
-    });
+        return matchFilter && matchSearch;
+      });
   }, [projects, activeFilter, searchQuery]);
 
   return (

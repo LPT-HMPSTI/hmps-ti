@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Plus,
   MagnifyingGlass,
@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { CyberSelect } from "@/components/ui/CyberSelect";
 import { SocialLinksInput } from "@/components/ui/SocialIcon";
+import { AdminPagination } from "../AdminPagination";
 import {
   getDivisionBadgeProps,
   renderSocialIconsList,
@@ -62,6 +63,28 @@ export const StrukturTab: React.FC<StrukturTabProps> = ({
   onOpenEditModal,
   onDeleteMember,
 }) => {
+  const ITEMS_PER_PAGE = 6;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Reset ke halaman 1 saat pencarian berubah
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  const totalPages = Math.ceil(divisionMembers.length / ITEMS_PER_PAGE) || 1;
+
+  // Pastikan currentPage tidak melebihi totalPages
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const paginatedMembers = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return divisionMembers.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [divisionMembers, currentPage]);
+
   return (
     <div className="space-y-6">
       <GlassCard glowColor="yellow" className="p-6 sm:p-7 space-y-5 sm:space-y-6">
@@ -277,7 +300,7 @@ export const StrukturTab: React.FC<StrukturTabProps> = ({
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4.5 sm:gap-5">
-          {divisionMembers.map((m) => (
+          {paginatedMembers.map((m) => (
             <GlassCard
               key={m.id}
               glowColor="yellow"
@@ -336,6 +359,16 @@ export const StrukturTab: React.FC<StrukturTabProps> = ({
             </GlassCard>
           ))}
         </div>
+
+        {/* Neubrutalist Pagination Bar */}
+        <AdminPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={divisionMembers.length}
+          itemsPerPage={ITEMS_PER_PAGE}
+          onPageChange={setCurrentPage}
+          itemName="pengurus divisi"
+        />
       </div>
     </div>
   );

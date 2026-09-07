@@ -1,193 +1,304 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useParams } from "next/navigation";
-import { ArrowLeft, Users } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { GlassCard } from "@/components/ui/GlassCard";
-import { Badge } from "@/components/ui/Badge";
+import { BphMemberDetailModal, BphMember } from "@/components/ui/BphMemberDetailModal";
+import {
+  fetchDivisionMembers,
+  fetchSiteSettings,
+  getLocalLikeState,
+  toggleDatabaseLike,
+} from "@/services";
+import { fetchWorkPrograms } from "@/services/workProgram.service";
+import { fallbackDivisionMembers, fallbackSiteSettings, fallbackWorkPrograms } from "@/constants";
+import { DivisionMember, SiteSettings, WorkProgram } from "@/types";
+import {
+  DivisionHero,
+  DivisionMeta,
+  DivisionLeadershipSection,
+  DivisionProkerSection,
+  DivisionQuickNav,
+} from "@/components/modules/divisi";
+import DivisionLoading from "./loading";
 
+const divisionMetaMap: Record<string, DivisionMeta> = {
+  bph: {
+    slug: "bph",
+    name: "Badan Pengurus Harian (BPH)",
+    short: "BPH",
+    tagline: "Sentral Manajemen & Pengambil Kebijakan Strategis HMPSTI SWU",
+    desc: "Bertanggung jawab penuh atas tata kelola organisasi, perumusan visi dan kebijakan strategis, administrasi hukum persuratan, pengawasan anggaran finansial, serta orkestrasi sinergi seluruh divisi kepengurusan.",
+  },
+  psdm: {
+    slug: "psdm",
+    name: "Divisi PSDM",
+    short: "PSDM",
+    tagline: "Kaderisasi, Upgrading & Menjaga Keakraban Internal Anggota",
+    desc: "Fokus pada pengembangan karakter kepemimpinan mahasiswa baru, upgrading keahlian softskill, dan iklim keakraban antar angkatan.",
+  },
+  lpt: {
+    slug: "lpt",
+    name: "Divisi LPT (Litbang)",
+    short: "LPT",
+    tagline: "Riset Teknologi, Pelatihan Koding & Kompetisi Software",
+    desc: "Pusat riset dan pelatihan skill teknis mahasiswa (Next.js, Python, Supabase, AI, DevOps) serta pendampingan lomba coding.",
+  },
+  kwu: {
+    slug: "kwu",
+    name: "Divisi KWU (Kewirausahaan)",
+    short: "KWU",
+    tagline: "Penggalangan Dana, Merchandise Resmi & Kemandirian Finansial",
+    desc: "Pengelolaan usaha mandiri himpunan, penjualan merchandise eksklusif (Jaket Himpunan, Kaos), serta kemitraan sponsorship.",
+  },
+  medkominfo: {
+    slug: "medkominfo",
+    name: "Divisi MEDKOMINFO",
+    short: "MEDKOMINFO",
+    tagline: "Branding Visual, Pengelolaan Sosmed & Publikasi Digital",
+    desc: "Menangani identitas visual branding HMPSTI SWU, pembuatan konten feeds Instagram, video dokumentasi, serta pengelolaan website.",
+  },
+  humas: {
+    slug: "humas",
+    name: "Divisi HUMAS",
+    short: "HUMAS",
+    tagline: "Kemitraan Eksternal, Studi Banding & Pengabdian Masyarakat",
+    desc: "Menghubungkan HMPSTI SWU dengan birokrasi kampus, himpunan universitas lain, serta kegiatan sosial pengabdian masyarakat.",
+  },
+};
+
+/**
+ * Halaman Profil Divisi Organisasi HMPSTI STMIK Widya Utama.
+ * Mengadopsi arsitektur visual Spotify identik dengan halaman Struktur Organisasi (/struktur)
+ * dengan penyesuaian untuk section program kerja.
+ */
 export default function ProfilDivisiPage() {
   const params = useParams();
   const rawSlug = (params?.slug as string) || "bph";
   const slug = rawSlug.toLowerCase();
 
-  const divisionData: Record<string, any> = {
-    bph: {
-      name: "BPH",
-      short: "BPH",
-      tagline: "Sentral Manajemen & Pengambil Kebijakan Strategis HMPSTI SWU",
-      desc: "Bertanggung jawab atas tata kelola, perumusan visi organisasi, administrasi persuratan, serta pengawasan keuangan himpunan.",
-      roles: ["Ketua Umum", "Wakil Ketua Umum", "Sekretaris 1 & 2", "Bendahara 1 & 2"],
-      proker: [
-        { title: "Rapat Kerja Pengurus (Raker) 2026", status: "SELESAI", date: "Januari 2026", variant: "spotify" },
-        { title: "Laporan Pertanggungjawaban Tengah Periode", status: "BERJALAN", date: "Juli 2026", variant: "cyan" },
-        { title: "Musyawarah Anggota (MUSANG) HMPS-TI", status: "MENDATANG", date: "Desember 2026", variant: "yellow" },
-      ],
-      members: [
-        { name: "Muhammad Rizky Pratama", role: "Ketua Umum", nim: "220101001" },
-        { name: "Fadhil Syahputra", role: "Wakil Ketua", nim: "220101002" },
-        { name: "Siti Nurhaliza", role: "Sekretaris 1", nim: "220101005" },
-        { name: "Ahmad Bagus Trio", role: "Bendahara 1", nim: "220101008" },
-      ],
-    },
-    psdm: {
-      name: "PSDM",
-      short: "PSDM",
-      tagline: "Kaderisasi, Upgrading & Menjaga Keakraban Internal Anggota",
-      desc: "Fokus pada pengembangan karakter kepemimpinan mahasiswa baru, upgrading keahlian softskill, dan iklim keakraban antar angkatan.",
-      roles: ["Kepala Divisi PSDM", "Staff Kaderisasi", "Staff Upgrading"],
-      proker: [
-        { title: "Inaugurasi & Makrab TI 2026", status: "MENDATANG", date: "Oktober 2026", variant: "yellow" },
-        { title: "Upgrading Soft-Skill & Leadership", status: "SELESAI", date: "Maret 2026", variant: "spotify" },
-        { title: "Gathering Keakraban Lintas Angkatan", status: "BERJALAN", date: "Setiap Bulan", variant: "cyan" },
-      ],
-      members: [
-        { name: "Andi Saputra", role: "Kepala Divisi PSDM", nim: "220101015" },
-        { name: "Dinda Permata", role: "Staff Kaderisasi", nim: "230101045" },
-        { name: "Reza Rahardian", role: "Staff Internal", nim: "230101050" },
-      ],
-    },
-    lpt: {
-      name: "LPT",
-      short: "LPT",
-      tagline: "Riset Teknologi, Pelatihan Koding & Kompetisi Software",
-      desc: "Pusat riset dan pelatihan skill teknis mahasiswa (Next.js, Python, Supabase, AI, DevOps) serta pendampingan lomba coding.",
-      roles: ["Kepala Divisi LPT", "Mentor Web Dev", "Mentor AI & IoT"],
-      proker: [
-        { title: "Workshop Next.js 15 & Supabase", status: "SELESAI", date: "Agustus 2026", variant: "spotify" },
-        { title: "National Tech Summit & Hackathon", status: "MENDATANG", date: "September 2026", variant: "yellow" },
-        { title: "Coding Bootcamp Rutin Akhir Pekan", status: "BERJALAN", date: "Setiap Minggu", variant: "cyan" },
-      ],
-      members: [
-        { name: "Aditya Pratama", role: "Kepala Divisi LPT", nim: "220101010" },
-        { name: "Deni Irawan", role: "Mentor Web", nim: "220101012" },
-        { name: "Gita Gutawa", role: "Mentor AI", nim: "230101099" },
-      ],
-    },
-    kwu: {
-      name: "KWU",
-      short: "KWU",
-      tagline: "Penggalangan Dana, Merchandise Resmi & Kemandirian Finansial",
-      desc: "Pengelolaan usaha mandiri himpunan, penjualan merchandise eksklusif (Jaket Himpunan, Kaos), serta kemitraan sponsorship.",
-      roles: ["Kepala Divisi KWU", "Manager Merchandise", "Staff Penjualan"],
-      proker: [
-        { title: "Pre-Order Jaket Himpunan Batch 1", status: "SELESAI", date: "Juni 2026", variant: "spotify" },
-        { title: "Bazar Entrepreneurship Kampus", status: "MENDATANG", date: "Desember 2026", variant: "yellow" },
-        { title: "Kantin Kejujuran HMPS-TI", status: "BERJALAN", date: "Harian", variant: "cyan" },
-      ],
-      members: [
-        { name: "Rina Kartika", role: "Kepala Divisi KWU", nim: "220101030" },
-        { name: "Hendra Setiawan", role: "Manager Merch", nim: "230101022" },
-      ],
-    },
-    medkominfo: {
-      name: "MEDKOMINFO",
-      short: "MEDKOMINFO",
-      tagline: "Branding Visual, Pengelolaan Sosmed & Publikasi Digital",
-      desc: "Menangani identitas visual branding HMPSTI SWU, pembuatan konten feeds Instagram, video dokumentasi, serta pengelolaan website.",
-      roles: ["Kepala Divisi MEDKOMINFO", "UI/UX Designer", "Video Editor & Copywriter"],
-      proker: [
-        { title: "Redesign Website Resmi HMPSTI (Frost-Cyber)", status: "SELESAI", date: "Agustus 2026", variant: "spotify" },
-        { title: "Workshop Visual Design Figma", status: "SELESAI", date: "Mei 2026", variant: "spotify" },
-        { title: "Publikasi Konten Feeds & Reels Daily", status: "BERJALAN", date: "Setiap Hari", variant: "cyan" },
-      ],
-      members: [
-        { name: "Bimo Wicaksono", role: "Kepala Divisi MEDKOMINFO", nim: "220101040" },
-        { name: "Fifi Alawiyah", role: "Staff Graphic Design", nim: "240101012" },
-      ],
-    },
-    humas: {
-      name: "HUMAS",
-      short: "HUMAS",
-      tagline: "Kemitraan Eksternal, Studi Banding & Pengabdian Masyarakat",
-      desc: "Menghubungkan HMPSTI SWU dengan birokrasi kampus, himpunan universitas lain, serta kegiatan sosial pengabdian masyarakat.",
-      roles: ["Kepala Divisi HUMAS", "Staff Eksternal", "Staff Pengabdian"],
-      proker: [
-        { title: "Studi Banding Ke HMPS-TI Universitas Mitra", status: "SELESAI", date: "April 2026", variant: "spotify" },
-        { title: "Bakti Sosial & Donor Darah SWU", status: "MENDATANG", date: "November 2026", variant: "yellow" },
-        { title: "Penyaluran Aspirasi Mahasiswa", status: "BERJALAN", date: "Setiap Saat", variant: "cyan" },
-      ],
-      members: [
-        { name: "Taufik Hidayat", role: "Kepala Divisi Humas", nim: "220101055" },
-        { name: "Indah Permatasari", role: "Staff Eksternal", nim: "230101066" },
-      ],
-    },
-  };
+  const currentMeta = divisionMetaMap[slug] || divisionMetaMap.bph;
+  const isBph = slug === "bph";
 
-  const currentDiv = divisionData[slug] || divisionData.bph;
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [divisionMembers, setDivisionMembers] = useState<DivisionMember[]>([]);
+  const [workPrograms, setWorkPrograms] = useState<WorkProgram[]>([]);
+  const [settings, setSettings] = useState<SiteSettings>(fallbackSiteSettings as SiteSettings);
+
+  // Dual Leadership Carousel state (0 = Leader 1, 1 = Leader 2)
+  const [activeLeaderIndex, setActiveLeaderIndex] = useState<number>(0);
+  const [isPlayingHero, setIsPlayingHero] = useState<boolean>(true);
+  const [isLikedHero, setIsLikedHero] = useState<boolean>(false);
+
+  // Selected Member for Spotify Floating Modal
+  const [selectedMember, setSelectedMember] = useState<BphMember | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadDivisionData() {
+      setIsLoading(true);
+      try {
+        const [allMembers, allProkers, siteSettings] = await Promise.all([
+          fetchDivisionMembers(),
+          fetchWorkPrograms(slug),
+          fetchSiteSettings(),
+        ]);
+
+        if (isMounted) {
+          if (siteSettings) setSettings(siteSettings as SiteSettings);
+
+          // 1. Filter anggota divisi
+          const filtered = (allMembers || []).filter((m) => {
+            const mSlug = (m.division_slug || "").toLowerCase().trim();
+            if (isBph) {
+              return mSlug === "bph" || mSlug === "bph-core" || mSlug === "bph-staff";
+            }
+            return mSlug === slug;
+          });
+
+          if (filtered.length > 0) {
+            setDivisionMembers(filtered);
+          } else {
+            const fallbackFiltered = (fallbackDivisionMembers as DivisionMember[]).filter(
+              (m) => {
+                const mSlug = (m.division_slug || "").toLowerCase().trim();
+                if (isBph) return mSlug === "bph" || mSlug === "bph-core";
+                return mSlug === slug;
+              }
+            );
+            setDivisionMembers(fallbackFiltered);
+          }
+
+          // 2. Program kerja divisi
+          if (allProkers && allProkers.length > 0) {
+            setWorkPrograms(allProkers);
+          } else {
+            const fallbackFilteredProker = (fallbackWorkPrograms as WorkProgram[]).filter(
+              (wp) => (wp.division_slug || "").toLowerCase() === slug
+            );
+            setWorkPrograms(fallbackFilteredProker);
+          }
+        }
+      } catch (err) {
+        console.warn("Gagal memuat data divisi, fallback digunakan:", err);
+        if (isMounted) {
+          const fallbackMembersForSlug = (fallbackDivisionMembers as DivisionMember[]).filter(
+            (m) => {
+              const mSlug = (m.division_slug || "").toLowerCase();
+              if (isBph) return mSlug === "bph" || mSlug === "bph-core";
+              return mSlug === slug;
+            }
+          );
+          const fallbackProkerForSlug = (fallbackWorkPrograms as WorkProgram[]).filter(
+            (wp) => (wp.division_slug || "").toLowerCase() === slug
+          );
+          setDivisionMembers(fallbackMembersForSlug);
+          setWorkPrograms(fallbackProkerForSlug);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadDivisionData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [slug, isBph]);
+
+  // Identifikasi 2 pimpinan utama divisi
+  const leader1 = useMemo(() => {
+    const ketuaMatch = divisionMembers.find((m) => {
+      const r = (m.role || "").toLowerCase();
+      return (r.includes("ketua") || r.includes("koordinator")) && !r.includes("wakil");
+    });
+    return ketuaMatch || divisionMembers[0] || (fallbackDivisionMembers[0] as DivisionMember);
+  }, [divisionMembers]);
+
+  const leader2 = useMemo(() => {
+    const wakilMatch = divisionMembers.find((m) => {
+      const r = (m.role || "").toLowerCase();
+      return r.includes("wakil") || r.includes("sekretaris");
+    });
+    return wakilMatch || divisionMembers[1] || (fallbackDivisionMembers[1] as DivisionMember);
+  }, [divisionMembers]);
+
+  const activeLeader = activeLeaderIndex === 0 ? leader1 : leader2;
+
+  // Hydrate visitor like state when active leader changes
+  useEffect(() => {
+    if (activeLeader) {
+      setIsLikedHero(getLocalLikeState("division_members", activeLeader.id));
+    }
+  }, [activeLeaderIndex, activeLeader?.id]);
+
+  // Auto-switch leader every 25 seconds when playing (identik dengan /struktur)
+  useEffect(() => {
+    if (!isPlayingHero) return;
+    const interval = setInterval(() => {
+      setActiveLeaderIndex((prev) => (prev === 0 ? 1 : 0));
+    }, 25000);
+    return () => clearInterval(interval);
+  }, [isPlayingHero]);
+
+  const handleToggleLikeHero = useCallback(async () => {
+    if (!activeLeader) return;
+    const nextState = !isLikedHero;
+    setIsLikedHero(nextState);
+
+    const baseLikes = (activeLeader as any)?.likes_count ?? 0;
+    const optimisticCount = Math.max(0, nextState ? baseLikes + 1 : baseLikes - 1);
+
+    setDivisionMembers((prev) =>
+      prev.map((m) =>
+        m.id === activeLeader.id ? { ...m, likes_count: optimisticCount } : m
+      )
+    );
+    await toggleDatabaseLike("division_members", activeLeader.id, nextState, baseLikes);
+  }, [activeLeader, isLikedHero]);
+
+  // Scroll to section with offset (identik dengan /struktur)
+  const scrollToSection = useCallback((id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      const navOffset = 145;
+      const elementPosition = el.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - navOffset;
+
+      window.scrollTo({
+        top: Math.max(0, offsetPosition),
+        behavior: "smooth",
+      });
+    }
+  }, []);
+
+  const handleSelectMember = useCallback((m: DivisionMember) => {
+    setSelectedMember(m as unknown as BphMember);
+  }, []);
+
+  // Completion rate
+  const completionRate = useMemo(() => {
+    if (workPrograms.length === 0) return 75;
+    const completedCount = workPrograms.filter(
+      (wp) => (wp.status || "").toUpperCase() === "SELESAI"
+    ).length;
+    return Math.round((completedCount / workPrograms.length) * 100);
+  }, [workPrograms]);
+
+  if (isLoading) {
+    return <DivisionLoading />;
+  }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-10 max-w-7xl mx-auto">
-      <Link href="/struktur">
-        <Button variant="glass" size="sm" icon={<ArrowLeft size={16} />} iconPosition="left">
-          Kembali ke Struktur Organisasi
-        </Button>
-      </Link>
+    <div className="p-4 sm:p-6 lg:p-12 space-y-12 max-w-7xl mx-auto min-h-screen bg-[#0B0D14] text-white relative">
+      {/* QUICK JUMP NAVIGATION BAR (IDENTIK DENGAN /STRUKTUR) */}
+      <DivisionQuickNav
+        currentSlug={slug}
+        onScrollTo={scrollToSection}
+      />
 
-      {/* Clean Hero Banner Divisi */}
-      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#121520] p-6 sm:p-10 backdrop-blur-xl shadow-2xl">
-        <div className="relative z-10 space-y-3">
-          <Badge variant="spotify" tilt="left">
-            DIVISI {currentDiv.short}
-          </Badge>
-          <h1 className="text-3xl font-extrabold text-white sm:text-5xl">
-            {currentDiv.name}
-          </h1>
-          <p className="text-sm font-mono text-[#1DB954] font-semibold">{currentDiv.tagline}</p>
-          <p className="text-xs sm:text-sm text-slate-300 max-w-3xl leading-relaxed">
-            {currentDiv.desc}
-          </p>
-        </div>
-      </div>
+      {/* 1. HERO SECTION: DUAL LEADERSHIP SPOTLIGHT (IDENTIK DENGAN /STRUKTUR) */}
+      <DivisionHero
+        division={currentMeta}
+        members={divisionMembers}
+        currentPeriod={settings.current_period || "2026/2027"}
+        isLikedHero={isLikedHero}
+        onToggleLikeHero={handleToggleLikeHero}
+        activeLeader={activeLeader}
+        activeLeaderIndex={activeLeaderIndex}
+        setActiveLeaderIndex={setActiveLeaderIndex}
+        isPlayingHero={isPlayingHero}
+        setIsPlayingHero={setIsPlayingHero}
+        officersCount={divisionMembers.length}
+        prokerCount={workPrograms.length}
+        completionRate={completionRate}
+        onScrollToSection={scrollToSection}
+      />
 
-      {/* Program Kerja Section */}
-      <div className="space-y-6">
-        <div>
-          <Badge variant="cyan" tilt="left">
-            WORK PROGRAM
-          </Badge>
-          <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">Program Kerja Divisi</h2>
-        </div>
+      {/* 2. SUSUNAN PENGURUS & ANGGOTA (IDENTIK DENGAN ORGBPHSECTION /STRUKTUR) */}
+      <DivisionLeadershipSection
+        members={divisionMembers}
+        divisionSlug={slug}
+        divisionName={currentMeta.name}
+        onSelectMember={handleSelectMember}
+      />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {currentDiv.proker.map((item: any, idx: number) => (
-            <GlassCard key={idx} glowColor="emerald" className="p-6 space-y-3">
-              <div className="flex items-center justify-between text-xs font-mono">
-                <span className="text-[#1DB954] font-bold">{item.date}</span>
-                <Badge variant={item.variant as any} tilt="right">
-                  {item.status}
-                </Badge>
-              </div>
-              <h3 className="text-sm font-bold text-white leading-snug">{item.title}</h3>
-            </GlassCard>
-          ))}
-        </div>
-      </div>
+      {/* 3. PROGRAM KERJA DIVISI (SPOTIFY TRACKLIST DENGAN PENYESUAIAN PROGRAM KERJA) */}
+      <DivisionProkerSection
+        workPrograms={workPrograms}
+        divisionSlug={slug}
+        divisionName={currentMeta.name}
+      />
 
-      {/* Anggota Divisi */}
-      <div className="space-y-6">
-        <div>
-          <Badge variant="yellow" tilt="left">
-            TEAM MEMBERS
-          </Badge>
-          <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">Susunan Pengurus Divisi</h2>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {currentDiv.members.map((m: any, idx: number) => (
-            <GlassCard key={idx} glowColor="cyan" className="p-5 text-center space-y-2">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1DB954]/20 text-[#1DB954] font-mono font-bold mx-auto border border-[#1DB954]/40">
-                <Users size={20} />
-              </div>
-              <h3 className="text-sm font-bold text-white">{m.name}</h3>
-              <p className="text-xs text-[#1DB954] font-semibold">{m.role}</p>
-              <p className="text-[10px] font-mono text-slate-500">NIM: {m.nim}</p>
-            </GlassCard>
-          ))}
-        </div>
-      </div>
+      {/* FLOATING SPOTIFY MINI-PLAYER MODAL (IDENTIK DENGAN /STRUKTUR) */}
+      <BphMemberDetailModal
+        isOpen={Boolean(selectedMember)}
+        onClose={() => setSelectedMember(null)}
+        member={selectedMember}
+      />
     </div>
   );
 }

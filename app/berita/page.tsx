@@ -20,7 +20,18 @@ const CATEGORIES = ["Semua", "Event", "Workshop", "Prestasi", "Akademik"];
 export default function BeritaPage() {
   const [activeCategory, setActiveCategory] = useState<string>("Semua");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [newsList, setNewsList] = useState<NewsArticle[]>([...(fallbackNews as NewsArticle[])]);
+  const [newsList, setNewsList] = useState<NewsArticle[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const cached = localStorage.getItem("hmpsti_cached_news");
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch {}
+    }
+    return [...(fallbackNews as NewsArticle[])];
+  });
   const [settings, setSettings] = useState<SiteSettings>(fallbackSiteSettings as SiteSettings);
   const [likedNews, setLikedNews] = useState<Record<string, boolean>>({});
 
@@ -30,6 +41,12 @@ export default function BeritaPage() {
         const [data, s] = await Promise.all([fetchNewsList(), fetchSiteSettings()]);
         const list = (data && data.length > 0 ? data : fallbackNews) as NewsArticle[];
         setNewsList(list);
+
+        if (typeof window !== "undefined" && data && data.length > 0) {
+          try {
+            localStorage.setItem("hmpsti_cached_news", JSON.stringify(data));
+          } catch {}
+        }
 
         // Hydrate status like pengunjung dari localStorage
         const initialLikes: Record<string, boolean> = {};
@@ -78,23 +95,25 @@ export default function BeritaPage() {
   );
 
   const filteredNews = useMemo(() => {
-    return newsList.filter((item) => {
-      let matchesCategory = activeCategory === "Semua";
-      if (activeCategory === "Event") {
-        matchesCategory = item.is_event === true || item.category === "Event";
-      } else if (activeCategory !== "Semua") {
-        matchesCategory = item.category === activeCategory;
-      }
+    return [...newsList]
+      .sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())
+      .filter((item) => {
+        let matchesCategory = activeCategory === "Semua";
+        if (activeCategory === "Event") {
+          matchesCategory = item.is_event === true || item.category === "Event";
+        } else if (activeCategory !== "Semua") {
+          matchesCategory = item.category === activeCategory;
+        }
 
-      const q = searchQuery.toLowerCase().trim();
-      const matchesSearch =
-        !q ||
-        item.title.toLowerCase().includes(q) ||
-        (item.excerpt && item.excerpt.toLowerCase().includes(q)) ||
-        (item.author_name && item.author_name.toLowerCase().includes(q));
+        const q = searchQuery.toLowerCase().trim();
+        const matchesSearch =
+          !q ||
+          item.title.toLowerCase().includes(q) ||
+          (item.excerpt && item.excerpt.toLowerCase().includes(q)) ||
+          (item.author_name && item.author_name.toLowerCase().includes(q));
 
-      return matchesCategory && matchesSearch;
-    });
+        return matchesCategory && matchesSearch;
+      });
   }, [newsList, activeCategory, searchQuery]);
 
   return (

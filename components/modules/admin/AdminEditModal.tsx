@@ -24,7 +24,7 @@ import {
 
 export interface EditModalState {
   isOpen: boolean;
-  type: "berita" | "struktur" | "keanggotaan" | "karya" | "galeri" | null;
+  type: "berita" | "struktur" | "keanggotaan" | "karya" | "galeri" | "proker" | null;
   item: any;
 }
 
@@ -45,6 +45,7 @@ export interface AdminEditModalProps {
   handleUpdateMember: (e: React.FormEvent) => void;
   handleUpdateProject: (e: React.FormEvent) => void;
   handleUpdateGallery: (e: React.FormEvent) => void;
+  handleUpdateProker: (e: React.FormEvent) => void;
 }
 
 /**
@@ -68,6 +69,7 @@ export const AdminEditModal: React.FC<AdminEditModalProps> = ({
   handleUpdateMember,
   handleUpdateProject,
   handleUpdateGallery,
+  handleUpdateProker,
 }) => {
   return (
     <AnimatePresence>
@@ -91,6 +93,8 @@ export const AdminEditModal: React.FC<AdminEditModalProps> = ({
                     ? "yellow"
                     : editModal.type === "karya"
                     ? "emerald"
+                    : editModal.type === "proker"
+                    ? "cyan"
                     : "purple"
                 }
                 tilt="left"
@@ -932,6 +936,171 @@ export const AdminEditModal: React.FC<AdminEditModalProps> = ({
 
                   <Button variant="spotify" size="md" className="w-full" icon={<FloppyDisk size={16} weight="bold" />}>
                     Simpan Perubahan Galeri
+                  </Button>
+                </form>
+              )}
+
+              {/* Edit Program Kerja Form */}
+              {editModal.type === "proker" && (
+                <form onSubmit={handleUpdateProker} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-mono text-slate-400 mb-1">
+                      Nama / Judul Program Kerja *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={editModal.item.title || ""}
+                      onChange={(e) =>
+                        setEditModal({
+                          ...editModal,
+                          item: { ...editModal.item, title: e.target.value },
+                        })
+                      }
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white focus:border-[#1DB954] focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <CyberSelect
+                        label="Divisi Terkait *"
+                        value={editModal.item.division_slug || "lpt"}
+                        onChange={(val) =>
+                          setEditModal({
+                            ...editModal,
+                            item: { ...editModal.item, division_slug: val },
+                          })
+                        }
+                        options={[
+                          { value: "bph", label: "BPH" },
+                          { value: "psdm", label: "PSDM" },
+                          { value: "lpt", label: "LPT" },
+                          { value: "kwu", label: "KWU" },
+                          { value: "medkominfo", label: "MEDKOMINFO" },
+                          { value: "humas", label: "HUMAS" },
+                        ]}
+                        placeholder="Pilih Divisi..."
+                      />
+                    </div>
+
+                    <div>
+                      <CyberSelect
+                        label="Status Pelaksanaan *"
+                        value={editModal.item.status || "MENDATANG"}
+                        onChange={(val) =>
+                          setEditModal({
+                            ...editModal,
+                            item: { ...editModal.item, status: val },
+                          })
+                        }
+                        options={[
+                          { value: "MENDATANG", label: "Mendatang" },
+                          { value: "BERJALAN", label: "Sedang Berjalan" },
+                          { value: "SELESAI", label: "Selesai" },
+                        ]}
+                        placeholder="Pilih Status..."
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
+                    <div>
+                      <CyberDateTimePicker
+                        value={editModal.item.execution_date || ""}
+                        onChange={(val) =>
+                          setEditModal({
+                            ...editModal,
+                            item: { ...editModal.item, execution_date: val },
+                          })
+                        }
+                        label="Jadwal Pelaksanaan *"
+                        dateOnly={true}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono text-slate-400 mb-1">
+                        Penanggung Jawab (PIC)
+                      </label>
+                      <input
+                        type="text"
+                        value={editModal.item.pic || ""}
+                        onChange={(e) =>
+                          setEditModal({
+                            ...editModal,
+                            item: { ...editModal.item, pic: e.target.value },
+                          })
+                        }
+                        placeholder="e.g. Aditya Pratama"
+                        className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white focus:border-[#1DB954] focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-mono text-slate-400 mb-1">
+                        Target Sasaran / Peserta
+                      </label>
+                      <input
+                        type="text"
+                        value={editModal.item.target_audience || ""}
+                        onChange={(e) =>
+                          setEditModal({
+                            ...editModal,
+                            item: { ...editModal.item, target_audience: e.target.value },
+                          })
+                        }
+                        placeholder="e.g. Mahasiswa Baru TI 2026"
+                        className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white focus:border-[#1DB954] focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono text-slate-400 mb-1">
+                        Anggaran / Estimasi Dana
+                      </label>
+                      <input
+                        type="text"
+                        value={editModal.item.budget || ""}
+                        onChange={(e) =>
+                          setEditModal({
+                            ...editModal,
+                            item: { ...editModal.item, budget: e.target.value },
+                          })
+                        }
+                        placeholder="e.g. Rp 1.500.000"
+                        className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white font-mono focus:border-[#1DB954] focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-mono text-slate-400 mb-1">
+                      Deskripsi & Tujuan Program Kerja *
+                    </label>
+                    <textarea
+                      rows={4}
+                      required
+                      value={editModal.item.description || ""}
+                      onChange={(e) =>
+                        setEditModal({
+                          ...editModal,
+                          item: { ...editModal.item, description: e.target.value },
+                        })
+                      }
+                      className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white focus:border-[#1DB954] focus:outline-none leading-relaxed"
+                    />
+                  </div>
+
+                  <Button
+                    variant="spotify"
+                    size="md"
+                    className="w-full"
+                    icon={<FloppyDisk size={16} weight="bold" />}
+                  >
+                    Simpan Perubahan Program Kerja
                   </Button>
                 </form>
               )}
