@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   NewspaperClipping,
   Calendar,
@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/Button";
 import { CyberSelect } from "@/components/ui/CyberSelect";
 import { CyberDateTimePicker } from "@/components/ui/CyberDateTimePicker";
 import { formatDateIndonesian } from "@/lib/utils";
+import { AdminPagination } from "../AdminPagination";
 import {
   divisionOptions,
   newsCategoryOptions,
@@ -69,6 +70,28 @@ export const BeritaTab: React.FC<BeritaTabProps> = ({
   onOpenEditModal,
   onDeleteArticle,
 }) => {
+  const ITEMS_PER_PAGE = 6;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Reset ke halaman 1 saat pencarian berubah
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  const totalPages = Math.ceil(newsList.length / ITEMS_PER_PAGE) || 1;
+
+  // Pastikan currentPage tidak melebihi totalPages
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const paginatedNews = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return newsList.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [newsList, currentPage]);
+
   return (
     <div className="space-y-6">
       <GlassCard glowColor="cyan" className="p-6 sm:p-7 space-y-5 sm:space-y-6">
@@ -353,7 +376,7 @@ export const BeritaTab: React.FC<BeritaTabProps> = ({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4.5 sm:gap-5">
-          {newsList.map((n) => {
+          {paginatedNews.map((n) => {
             const isEvt = isEventArticle(n);
             return (
               <GlassCard
@@ -424,6 +447,16 @@ export const BeritaTab: React.FC<BeritaTabProps> = ({
             );
           })}
         </div>
+
+        {/* Neubrutalist Pagination Bar */}
+        <AdminPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={newsList.length}
+          itemsPerPage={ITEMS_PER_PAGE}
+          onPageChange={setCurrentPage}
+          itemName="berita/event"
+        />
       </div>
     </div>
   );

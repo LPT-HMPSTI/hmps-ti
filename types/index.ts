@@ -7,3 +7,4 @@ export * from "./projects";
 export * from "./gallery";
 export * from "./aspirasi";
 export * from "./likes";
+export * from "./workProgram";

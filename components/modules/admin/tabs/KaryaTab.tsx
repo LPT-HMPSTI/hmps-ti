@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Plus,
   MagnifyingGlass,
@@ -16,6 +16,7 @@ import { GlassCard } from "@/components/ui/GlassCard";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { CyberSelect } from "@/components/ui/CyberSelect";
+import { AdminPagination } from "../AdminPagination";
 
 export interface NewProjectState {
   title: string;
@@ -61,6 +62,28 @@ export const KaryaTab: React.FC<KaryaTabProps> = ({
   onOpenEditModal,
   onDeleteProject,
 }) => {
+  const ITEMS_PER_PAGE = 6;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Reset ke halaman 1 saat pencarian berubah
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  const totalPages = Math.ceil(projectsList.length / ITEMS_PER_PAGE) || 1;
+
+  // Pastikan currentPage tidak melebihi totalPages
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const paginatedProjects = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return projectsList.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [projectsList, currentPage]);
+
   return (
     <div className="space-y-6">
       <GlassCard glowColor="spotify" className="p-6 sm:p-7 space-y-5 sm:space-y-6">
@@ -343,7 +366,7 @@ export const KaryaTab: React.FC<KaryaTabProps> = ({
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4.5 sm:gap-5">
-          {projectsList.map((p) => {
+          {paginatedProjects.map((p) => {
             const techList = Array.isArray(p.tech_stack)
               ? p.tech_stack
               : typeof p.tech_stack === "string" && p.tech_stack.length > 0
@@ -450,6 +473,16 @@ export const KaryaTab: React.FC<KaryaTabProps> = ({
             );
           })}
         </div>
+
+        {/* Neubrutalist Pagination Bar */}
+        <AdminPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={projectsList.length}
+          itemsPerPage={ITEMS_PER_PAGE}
+          onPageChange={setCurrentPage}
+          itemName="karya proyek"
+        />
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/Badge";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { fetchNewsList, getLocalLikeState, toggleDatabaseLike } from "@/services";
 import { fallbackNews } from "@/constants";
+import { SkeletonDetail } from "@/components/ui/Skeleton";
 
 const isEventArticle = (item: any) => {
   if (!item) return false;
@@ -116,17 +117,7 @@ export default function DetailBeritaPage() {
   };
 
   if (!article) {
-    return (
-      <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto space-y-8 animate-pulse">
-        <div className="h-9 w-40 bg-white/10 rounded-xl" />
-        <div className="space-y-4">
-          <div className="h-4 w-32 bg-white/10 rounded" />
-          <div className="h-10 w-3/4 bg-white/10 rounded-xl" />
-          <div className="h-5 w-1/2 bg-white/10 rounded" />
-        </div>
-        <div className="aspect-video w-full rounded-3xl bg-white/10" />
-      </div>
-    );
+    return <SkeletonDetail />;
   }
 
   const currentLikes = article.likes_count ?? (isLiked ? 1 : 0);

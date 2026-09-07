@@ -32,7 +32,12 @@ import {
   fetchAspirasiList,
   toggleAspirasiReadStatus,
   deleteAspirasi,
+  fetchWorkPrograms,
+  createWorkProgram,
+  updateWorkProgram,
+  deleteWorkProgram,
 } from "@/services";
+import { WorkProgram, CreateWorkProgramPayload } from "@/types";
 import {
   AdminHeader,
   AdminTabNav,
@@ -42,6 +47,7 @@ import {
   AspirasiTab,
   BeritaTab,
   StrukturTab,
+  ProkerTab,
   KeanggotaanTab,
   VisiMisiTab,
   KaryaTab,
@@ -58,6 +64,7 @@ import {
   prepareDivMemberTablePayload,
   prepareMemberTablePayload,
   deriveCohortFromNim,
+  AdminSkeleton,
 } from "@/components/modules/admin";
 
 /**
@@ -81,9 +88,7 @@ export default function AdminDashboardPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingText, setProcessingText] = useState("Memproses Data...");
 
-  const [activeTab, setActiveTab] = useState<
-    "settings" | "aspirasi" | "berita" | "struktur" | "keanggotaan" | "visi-misi" | "karya" | "galeri"
-  >("settings");
+  const [activeTab, setActiveTab] = useState<AdminTabType>("settings");
 
   const [notification, setNotification] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -96,11 +101,24 @@ export default function AdminDashboardPage() {
   }>({ isOpen: false, title: "", onConfirm: () => {} });
 
   // Edit Modal State
-  const [editModal, setEditModal] = useState<{
-    isOpen: boolean;
-    type: "berita" | "struktur" | "keanggotaan" | "karya" | "galeri" | null;
-    item: any;
-  }>({ isOpen: false, type: null, item: null });
+  const [editModal, setEditModal] = useState<EditModalState>({
+    isOpen: false,
+    type: null,
+    item: null,
+  });
+
+  // Program Kerja State
+  const [workProgramsList, setWorkProgramsList] = useState<WorkProgram[]>([]);
+  const [newWorkProgram, setNewWorkProgram] = useState<CreateWorkProgramPayload>({
+    title: "",
+    division_slug: "lpt",
+    status: "MENDATANG",
+    execution_date: "",
+    pic: "",
+    target_audience: "",
+    budget: "",
+    description: "",
+  });
 
   // Settings State
   const [settings, setSettings] = useState({
@@ -403,6 +421,9 @@ export default function AdminDashboardPage() {
 
     const aData = await fetchAspirasiList();
     setAspirasiList(aData || []);
+
+    const wpData = await fetchWorkPrograms();
+    setWorkProgramsList(wpData || []);
   }
 
   // File Reader Helper for Device Image Upload (with Canvas Compression)
@@ -887,6 +908,71 @@ export default function AdminDashboardPage() {
     }
   };
 
+  // CRUD Program Kerja Operations
+  const handleCreateWorkProgram = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newWorkProgram.title || !newWorkProgram.execution_date) {
+      showNotify("Harap isi Judul dan Jadwal Waktu Pelaksanaan!");
+      return;
+    }
+
+    startProcessing("Menambahkan Program Kerja...");
+    const res = await createWorkProgram(newWorkProgram);
+    stopProcessing();
+
+    if (res.success) {
+      showNotify("Program kerja divisi berhasil ditambahkan!");
+      setNewWorkProgram({
+        title: "",
+        division_slug: "lpt",
+        status: "MENDATANG",
+        execution_date: "",
+        pic: "",
+        target_audience: "",
+        budget: "",
+        description: "",
+      });
+      await loadAllData();
+    } else {
+      showNotify(
+        "Gagal menambahkan program kerja: " +
+          (res.error || "Terjadi kesalahan database")
+      );
+    }
+  };
+
+  const handleUpdateProker = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editModal.item?.title) return;
+    startProcessing("Memperbarui Data Program Kerja...");
+    const item = editModal.item;
+
+    const payload = {
+      title: item.title,
+      division_slug: item.division_slug || "lpt",
+      status: item.status || "MENDATANG",
+      execution_date: item.execution_date || "",
+      pic: item.pic || "",
+      target_audience: item.target_audience || "",
+      budget: item.budget || "",
+      description: item.description || "",
+    };
+
+    const res = await updateWorkProgram(item.id, payload);
+    setEditModal({ isOpen: false, type: null, item: null });
+    stopProcessing();
+
+    if (res.success) {
+      showNotify("Program kerja berhasil diperbarui!");
+      await loadAllData();
+    } else {
+      showNotify(
+        "Gagal memperbarui program kerja: " +
+          (res.error || "Terjadi kesalahan database")
+      );
+    }
+  };
+
   const promptDelete = (title: string, action: () => Promise<any>) => {
     setDeleteConfirmModal({
       isOpen: true,
@@ -950,14 +1036,7 @@ export default function AdminDashboardPage() {
   );
 
   if (isCheckingAuth || !isAuthenticated) {
-    return (
-      <div className="min-h-[50vh] flex items-center justify-center">
-        <div className="flex items-center gap-2.5 font-mono text-xs text-slate-400">
-          <div className="h-4 w-4 rounded-full border-2 border-[#1DB954] border-t-transparent animate-spin" />
-          <span>Memuat console admin...</span>
-        </div>
-      </div>
-    );
+    return <AdminSkeleton />;
   }
 
   return (
@@ -991,6 +1070,7 @@ export default function AdminDashboardPage() {
         handleUpdateMember={handleUpdateMember}
         handleUpdateProject={handleUpdateProject}
         handleUpdateGallery={handleUpdateGallery}
+        handleUpdateProker={handleUpdateProker}
       />
 
       {/* 3. Header Banner Console */}
@@ -1066,6 +1146,21 @@ export default function AdminDashboardPage() {
           }
           onDeleteMember={(m) =>
             promptDelete(m.name, () => deleteDivisionMember(m.id))
+          }
+        />
+      )}
+
+      {activeTab === "proker" && (
+        <ProkerTab
+          workPrograms={workProgramsList}
+          newWorkProgram={newWorkProgram}
+          onNewWorkProgramChange={setNewWorkProgram}
+          onCreateWorkProgram={handleCreateWorkProgram}
+          onOpenEditModal={(proker) =>
+            setEditModal({ isOpen: true, type: "proker", item: { ...proker } })
+          }
+          onDeleteWorkProgram={(proker) =>
+            promptDelete(proker.title, () => deleteWorkProgram(proker.id))
           }
         />
       )}
