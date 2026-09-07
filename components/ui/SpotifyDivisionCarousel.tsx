@@ -41,7 +41,7 @@ interface SpotifyDivisionCarouselProps {
 const PLACEHOLDER_IMAGE =
   "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop";
 
-const TRACK_DURATION = 35; // 35 seconds auto-play timer
+const TRACK_DURATION = 30; // 30 seconds auto-play timer
 
 export function SpotifyDivisionCarousel({
   title,
@@ -72,6 +72,13 @@ export function SpotifyDivisionCarousel({
   const totalMembers = sortedMembers.length;
   const activeMember = sortedMembers[currentIndex];
 
+  // Safeguard index out-of-bounds when members change
+  useEffect(() => {
+    if (totalMembers > 0 && currentIndex >= totalMembers) {
+      setCurrentIndex(0);
+    }
+  }, [totalMembers, currentIndex]);
+
   // HYDRATE VISITOR LIKE STATE WHEN CURRENT INDEX CHANGES
   useEffect(() => {
     if (activeMember) {
@@ -82,9 +89,9 @@ export function SpotifyDivisionCarousel({
     setLikeReactionBadge(null);
   }, [currentIndex, activeMember]);
 
-  // 2. ULTRA-SMOOTH 60FPS PLAY PROGRESS & AUTOMATIC ROTATION (requestAnimationFrame)
+  // 2. ULTRA-SMOOTH 60FPS PLAY PROGRESS (requestAnimationFrame)
   useEffect(() => {
-    if (!isPlaying || totalMembers <= 1) return;
+    if (!isPlaying || totalMembers === 0) return;
 
     let lastTimestamp = performance.now();
     let frameId: number;
@@ -95,12 +102,7 @@ export function SpotifyDivisionCarousel({
 
       setSecondsElapsed((prev) => {
         const next = prev + deltaSec;
-        if (next >= TRACK_DURATION) {
-          setDirection(1);
-          setCurrentIndex((curr) => (curr + 1) % totalMembers);
-          return 0;
-        }
-        return next;
+        return next >= TRACK_DURATION ? TRACK_DURATION : next;
       });
 
       frameId = requestAnimationFrame(tick);
@@ -108,7 +110,18 @@ export function SpotifyDivisionCarousel({
 
     frameId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frameId);
-  }, [isPlaying, totalMembers, currentIndex]);
+  }, [isPlaying, totalMembers]);
+
+  // 3. AUTOMATIC ROTATION: When bar reaches full (30s), switch to next member
+  useEffect(() => {
+    if (secondsElapsed >= TRACK_DURATION) {
+      setDirection(1);
+      setSecondsElapsed(0);
+      if (totalMembers > 1) {
+        setCurrentIndex((curr) => (curr + 1) % totalMembers);
+      }
+    }
+  }, [secondsElapsed, totalMembers]);
 
   const handleNext = () => {
     if (totalMembers === 0) return;

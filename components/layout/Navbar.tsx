@@ -214,24 +214,24 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
           {/* ===== RIGHT ACTIONS ===== */}
           <div className="flex items-center gap-2.5">
             {/* Search (tersembunyi di mobile kecil) */}
-            <div className="relative hidden md:block w-44 xl:w-56">
+            <div className="relative hidden md:block transition-all duration-300 w-40 lg:w-48 xl:w-56 focus-within:w-48 lg:focus-within:w-56 xl:focus-within:w-64">
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cari..."
-                className="w-full rounded-full border border-white/10 bg-white/[0.05] py-1.5 pl-9 pr-7 text-xs text-white placeholder-slate-500 backdrop-blur-md transition-all focus:border-[#1DB954] focus:bg-white/[0.08] focus:outline-none focus:ring-1 focus:ring-[#1DB954] focus:w-64"
+                className="w-full rounded-full border border-white/10 bg-white/[0.05] py-1.5 pl-9 pr-7 text-xs text-white placeholder-slate-500 backdrop-blur-md transition-all focus:border-[#1DB954] focus:bg-white/[0.08] focus:outline-none focus:ring-1 focus:ring-[#1DB954]"
               />
               <MagnifyingGlass
                 size={15}
                 weight="bold"
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#1DB954] pointer-events-none"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#1DB954] pointer-events-none z-10"
               />
               {searchQuery && (
                 <button
                   type="button"
                   onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs cursor-pointer"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs cursor-pointer z-10"
                 >
                   ✕
                 </button>
@@ -239,7 +239,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
             </div>
 
             {/* Badge kampus */}
-            <Badge variant="cyan" tilt="left" className="hidden xl:inline-flex">
+            <Badge variant="cyan" tilt="left" className="hidden xl:inline-flex shrink-0">
               STMIK Widya Utama
             </Badge>
 
