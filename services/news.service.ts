@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { supabase, withTimeout } from "@/lib/supabase";
 import { NewsArticle, CreateNewsPayload, UpdateNewsPayload } from "@/types";
 import { fallbackNews } from "@/constants";
 
@@ -10,10 +10,13 @@ let memoryNewsStore: NewsArticle[] = [...(fallbackNews as NewsArticle[])];
 export async function fetchNewsList(): Promise<NewsArticle[]> {
   if (supabase) {
     try {
-      const { data, error } = await supabase
-        .from("news")
-        .select("*")
-        .order("created_at", { ascending: false });
+      const { data, error }: any = await withTimeout(
+        supabase
+          .from("news")
+          .select("*")
+          .order("created_at", { ascending: false }),
+        2000
+      );
 
       if (!error && data && data.length > 0) {
         memoryNewsStore = data as NewsArticle[];

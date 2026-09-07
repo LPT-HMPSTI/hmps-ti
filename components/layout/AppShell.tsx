@@ -2,6 +2,7 @@
 
 import React from "react";
 import { LenisProvider } from "./LenisProvider";
+import { NavigationProgressBar } from "./NavigationProgressBar";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 import { BottomPlayerBar } from "./BottomPlayerBar";
@@ -14,6 +15,9 @@ const ShellContent: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
   return (
     <div className="relative flex min-h-screen flex-col bg-[#0B0D14] text-[#FFFFFF] antialiased">
+      {/* Laser Top Navigation Progress Bar */}
+      <NavigationProgressBar />
+
       {/* Top Navbar */}
       <Navbar onOpenDirectLink={openDrawer} />
 

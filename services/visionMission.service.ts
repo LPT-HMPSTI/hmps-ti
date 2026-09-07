@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { supabase, withTimeout } from "@/lib/supabase";
 import { VisionMissions, MissionItem } from "@/types";
 import { fallbackVisionMissions } from "@/constants";
 
@@ -10,11 +10,14 @@ let memoryVisionMissionsStore: VisionMissions = { ...(fallbackVisionMissions as 
 export async function fetchVisionMissions(): Promise<VisionMissions> {
   if (supabase) {
     try {
-      const { data, error } = await supabase
-        .from("vision_missions")
-        .select("*")
-        .eq("id", "default")
-        .maybeSingle();
+      const { data, error }: any = await withTimeout(
+        supabase
+          .from("vision_missions")
+          .select("*")
+          .eq("id", "default")
+          .maybeSingle(),
+        2000
+      );
 
       if (!error && data) {
         memoryVisionMissionsStore = data as VisionMissions;

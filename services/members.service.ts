@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { supabase, withTimeout } from "@/lib/supabase";
 import {
   DivisionMember,
   MemberDirectory,
@@ -24,10 +24,13 @@ let memoryMembersStore: MemberDirectory[] = [
 export async function fetchDivisionMembers(): Promise<DivisionMember[]> {
   if (supabase) {
     try {
-      const { data, error } = await supabase
-        .from("division_members")
-        .select("*")
-        .order("created_at", { ascending: true });
+      const { data, error }: any = await withTimeout(
+        supabase
+          .from("division_members")
+          .select("*")
+          .order("created_at", { ascending: true }),
+        2000
+      );
 
       if (!error && data && data.length > 0) {
         memoryDivisionStore = data as DivisionMember[];
@@ -163,10 +166,13 @@ export async function deleteDivisionMember(
 export async function fetchMembersList(): Promise<MemberDirectory[]> {
   if (supabase) {
     try {
-      const { data, error } = await supabase
-        .from("members")
-        .select("*")
-        .order("cohort", { ascending: false });
+      const { data, error }: any = await withTimeout(
+        supabase
+          .from("members")
+          .select("*")
+          .order("cohort", { ascending: false }),
+        2000
+      );
 
       if (!error && data && data.length > 0) {
         memoryMembersStore = data as MemberDirectory[];

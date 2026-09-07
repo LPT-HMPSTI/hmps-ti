@@ -1,6 +1,8 @@
-import { supabase } from "@/lib/supabase";
+import { supabase, withTimeout } from "@/lib/supabase";
 import { SiteSettings, UpdateSiteSettingsPayload } from "@/types";
 import { fallbackSiteSettings } from "@/constants";
+
+let memorySettingsStore: SiteSettings = { ...(fallbackSiteSettings as SiteSettings) };
 
 /**
  * Mengambil data pengaturan website (periode kepengurusan, kontak, peta) dari Supabase.
@@ -9,18 +11,24 @@ import { fallbackSiteSettings } from "@/constants";
 export async function fetchSiteSettings(): Promise<SiteSettings> {
   if (supabase) {
     try {
-      const { data, error } = await supabase
-        .from("site_settings")
-        .select("*")
-        .eq("id", "default")
-        .maybeSingle();
+      const { data, error }: any = await withTimeout(
+        supabase
+          .from("site_settings")
+          .select("*")
+          .eq("id", "default")
+          .maybeSingle(),
+        2000
+      );
 
-      if (!error && data) return data as SiteSettings;
+      if (!error && data) {
+        memorySettingsStore = data as SiteSettings;
+        return data as SiteSettings;
+      }
     } catch (e) {
       console.warn("fetchSiteSettings fallback used:", e);
     }
   }
-  return fallbackSiteSettings as SiteSettings;
+  return memorySettingsStore;
 }
 
 /**
