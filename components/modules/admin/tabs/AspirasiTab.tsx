@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { MagnifyingGlass, CheckCircle, Trash } from "@phosphor-icons/react";
+import { MagnifyingGlass, CheckCircle, Trash, DownloadSimple } from "@phosphor-icons/react";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Badge } from "@/components/ui/Badge";
 
@@ -23,9 +23,33 @@ export interface AspirasiTabProps {
   onDeleteAspirasi: (item: AspirasiItem) => void;
 }
 
+/** Mengubah list aspirasi menjadi file CSV dan memicunya agar terunduh. */
+const exportToCSV = (data: AspirasiItem[]) => {
+  const headers = ["ID", "Nama / Anonim", "Email", "Pesan", "Status Baca", "Tanggal"];
+  const rows = data.map((asp) => [
+    asp.id,
+    asp.is_anonymous ? "Anonim" : (asp.sender_name ?? "—"),
+    asp.email ?? "—",
+    `"${(asp.message ?? "").replace(/"/g, '""')}"`, // escape quotes
+    asp.is_read ? "Sudah Dibaca" : "Belum Dibaca",
+    asp.created_at ? new Date(asp.created_at).toLocaleString("id-ID") : "—",
+  ]);
+
+  const csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+  const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" }); // BOM for Excel
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `aspirasi-hmpsti-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
+
 /**
  * Tab Inbox Aspirasi: Menampilkan aspirasi mahasiswa (terbuka maupun anonim)
- * dengan fitur pencarian teks, penandaan status baca, dan tombol hapus neubrutalis.
+ * dengan fitur pencarian teks, penandaan status baca, tombol hapus, dan export CSV.
  */
 export const AspirasiTab: React.FC<AspirasiTabProps> = ({
   aspirasiList,
@@ -37,11 +61,25 @@ export const AspirasiTab: React.FC<AspirasiTabProps> = ({
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <h2 className="text-lg font-bold text-white">
-          Kotak Masuk Aspirasi Mahasiswa ({aspirasiList.length})
-        </h2>
+        <div className="flex items-center gap-3">
+          <h2 className="text-lg font-bold text-white">
+            Kotak Masuk Aspirasi Mahasiswa ({aspirasiList.length})
+          </h2>
 
-        {/* Search Bar Komponen */}
+          {/* Tombol Export CSV */}
+          {aspirasiList.length > 0 && (
+            <button
+              onClick={() => exportToCSV(aspirasiList)}
+              title="Export ke CSV"
+              className="flex items-center gap-1.5 rounded-lg border-2 border-black bg-[#1DB954] px-3 py-1.5 text-xs font-bold text-black shadow-[2px_2px_0px_0px_#000000] -rotate-1 hover:rotate-0 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all cursor-pointer whitespace-nowrap"
+            >
+              <DownloadSimple size={14} weight="bold" />
+              Export CSV
+            </button>
+          )}
+        </div>
+
+        {/* Search Bar */}
         <div className="relative w-full sm:w-80">
           <input
             type="text"
@@ -76,6 +114,13 @@ export const AspirasiTab: React.FC<AspirasiTabProps> = ({
                 </Badge>
                 {asp.email && (
                   <span className="text-xs font-mono text-slate-400">({asp.email})</span>
+                )}
+                {asp.created_at && (
+                  <span className="text-xs font-mono text-slate-500 hidden sm:inline">
+                    {new Date(asp.created_at).toLocaleDateString("id-ID", {
+                      day: "2-digit", month: "short", year: "numeric"
+                    })}
+                  </span>
                 )}
               </div>
               <div className="flex items-center gap-2">

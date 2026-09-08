@@ -4,14 +4,13 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  MagnifyingGlass,
   CaretDown,
   List,
   X,
   CaretRight,
   SignOut,
   ArrowSquareOut,
-  House,
+  Gauge,
 } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -33,7 +32,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileOpenDropdown, setMobileOpenDropdown] = useState<string | null>(null);
@@ -168,22 +166,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
             </div>
           </Link>
 
-          {/* ===== MAIN NAV & ORBIT — Desktop ===== */}
+          {/* ===== MAIN NAV — Desktop ===== */}
           <div ref={dropdownRef} className="hidden lg:flex items-center">
             <nav className="flex items-center gap-1">
-              <Link
-                href="/"
-                prefetch={true}
-                className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-[15px] font-semibold transition-all duration-200 ${
-                  pathname === "/"
-                    ? "text-[#1DB954] bg-[#1DB954]/10 border border-[#1DB954]/25"
-                    : "text-slate-300 hover:text-white hover:bg-white/[0.06]"
-                }`}
-                title="Beranda"
-              >
-                <House size={18} weight="fill" />
-              </Link>
-
               {navLinks.map((item) => {
                 const hasChildren = !!item.children?.length;
                 const isActive = isMenuActive(item);
@@ -279,10 +264,37 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
                 );
               })}
             </nav>
+          </div>
 
-            {/* ===== MENU ORBIT (Special) ===== */}
-            <div 
-              className="relative ml-2 lg:ml-6"
+          {/* ===== RIGHT ACTIONS ===== */}
+          <div className="flex items-center gap-2 lg:gap-3 ml-auto">
+
+            {/* Admin: Dashboard & Logout buttons */}
+            {isAdminLoggedIn && (
+              <>
+                <Link
+                  href="/admin"
+                  prefetch={true}
+                  className="hidden sm:flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.05] px-3.5 py-1.5 text-sm font-semibold text-slate-200 hover:text-white hover:bg-white/[0.1] hover:border-white/25 transition-all duration-200"
+                >
+                  <Gauge size={16} weight="bold" className="text-[#1DB954]" />
+                  Dashboard
+                </Link>
+                <Button
+                  variant="glass"
+                  size="sm"
+                  icon={<SignOut size={15} weight="bold" />}
+                  onClick={handleAdminLogout}
+                  className="text-red-400 border-red-500/30 hover:bg-red-500/10 hover:border-red-500/50"
+                >
+                  <span className="hidden sm:inline">Keluar</span>
+                </Button>
+              </>
+            )}
+
+            {/* ===== ORBIT (paling kanan, desktop) ===== */}
+            <div
+              className="relative hidden lg:block"
               onMouseEnter={() => handleMouseEnter('ORBIT')}
               onMouseLeave={handleMouseLeave}
             >
@@ -292,41 +304,42 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
                   if (timeoutRef.current) clearTimeout(timeoutRef.current);
                   setOpenDropdown(openDropdown === 'ORBIT' ? null : 'ORBIT');
                 }}
-                className={`flex items-center gap-2 rounded-xl px-4 py-2 cursor-pointer transition-all duration-200 ${
-                  openDropdown === 'ORBIT' ? "bg-white/[0.08]" : "hover:bg-white/[0.06]"
+                className={`flex items-center gap-2 rounded-xl px-3.5 py-2 cursor-pointer transition-all duration-200 ${
+                  openDropdown === 'ORBIT'
+                    ? "bg-white/[0.08] border border-white/15"
+                    : "border border-transparent hover:bg-white/[0.06] hover:border-white/10"
                 }`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/logo-orbit.png" alt="ORBIT Logo" className="w-6 h-6 object-contain" />
                 <span className="text-[15px] font-bold text-white tracking-wide">ORBIT</span>
-                <CaretDown size={14} weight="bold" className={`text-slate-300 transition-transform duration-200 ${openDropdown === 'ORBIT' ? "rotate-180" : ""}`} />
+                <CaretDown
+                  size={14}
+                  weight="bold"
+                  className={`text-slate-300 transition-transform duration-200 ${
+                    openDropdown === 'ORBIT' ? "rotate-180" : ""
+                  }`}
+                />
               </button>
-              
-              {/* Dropdown ORBIT */}
+
               {openDropdown === 'ORBIT' && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
-                  {/* Invisible bridge to catch cursor movement seamlessly */}
+                <div className="absolute top-full right-0 pt-2 z-50">
                   <div className="absolute -top-2 inset-x-0 h-4 bg-transparent" />
                   <div className="min-w-[200px] rounded-2xl border border-white/10 bg-[#121520]/95 p-1.5 shadow-2xl shadow-black/60 backdrop-blur-2xl animate-in fade-in slide-in-from-top-1 duration-150">
-                    <Link 
-                      href="/orbit/tentang" 
+                    <div className="pointer-events-none absolute inset-x-4 -top-px h-px bg-gradient-to-r from-transparent via-[#1DB954]/50 to-transparent" />
+                    <Link
+                      href="/orbit/tentang"
                       prefetch={true}
-                      onClick={() => {
-                        if (timeoutRef.current) clearTimeout(timeoutRef.current);
-                        setOpenDropdown(null);
-                      }} 
+                      onClick={() => { if (timeoutRef.current) clearTimeout(timeoutRef.current); setOpenDropdown(null); }}
                       className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[14px] font-medium text-slate-300 hover:text-white hover:bg-white/[0.06] transition-all whitespace-nowrap"
                     >
                       <span>Tentang ORBIT</span>
                     </Link>
-                    <a 
-                      href="https://orbit.hmpsti.site/" 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      onClick={() => {
-                        if (timeoutRef.current) clearTimeout(timeoutRef.current);
-                        setOpenDropdown(null);
-                      }} 
+                    <a
+                      href="https://orbit.hmpsti.site/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => { if (timeoutRef.current) clearTimeout(timeoutRef.current); setOpenDropdown(null); }}
                       className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[14px] font-medium text-[#1DB954] hover:bg-[#1DB954]/10 transition-all whitespace-nowrap"
                     >
                       <span>Mari MengORBIT!</span>
@@ -336,22 +349,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
                 </div>
               )}
             </div>
-          </div>
-
-          {/* ===== RIGHT ACTIONS ===== */}
-          <div className="flex items-center gap-2.5 lg:gap-4 ml-auto">
-            {/* Admin Logout */}
-            {isAdminLoggedIn && (
-              <Button
-                variant="glass"
-                size="sm"
-                icon={<SignOut size={15} weight="bold" />}
-                onClick={handleAdminLogout}
-                className="text-red-400 border-red-500/30 hover:bg-red-500/10 hover:border-red-500/50"
-              >
-                <span className="hidden sm:inline">Keluar Admin</span>
-              </Button>
-            )}
 
             {/* Hamburger (mobile) */}
             <button
@@ -362,31 +359,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
             >
               {mobileMenuOpen ? <X size={20} weight="bold" /> : <List size={20} weight="bold" />}
             </button>
-            
-            {/* Search (tersembunyi di mobile kecil) pindah ke paling kanan */}
-            <div className="relative hidden md:block w-44 xl:w-56">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari..."
-                className="w-full rounded-full border border-white/10 bg-white/[0.05] py-2 pl-9 pr-7 text-[13px] text-white placeholder-slate-500 backdrop-blur-md transition-all focus:border-[#1DB954] focus:bg-white/[0.08] focus:outline-none focus:ring-1 focus:ring-[#1DB954] focus:w-64"
-              />
-              <MagnifyingGlass
-                size={16}
-                weight="bold"
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#1DB954] pointer-events-none"
-              />
-              {searchQuery && (
-                <button
-                  type="button"
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs cursor-pointer"
-                >
-                  ✕
-                </button>
-              )}
-            </div>
           </div>
         </div>
 
@@ -394,17 +366,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
         {mobileMenuOpen && (
           <div className="absolute top-16 left-0 right-0 z-50 border-b border-white/10 bg-[#0B0D14]/98 backdrop-blur-2xl lg:hidden shadow-2xl">
             <div className="flex flex-col p-4 gap-1">
-              {/* Search mobile */}
-              <div className="relative mb-3">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Cari berita, karya, divisi..."
-                  className="w-full rounded-full border border-white/10 bg-white/[0.05] py-2 pl-10 pr-8 text-xs text-white placeholder-slate-400 focus:border-[#1DB954] focus:outline-none focus:ring-1 focus:ring-[#1DB954]"
-                />
-                <MagnifyingGlass size={16} weight="bold" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#1DB954] pointer-events-none" />
-              </div>
 
               {navLinks.map((item) => {
                 const hasChildren = !!item.children?.length;
@@ -526,9 +487,18 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
                 )}
               </div>
 
-              {/* Admin logout mobile */}
+              {/* Admin mobile */}
               {isAdminLoggedIn && (
-                <div className="pt-2 border-t border-white/10 mt-2">
+                <div className="pt-2 border-t border-white/10 mt-2 flex flex-col gap-2">
+                  <Link
+                    href="/admin"
+                    prefetch={true}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-slate-200 hover:text-[#1DB954] hover:bg-white/[0.05] transition-all"
+                  >
+                    <Gauge size={16} weight="bold" className="text-[#1DB954]" />
+                    Dashboard Admin
+                  </Link>
                   <Button
                     variant="glass"
                     size="sm"
@@ -539,7 +509,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
                       handleAdminLogout();
                     }}
                   >
-                    Keluar Admin (Logout)
+                    Keluar Admin
                   </Button>
                 </div>
               )}
