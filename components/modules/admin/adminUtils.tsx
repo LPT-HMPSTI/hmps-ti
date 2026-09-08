@@ -266,6 +266,7 @@ export const prepareDivMemberTablePayload = (data: any) => {
     github_url: githubLink,
     linkedin_url: linkedinLink,
     social_links: socialLinks,
+    order_index: typeof data.order_index === "number" ? data.order_index : Number(data.order_index) || 0,
   };
 
   if (data.id) {

@@ -319,7 +319,7 @@ export const AdminEditModal: React.FC<AdminEditModalProps> = ({
               {/* Edit Form for Other Entities */}
               {editModal.type === "struktur" && (
                 <form onSubmit={handleUpdateDivMember} className="space-y-3">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                     <div>
                       <label className="block text-xs font-mono text-slate-400 mb-1">Nama Lengkap *</label>
                       <input
@@ -366,6 +366,18 @@ export const AdminEditModal: React.FC<AdminEditModalProps> = ({
                         onChange={(e) => setEditModal({ ...editModal, item: { ...editModal.item, role: e.target.value } })}
                         placeholder="e.g. Kadiv LPT / Staff"
                         className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-mono text-slate-400 mb-1">Urutan Tampil</label>
+                      <input
+                        type="number"
+                        min={1}
+                        max={999}
+                        value={editModal.item.order_index || ""}
+                        onChange={(e) => setEditModal({ ...editModal, item: { ...editModal.item, order_index: Number(e.target.value) } })}
+                        placeholder="1, 2, 3..."
+                        className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white font-mono text-center"
                       />
                     </div>
                   </div>

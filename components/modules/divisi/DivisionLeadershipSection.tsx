@@ -45,17 +45,19 @@ export const DivisionLeadershipSection: React.FC<DivisionLeadershipSectionProps>
         </span>
       </div>
 
-      {/* Artist Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5">
-        {members.map((member, idx) => (
+      {/* Artist Grid — maks 4 kolom, diurutkan berdasarkan order_index */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
+        {[...members]
+          .sort((a, b) => (a.order_index ?? 999) - (b.order_index ?? 999))
+          .map((member, idx) => (
           <div
             key={member.id || idx}
             onClick={() => onSelectMember(member)}
-            className="group flex flex-col items-center text-center gap-3 p-4 rounded-2xl bg-white/[0.03] hover:bg-white/[0.07] transition-all duration-200 cursor-pointer border border-transparent hover:border-white/10"
+            className="group flex flex-col items-center text-center gap-3 p-5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.07] transition-all duration-200 cursor-pointer border border-transparent hover:border-white/10"
           >
             {/* Circular Photo */}
-            <div className="relative w-24 h-24 sm:w-28 sm:h-28 shrink-0">
-              <div className="w-full h-full rounded-full overflow-hidden border-2 border-white/10 group-hover:border-[#1DB954]/50 bg-black transition-all duration-300 shadow-lg group-hover:shadow-[0_0_20px_rgba(29,185,84,0.25)]">
+            <div className="relative w-32 h-32 sm:w-36 sm:h-36 shrink-0">
+              <div className="w-full h-full rounded-full overflow-hidden border-2 border-white/10 group-hover:border-[#1DB954]/50 bg-black transition-all duration-300 shadow-lg group-hover:shadow-[0_0_24px_rgba(29,185,84,0.3)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={member.avatar || PLACEHOLDER_IMAGE}
@@ -64,17 +66,17 @@ export const DivisionLeadershipSection: React.FC<DivisionLeadershipSectionProps>
                 />
               </div>
               {/* Number badge */}
-              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#1DB954] text-[10px] font-mono font-black text-black border-2 border-[#121212]">
+              <span className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-[#1DB954] text-[10px] font-mono font-black text-black border-2 border-[#121212]">
                 {String(idx + 1).padStart(2, "0")}
               </span>
             </div>
 
             {/* Info */}
-            <div className="w-full space-y-1">
-              <h4 className="text-sm font-bold text-white leading-tight group-hover:text-[#1DB954] transition-colors duration-200 line-clamp-2">
+            <div className="w-full space-y-1.5">
+              <h4 className="text-sm sm:text-base font-bold text-white leading-tight group-hover:text-[#1DB954] transition-colors duration-200 line-clamp-2">
                 {member.name}
               </h4>
-              <p className="text-xs text-slate-400 font-medium leading-snug line-clamp-2">
+              <p className="text-xs sm:text-sm text-slate-400 font-medium leading-snug line-clamp-2">
                 {member.role}
               </p>
               <p className="text-[11px] font-mono text-[#1DB954]/80 font-semibold tracking-wider">

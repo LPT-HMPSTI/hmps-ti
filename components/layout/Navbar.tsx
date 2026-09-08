@@ -139,10 +139,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
             : "border-b border-white/5 bg-[#0B0D14]/80 backdrop-blur-lg"
         }`}
       >
-        <div className="mx-auto flex h-20 max-w-[1600px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-          
+        <div className="relative mx-auto flex h-20 max-w-[1600px] items-center px-4 sm:px-6 lg:px-8">
+
           {/* ===== BRAND / LOGO (klik → beranda) ===== */}
-          <Link href="/" className="group flex shrink-0 items-center gap-3">
+          <Link href="/" className="group flex shrink-0 items-center gap-3 z-10">
             {/* Logo Badge */}
             <div className="relative flex h-12 w-12 items-center justify-center rounded-xl border border-white/15 bg-white/5 p-1 shadow-[0_0_20px_rgba(29,185,84,0.2)] transition-all duration-300 group-hover:shadow-[0_0_28px_rgba(29,185,84,0.4)] group-hover:border-[#1DB954]/40">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -166,9 +166,29 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
             </div>
           </Link>
 
-          {/* ===== MAIN NAV — Desktop ===== */}
-          <div ref={dropdownRef} className="hidden lg:flex items-center">
-            <nav className="flex items-center gap-1">
+          {/* ===== MAIN NAV — Desktop (Centered Absolute) ===== */}
+          {/* ===== MAIN NAV — Desktop (Centered Absolute) ===== */}
+          <div
+            ref={dropdownRef}
+            className="hidden lg:flex items-center absolute left-1/2 -translate-x-1/2 max-w-[calc(100%-450px)]"
+          >
+            <nav className="flex items-center gap-1 xl:gap-1.5 whitespace-nowrap">
+              {/* Dashboard Admin Button (jika admin sedang login, ditaruh di sebelah kiri menu berita) */}
+              {isAdminLoggedIn && (
+                <Link
+                  href="/admin"
+                  prefetch={true}
+                  className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-[15px] font-semibold whitespace-nowrap transition-all duration-200 ${
+                    pathname.startsWith("/admin")
+                      ? "text-[#1DB954] bg-[#1DB954]/10 border border-[#1DB954]/25"
+                      : "text-slate-300 hover:text-white hover:bg-white/[0.06]"
+                  }`}
+                >
+                  <Gauge size={16} weight="bold" className="text-[#1DB954] shrink-0" />
+                  <span className="whitespace-nowrap">Dashboard Admin</span>
+                </Link>
+              )}
+
               {navLinks.map((item) => {
                 const hasChildren = !!item.children?.length;
                 const isActive = isMenuActive(item);
@@ -177,7 +197,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
                 return (
                   <div 
                     key={item.name} 
-                    className="relative"
+                    className="relative shrink-0"
                     onMouseEnter={() => hasChildren && handleMouseEnter(item.name)}
                     onMouseLeave={() => hasChildren && handleMouseLeave()}
                   >
@@ -189,18 +209,18 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
                           if (timeoutRef.current) clearTimeout(timeoutRef.current);
                           setOpenDropdown(isOpen ? null : item.name);
                         }}
-                        className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-[15px] font-semibold transition-all duration-200 cursor-pointer ${
+                        className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-[15px] font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${
                           isActive || isOpen
                             ? "text-[#1DB954] bg-[#1DB954]/10 border border-[#1DB954]/25"
                             : "text-slate-300 hover:text-white hover:bg-white/[0.06]"
                         }`}
                         aria-expanded={isOpen}
                       >
-                        <span>{item.name}</span>
+                        <span className="whitespace-nowrap">{item.name}</span>
                         <CaretDown
                           size={15}
                           weight="bold"
-                          className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+                          className={`transition-transform duration-200 shrink-0 ${isOpen ? "rotate-180" : ""}`}
                         />
                       </button>
                     ) : (
@@ -208,13 +228,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
                       <Link
                         href={item.href}
                         prefetch={true}
-                        className={`flex items-center rounded-xl px-3.5 py-2 text-[15px] font-semibold transition-all duration-200 ${
+                        className={`flex items-center rounded-xl px-3 py-2 text-[15px] font-semibold whitespace-nowrap transition-all duration-200 ${
                           isActive
                             ? "text-[#1DB954] bg-[#1DB954]/10 border border-[#1DB954]/25"
                             : "text-slate-300 hover:text-white hover:bg-white/[0.06]"
                         }`}
                       >
-                        {item.name}
+                        <span className="whitespace-nowrap">{item.name}</span>
                       </Link>
                     )}
 
@@ -267,29 +287,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
           </div>
 
           {/* ===== RIGHT ACTIONS ===== */}
-          <div className="flex items-center gap-2 lg:gap-3 ml-auto">
+          <div className="flex items-center gap-2 lg:gap-3 ml-auto z-10">
 
-            {/* Admin: Dashboard & Logout buttons */}
+            {/* Admin Logout button (di sebelah kiri menu ORBIT) */}
             {isAdminLoggedIn && (
-              <>
-                <Link
-                  href="/admin"
-                  prefetch={true}
-                  className="hidden sm:flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.05] px-3.5 py-1.5 text-sm font-semibold text-slate-200 hover:text-white hover:bg-white/[0.1] hover:border-white/25 transition-all duration-200"
-                >
-                  <Gauge size={16} weight="bold" className="text-[#1DB954]" />
-                  Dashboard
-                </Link>
-                <Button
-                  variant="glass"
-                  size="sm"
-                  icon={<SignOut size={15} weight="bold" />}
-                  onClick={handleAdminLogout}
-                  className="text-red-400 border-red-500/30 hover:bg-red-500/10 hover:border-red-500/50"
-                >
-                  <span className="hidden sm:inline">Keluar</span>
-                </Button>
-              </>
+              <Button
+                variant="glass"
+                size="sm"
+                icon={<SignOut size={15} weight="bold" />}
+                onClick={handleAdminLogout}
+                className="hidden sm:flex text-red-400 border-red-500/30 hover:bg-red-500/10 hover:border-red-500/50 whitespace-nowrap"
+              >
+                <span>Keluar</span>
+              </Button>
             )}
 
             {/* ===== ORBIT (paling kanan, desktop) ===== */}
