@@ -16,6 +16,32 @@ const PLACEHOLDER_IMAGE =
   "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop";
 
 /**
+ * Menghitung urutan posisi hirarki berdasarkan jabatan pengurus
+ */
+const getMemberRoleRank = (role: string = "", divisionSlug: string = ""): number => {
+  const r = role.toLowerCase().trim();
+  const slug = divisionSlug.toLowerCase().trim();
+  const isBph = slug === "bph" || slug === "bph-core" || slug === "bph-staff";
+
+  if (isBph) {
+    if (r.includes("ketua") && !r.includes("wakil")) return 1;
+    if (r.includes("wakil ketua") || r.includes("wakil")) return 2;
+    if (r.includes("sekretaris 1") || r.includes("sekretaris i") || r.includes("sekretaris umum") || r === "sekretaris") return 3;
+    if (r.includes("sekretaris 2") || r.includes("sekretaris ii")) return 4;
+    if (r.includes("bendahara 1") || r.includes("bendahara i") || r.includes("bendahara umum") || r === "bendahara") return 5;
+    if (r.includes("bendahara 2") || r.includes("bendahara ii")) return 6;
+    if (r.includes("sekretaris")) return 3.5;
+    if (r.includes("bendahara")) return 5.5;
+    return 10;
+  }
+
+  if (r.includes("koordinator") || r.includes("koor") || r.includes("kadiv") || (r.includes("ketua") && !r.includes("wakil"))) return 1;
+  if (r.includes("wakil koordinator") || r.includes("wakil koor") || r.includes("wakil")) return 2;
+  if (r.includes("staff") || r.includes("staf") || r.includes("anggota")) return 3;
+  return 10;
+};
+
+/**
  * Komponen Susunan Pengurus & Anggota Divisi bergaya Spotify Artist Grid:
  * foto bulat di atas → nama → jabatan → NIM → tombol sosial.
  */
@@ -26,6 +52,12 @@ export const DivisionLeadershipSection: React.FC<DivisionLeadershipSectionProps>
   onSelectMember,
 }) => {
   if (members.length === 0) return null;
+
+  const sortedMembers = [...members].sort((a, b) => {
+    const rankA = getMemberRoleRank(a.role, divisionSlug || a.division_slug);
+    const rankB = getMemberRoleRank(b.role, divisionSlug || b.division_slug);
+    return rankA - rankB;
+  });
 
   return (
     <section
@@ -45,11 +77,9 @@ export const DivisionLeadershipSection: React.FC<DivisionLeadershipSectionProps>
         </span>
       </div>
 
-      {/* Artist Grid — maks 4 kolom, diurutkan berdasarkan order_index */}
+      {/* Artist Grid — maks 4 kolom, diurutkan berdasarkan jabatan */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
-        {[...members]
-          .sort((a, b) => (a.order_index ?? 999) - (b.order_index ?? 999))
-          .map((member, idx) => (
+        {sortedMembers.map((member, idx) => (
           <div
             key={member.id || idx}
             onClick={() => onSelectMember(member)}

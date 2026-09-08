@@ -30,7 +30,6 @@ export interface NewDivMemberState {
   email: string;
   instagram_url: string;
   social_links: string[];
-  order_index: number;
 }
 
 export interface StrukturTabProps {
@@ -93,7 +92,7 @@ export const StrukturTab: React.FC<StrukturTabProps> = ({
           Tambah Pengurus BPH / Divisi
         </h3>
         <form onSubmit={onCreateDivMember} className="space-y-4 sm:space-y-4.5">
-          <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 sm:gap-4.5 items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 sm:gap-4.5 items-center">
             <input
               type="text"
               required
@@ -138,20 +137,6 @@ export const StrukturTab: React.FC<StrukturTabProps> = ({
               placeholder="Jabatan (e.g. Kadiv LPT)"
               className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white"
             />
-            <div className="flex flex-col gap-1">
-              <label className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Urutan Tampil</label>
-              <input
-                type="number"
-                min={1}
-                max={999}
-                value={newDivMember.order_index || ""}
-                onChange={(e) =>
-                  onNewDivMemberChange({ ...newDivMember, order_index: Number(e.target.value) })
-                }
-                placeholder="1, 2, 3..."
-                className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white font-mono text-center"
-              />
-            </div>
           </div>
 
           <div className="space-y-1.5">

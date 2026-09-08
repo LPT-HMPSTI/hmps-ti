@@ -29,7 +29,6 @@ export interface DivisionMember {
   social_links?: string[];
   likes_count?: number;
   is_bph?: boolean;
-  order_index?: number;
   created_at?: string;
   [key: string]: any;
 }

@@ -282,7 +282,6 @@ export default function AdminDashboardPage() {
     email: "",
     instagram_url: "",
     social_links: [] as string[],
-    order_index: 0,
   });
 
   // Keanggotaan State
@@ -660,7 +659,6 @@ export default function AdminDashboardPage() {
       github_url: githubLink,
       linkedin_url: linkedinLink,
       social_links: socialLinks,
-      order_index: typeof data.order_index === "number" ? data.order_index : Number(data.order_index) || 0,
     };
 
     if (data.id) {
@@ -730,7 +728,6 @@ export default function AdminDashboardPage() {
         email: "",
         instagram_url: "",
         social_links: [],
-        order_index: 0,
       });
       await loadAllData();
     } else {
