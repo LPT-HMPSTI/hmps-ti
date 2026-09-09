@@ -18,15 +18,15 @@ import {
   DivisionItemConfig,
 } from "@/components/modules/struktur";
 
-// Department definitions & grouping
+// Department definitions & grouping (sesuai urutan katalog navbar: BPH -> PSDM -> LPT -> KWU -> MEDKOMINFO -> HUMAS)
 const DIVISION_CONFIGS: DivisionItemConfig[] = [
   {
-    slug: "medkominfo",
-    aliases: ["medkominfo", "medkom"],
-    name: "Divisi Medkominfo",
-    fullname: "Media, Komunikasi & Informasi",
-    variantColor: "#A855F7",
-    desc: "Mengelola branding publik, media sosial resmi, desain visual, serta saluran informasi digital HMPSTI SWU.",
+    slug: "psdm",
+    aliases: ["psdm"],
+    name: "Divisi PSDM",
+    fullname: "Pengembangan Sumber Daya Mahasiswa",
+    variantColor: "#00F2FE",
+    desc: "Menjalankan program kaderisasi berkelanjutan, upgraded leadership, keakraban internal, dan konseling anggota.",
   },
   {
     slug: "lpt",
@@ -37,14 +37,6 @@ const DIVISION_CONFIGS: DivisionItemConfig[] = [
     desc: "Menyelenggarakan workshop riset teknologi modern, pendampingan rekayasa perangkat lunak, dan showcase karya mahasiswa.",
   },
   {
-    slug: "humas",
-    aliases: ["humas"],
-    name: "Divisi Humas",
-    fullname: "Hubungan Masyarakat & Eksternal",
-    variantColor: "#E879F9",
-    desc: "Membangun jejaring kolaborasi industri, kemitraan antar prodi, alumni, serta kegiatan pengabdian masyarakat.",
-  },
-  {
     slug: "kwu",
     aliases: ["kwu", "kewirausahaan"],
     name: "Divisi Kewirausahaan",
@@ -53,12 +45,20 @@ const DIVISION_CONFIGS: DivisionItemConfig[] = [
     desc: "Mengembangkan produk merchandise resmi HMPSTI, program fund-raising kreatif, serta jiwa wirausaha mahasiswa TI.",
   },
   {
-    slug: "psdm",
-    aliases: ["psdm"],
-    name: "Divisi PSDM",
-    fullname: "Pengembangan Sumber Daya Mahasiswa",
-    variantColor: "#00F2FE",
-    desc: "Menjalankan program kaderisasi berkelanjutan, upgraded leadership, keakraban internal, dan konseling anggota.",
+    slug: "medkominfo",
+    aliases: ["medkominfo", "medkom"],
+    name: "Divisi Medkominfo",
+    fullname: "Media, Komunikasi & Informasi",
+    variantColor: "#A855F7",
+    desc: "Mengelola branding publik, media sosial resmi, desain visual, serta saluran informasi digital HMPSTI SWU.",
+  },
+  {
+    slug: "humas",
+    aliases: ["humas"],
+    name: "Divisi Humas",
+    fullname: "Hubungan Masyarakat & Eksternal",
+    variantColor: "#E879F9",
+    desc: "Membangun jejaring kolaborasi industri, kemitraan antar prodi, alumni, serta kegiatan pengabdian masyarakat.",
   },
 ];
 
@@ -67,9 +67,18 @@ const DIVISION_CONFIGS: DivisionItemConfig[] = [
  * Mengorkestrasi data pimpinan BPH, anggota divisi, dan pemutar audio/carousel interaktif.
  */
 export default function StructurePage() {
-  const [divisionMembers, setDivisionMembers] = useState<DivisionMember[]>([
-    ...(fallbackDivisionMembers as DivisionMember[]),
-  ]);
+  const [divisionMembers, setDivisionMembers] = useState<DivisionMember[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const cached = localStorage.getItem("hmpsti_cached_division_members");
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed as DivisionMember[];
+        }
+      } catch {}
+    }
+    return [...(fallbackDivisionMembers as DivisionMember[])];
+  });
   const [settings, setSettings] = useState<SiteSettings>(fallbackSiteSettings as SiteSettings);
 
   // Hero Dual Leadership Carousel state (0 = Ketua, 1 = Wakil)
@@ -181,7 +190,7 @@ export default function StructurePage() {
   }, []);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-12 space-y-12 max-w-7xl mx-auto min-h-screen bg-[#0B0D14] text-white relative">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-12 min-h-screen bg-[#0B0D14] text-white relative">
       {/* QUICK JUMP NAVIGATION BAR */}
       <OrgQuickNav
         divisionConfigs={DIVISION_CONFIGS}

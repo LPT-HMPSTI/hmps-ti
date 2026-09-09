@@ -45,7 +45,7 @@ export default function KontakPage() {
   );
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-7xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-8">
       {/* Editorial Header Banner */}
       <ContactHero currentPeriod={settings.current_period} />
 

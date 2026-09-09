@@ -36,6 +36,8 @@ import {
   createWorkProgram,
   updateWorkProgram,
   deleteWorkProgram,
+  fetchDivisionPhotos,
+  updateDivisionPhoto,
 } from "@/services";
 import { WorkProgram, CreateWorkProgramPayload } from "@/types";
 import {
@@ -47,6 +49,7 @@ import {
   AspirasiTab,
   BeritaTab,
   StrukturTab,
+  DivisionPhotosTab,
   NewDivMemberState,
   ProkerTab,
   KeanggotaanTab,
@@ -74,18 +77,8 @@ import {
  */
 export default function AdminDashboardPage() {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    if (typeof window !== "undefined") {
-      return sessionStorage.getItem("hmpsti_admin_session") === "authenticated";
-    }
-    return false;
-  });
-  const [isCheckingAuth, setIsCheckingAuth] = useState<boolean>(() => {
-    if (typeof window !== "undefined") {
-      return sessionStorage.getItem("hmpsti_admin_session") !== "authenticated";
-    }
-    return true;
-  });
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState<boolean>(true);
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingText, setProcessingText] = useState("Memproses Data...");
 
@@ -132,6 +125,10 @@ export default function AdminDashboardPage() {
 
   // Aspirasi State
   const [aspirasiList, setAspirasiList] = useState<any[]>([]);
+
+  // Foto Bersama Divisi State
+  const [divisionPhotos, setDivisionPhotos] = useState<Record<string, string>>({});
+  const [isSavingDivisionPhotos, setIsSavingDivisionPhotos] = useState(false);
 
   // Berita & Event Form State
   const [newsList, setNewsList] = useState<any[]>([]);
@@ -425,6 +422,9 @@ export default function AdminDashboardPage() {
 
     const wpData = await fetchWorkPrograms();
     setWorkProgramsList(wpData || []);
+
+    const dpData = await fetchDivisionPhotos();
+    setDivisionPhotos(dpData || {});
   }
 
   // File Reader Helper for Device Image Upload (with Canvas Compression)
@@ -762,6 +762,38 @@ export default function AdminDashboardPage() {
     }
   };
 
+  // Handlers Foto Bersama Divisi
+  const handleDivisionPhotoChange = (slug: string, newUrl: string) => {
+    setDivisionPhotos((prev) => ({ ...prev, [slug]: newUrl }));
+  };
+
+  const handleSaveDivisionPhoto = async (slug: string, name: string, url: string) => {
+    startProcessing(`Menyimpan Foto Bersama ${name}...`);
+    await updateDivisionPhoto(slug, name, url);
+    stopProcessing();
+    showNotify(`Foto bersama ${name} berhasil disimpan!`);
+  };
+
+  const handleSaveAllDivisionPhotos = async () => {
+    startProcessing("Menyimpan Seluruh Foto Bersama Divisi...");
+    setIsSavingDivisionPhotos(true);
+    const list = [
+      { slug: "bph", name: "Badan Pengurus Harian (BPH)" },
+      { slug: "psdm", name: "Pengembangan Sumber Daya Mahasiswa" },
+      { slug: "lpt", name: "Lembaga Pengembangan Teknologi (LPT)" },
+      { slug: "kwu", name: "Kewirausahaan & Bisnis Mandiri (KWU)" },
+      { slug: "medkominfo", name: "Media Komunikasi & Informasi" },
+      { slug: "humas", name: "Hubungan Masyarakat & Kemitraan" },
+    ];
+    for (const div of list) {
+      const url = divisionPhotos[div.slug] || "";
+      await updateDivisionPhoto(div.slug, div.name, url);
+    }
+    setIsSavingDivisionPhotos(false);
+    stopProcessing();
+    showNotify("Seluruh foto bersama 6 divisi berhasil disimpan!");
+  };
+
   const handleCreateMember = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMember.name || !newMember.nim) {
@@ -1041,7 +1073,7 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-7xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-8">
       {/* 1. Modal Dialogs (Processing, Toast, Delete Confirmation) */}
       <AdminModals
         isProcessing={isProcessing}
@@ -1148,6 +1180,17 @@ export default function AdminDashboardPage() {
           onDeleteMember={(m) =>
             promptDelete(m.name, () => deleteDivisionMember(m.id))
           }
+        />
+      )}
+
+      {activeTab === "foto-divisi" && (
+        <DivisionPhotosTab
+          photos={divisionPhotos}
+          onPhotoChange={handleDivisionPhotoChange}
+          onSavePhoto={handleSaveDivisionPhoto}
+          onSaveAllPhotos={handleSaveAllDivisionPhotos}
+          onDeviceFileUpload={handleDeviceFileUpload}
+          isSaving={isSavingDivisionPhotos}
         />
       )}
 

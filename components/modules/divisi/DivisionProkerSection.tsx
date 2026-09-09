@@ -25,23 +25,23 @@ const getStatusBadge = (status: string) => {
     case "SELESAI":
       return {
         label: "Selesai",
-        badgeClass: "bg-[#1DB954]/20 text-[#1DB954] border-[#1DB954]/40",
+        badgeClass: "bg-[#1DB954] text-black border-2 border-black shadow-[2.5px_2.5px_0px_0px_#000000] -rotate-1 hover:rotate-0 hover:scale-105 hover:-translate-y-0.5 transition-all duration-200 cursor-default",
         progressClass: "bg-[#1DB954]",
         percent: 100,
       };
     case "BERJALAN":
       return {
         label: "Berjalan",
-        badgeClass: "bg-cyan-500/20 text-cyan-400 border-cyan-500/40",
-        progressClass: "bg-cyan-400",
+        badgeClass: "bg-[#00F2FE] text-black border-2 border-black shadow-[2.5px_2.5px_0px_0px_#000000] rotate-1 hover:rotate-0 hover:scale-105 hover:-translate-y-0.5 transition-all duration-200 cursor-default",
+        progressClass: "bg-[#00F2FE]",
         percent: 55,
       };
     case "MENDATANG":
     default:
       return {
         label: "Mendatang",
-        badgeClass: "bg-amber-500/20 text-amber-400 border-amber-500/40",
-        progressClass: "bg-amber-400",
+        badgeClass: "bg-[#FFD700] text-black border-2 border-black shadow-[2.5px_2.5px_0px_0px_#000000] -rotate-1 hover:rotate-0 hover:scale-105 hover:-translate-y-0.5 transition-all duration-200 cursor-default",
+        progressClass: "bg-[#FFD700]",
         percent: 15,
       };
   }
@@ -100,8 +100,8 @@ export const DivisionProkerSection: React.FC<DivisionProkerSectionProps> = ({
                 onClick={() => setActiveFilter(tab.id)}
                 className={`px-3 py-1 rounded-full text-xs font-mono font-bold transition-all border cursor-pointer ${
                   isSelected
-                    ? "bg-[#1DB954] text-black border-black shadow-[2px_2px_0px_0px_#000000]"
-                    : "bg-white/[0.04] text-slate-300 border-white/10 hover:text-white hover:bg-white/10"
+                    ? "bg-[#1DB954] text-black border-black shadow-[2px_2px_0px_0px_#000000] -rotate-1 hover:rotate-0 scale-105"
+                    : "bg-white/[0.04] text-slate-300 border-white/10 hover:text-white hover:bg-white/10 hover:-rotate-1"
                 }`}
               >
                 {tab.label}
@@ -143,15 +143,15 @@ export const DivisionProkerSection: React.FC<DivisionProkerSectionProps> = ({
                 <div
                   key={proker.id || index}
                   onClick={() => toggleTrackPlay(proker.id)}
-                  className={`p-3 sm:p-3.5 rounded-xl border border-white/5 transition-all cursor-pointer group ${
+                  className={`p-3 sm:p-3.5 rounded-2xl border transition-all duration-200 cursor-pointer group ${
                     isPlayingThis
-                      ? "bg-white/[0.08] border-[#1DB954]/30"
-                      : "bg-white/[0.03] hover:bg-white/[0.07]"
+                      ? "border-[#1DB954]/50 bg-[#1DB954]/10 shadow-[0_0_20px_rgba(29,185,84,0.15)]"
+                      : "border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.06]"
                   }`}
                 >
                   {/* Desktop Layout */}
                   <div className="hidden lg:grid grid-cols-12 gap-4 items-center">
-                    {/* Track Number / Play toggle */}
+                    {/* Track Number / Equalizer / Play toggle */}
                     <div className="col-span-1 flex items-center justify-center">
                       <button
                         type="button"
@@ -159,10 +159,17 @@ export const DivisionProkerSection: React.FC<DivisionProkerSectionProps> = ({
                         className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 group-hover:text-white transition-colors"
                       >
                         {isPlayingThis ? (
-                          <Pause size={15} className="fill-[#1DB954] text-[#1DB954]" />
+                          <>
+                            <div className="flex items-end gap-0.5 h-4 group-hover:hidden">
+                              <span className="w-1 bg-[#1DB954] rounded-full animate-[bounce_0.8s_infinite] h-3" />
+                              <span className="w-1 bg-[#1DB954] rounded-full animate-[bounce_0.6s_infinite] h-4" />
+                              <span className="w-1 bg-[#1DB954] rounded-full animate-[bounce_1s_infinite] h-2" />
+                            </div>
+                            <Pause size={14} className="hidden group-hover:block fill-[#1DB954] text-[#1DB954]" />
+                          </>
                         ) : (
                           <>
-                            <span className="font-mono text-xs font-bold block group-hover:hidden">
+                            <span className="font-mono text-xs font-bold block group-hover:hidden text-slate-400">
                               {trackNum}
                             </span>
                             <Play
@@ -195,7 +202,7 @@ export const DivisionProkerSection: React.FC<DivisionProkerSectionProps> = ({
                     {/* Status Pill */}
                     <div className="col-span-2 flex justify-center">
                       <span
-                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold border whitespace-nowrap ${badge.badgeClass}`}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-mono font-black uppercase tracking-wider whitespace-nowrap ${badge.badgeClass}`}
                       >
                         {badge.label}
                       </span>
@@ -230,9 +237,17 @@ export const DivisionProkerSection: React.FC<DivisionProkerSectionProps> = ({
                   <div className="lg:hidden space-y-2.5">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-start gap-3 min-w-0">
-                        <span className="font-mono text-xs font-bold text-[#1DB954] mt-0.5">
-                          {trackNum}
-                        </span>
+                        {isPlayingThis ? (
+                          <div className="flex items-end gap-0.5 h-3.5 shrink-0 mt-0.5">
+                            <span className="w-1 bg-[#1DB954] rounded-full animate-[bounce_0.8s_infinite] h-2.5" />
+                            <span className="w-1 bg-[#1DB954] rounded-full animate-[bounce_0.6s_infinite] h-3.5" />
+                            <span className="w-1 bg-[#1DB954] rounded-full animate-[bounce_1s_infinite] h-2" />
+                          </div>
+                        ) : (
+                          <span className="font-mono text-xs font-bold text-slate-400 mt-0.5">
+                            {trackNum}
+                          </span>
+                        )}
                         <div className="min-w-0 space-y-0.5">
                           <h4
                             className={`text-sm font-bold leading-snug ${
@@ -250,7 +265,7 @@ export const DivisionProkerSection: React.FC<DivisionProkerSectionProps> = ({
                       </div>
 
                       <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold border shrink-0 ${badge.badgeClass}`}
+                        className={`px-2.5 py-0.5 rounded-xl text-[10px] font-mono font-black uppercase tracking-wider shrink-0 ${badge.badgeClass}`}
                       >
                         {badge.label}
                       </span>

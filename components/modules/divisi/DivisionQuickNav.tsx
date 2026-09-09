@@ -63,7 +63,7 @@ export const DivisionQuickNav: React.FC<DivisionQuickNavProps> = ({
   }, []);
 
   return (
-    <div className="sticky top-20 z-40 flex justify-center py-2 px-2 pointer-events-none">
+    <div className="sticky top-20 z-30 flex justify-center py-2 px-2 pointer-events-none">
       <motion.nav
         layout
         transition={{
@@ -96,8 +96,8 @@ export const DivisionQuickNav: React.FC<DivisionQuickNavProps> = ({
                   type="button"
                   className={`px-2.5 sm:px-3 py-1 rounded-full text-xs font-mono font-bold transition-all whitespace-nowrap cursor-pointer ${
                     isActive
-                      ? "bg-[#1DB954] text-black shadow-[2px_2px_0px_0px_#000000] scale-105"
-                      : "text-slate-300 hover:text-white hover:bg-white/10"
+                      ? "bg-[#1DB954] text-black border-2 border-black shadow-[2px_2px_0px_0px_#000000] -rotate-1 hover:rotate-0 scale-105"
+                      : "text-slate-300 hover:text-white hover:bg-white/10 hover:-rotate-1"
                   }`}
                 >
                   {div.name}

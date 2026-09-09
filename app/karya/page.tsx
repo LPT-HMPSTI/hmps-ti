@@ -126,7 +126,7 @@ export default function KaryaPage() {
   }, [projects, activeFilter, searchQuery]);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-7xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-8">
       {/* Header Banner & Search/Category Filter Pills */}
       <ProjectHero
         currentPeriod={settings.current_period}

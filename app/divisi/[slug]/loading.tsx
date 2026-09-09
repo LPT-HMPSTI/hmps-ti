@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/Skeleton";
  */
 export default function DivisionLoading() {
   return (
-    <div className="p-4 sm:p-6 lg:p-12 space-y-12 max-w-7xl mx-auto min-h-screen bg-[#0B0D14] text-white relative">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-12 min-h-screen bg-[#0B0D14] text-white relative">
       {/* Quick Nav Capsule Skeleton */}
       <div className="flex justify-center py-2">
         <Skeleton className="h-10 w-96 rounded-full" />

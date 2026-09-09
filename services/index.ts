@@ -7,3 +7,4 @@ export * from "./gallery.service";
 export * from "./aspirasi.service";
 export * from "./likes.service";
 export * from "./workProgram.service";
+export * from "./divisionPhotos.service";

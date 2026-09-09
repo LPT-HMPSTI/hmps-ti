@@ -23,7 +23,7 @@ export const supabase = isSupabaseConfigured
 /**
  * Helper timeout pelindung agar permintaan data ke Supabase tidak hang jika jaringan lambat.
  */
-export async function withTimeout<T>(promiseLike: PromiseLike<T>, ms = 3000): Promise<T> {
+export async function withTimeout<T>(promiseLike: PromiseLike<T>, ms = 8000): Promise<T> {
   let timer: any;
   const timeout = new Promise<T>((_, reject) => {
     timer = setTimeout(() => reject(new Error("Supabase request timeout")), ms);

@@ -25,7 +25,7 @@ export interface OrgDivisionSectionProps {
 export const OrgDivisionSection: React.FC<OrgDivisionSectionProps> = ({
   divisionConfigs,
   divisionMembers,
-}) => {
+}): React.JSX.Element => {
   return (
     <section className="space-y-12 pt-4">
       <div className="text-center space-y-2 border-t border-white/10 pt-10">
@@ -34,7 +34,7 @@ export const OrgDivisionSection: React.FC<OrgDivisionSectionProps> = ({
         </Badge>
         <h2 className="text-2xl sm:text-4xl font-black text-white uppercase tracking-tight">
           Introduce Our Division
-        </h2>        
+        </h2>
       </div>
 
       {/* Division Carousels */}

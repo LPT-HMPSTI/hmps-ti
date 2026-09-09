@@ -24,7 +24,10 @@ export const OrgBphSection: React.FC<OrgBphSectionProps> = ({
   if (remainingBPH.length === 0) return null;
 
   return (
-    <section className="space-y-4 bg-[#121212] p-6 rounded-2xl border border-white/10 shadow-xl">
+    <section
+      id="pengurus-bph"
+      className="space-y-4 bg-[#121212] p-6 rounded-2xl border border-white/10 shadow-xl scroll-mt-36 sm:scroll-mt-40"
+    >
       <div className="flex items-center justify-between border-b border-white/10 pb-3">
         <div className="flex items-center gap-2">
           <ListMusic size={18} className="text-[#1DB954]" />

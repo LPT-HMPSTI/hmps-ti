@@ -3,7 +3,7 @@ import { Skeleton, SkeletonCard } from "@/components/ui/Skeleton";
 
 export default function GaleriLoading() {
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-7xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-8">
       {/* Header Skeleton */}
       <div className="rounded-3xl border-2 border-black bg-[#0c0e14] p-6 sm:p-10 shadow-[4px_4px_0px_0px_#000000] space-y-4">
         <Skeleton className="h-6 w-32 rounded-full" />

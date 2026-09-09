@@ -12,18 +12,23 @@ export interface VisionHeroProps {
  */
 export const VisionHero: React.FC<VisionHeroProps> = ({ currentPeriod }) => {
   return (
-    <div className="space-y-3 pt-2 border-b border-white/10 pb-6">
-      <div className="flex flex-wrap items-center gap-3">
+    <div className="flex flex-col items-center justify-center text-center space-y-3 pt-2 w-full">
+      <div className="flex flex-wrap items-center justify-center gap-2.5">
         <Badge variant="spotify" tilt="left">
           LANDASAN STRATEGIS
         </Badge>
-        <span className="text-xs font-mono font-bold text-[#1DB954]">
-          STMIK WIDYA UTAMA PERIODE {currentPeriod}
-        </span>
+        <Badge variant="yellow" tilt="right">
+          PERIODE {currentPeriod}
+        </Badge>
       </div>
-      <h1 className="text-2xl sm:text-4xl font-black text-white tracking-tight uppercase">
+
+      <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight uppercase">
         Visi & Misi Organisasi
       </h1>
+
+      <p className="text-xs sm:text-sm font-medium text-slate-400 max-w-xl leading-relaxed">
+        Komitmen arah gerak, fondasi filosofis, dan manifesto perjuangan Himpunan Mahasiswa Program Studi Teknik Informatika STMIK Widya Utama.
+      </p>
     </div>
   );
 };

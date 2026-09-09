@@ -75,7 +75,7 @@ export default function GaleriPage() {
   }, []);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-7xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-8">
       {/* Header Banner & Dynamic Category Filter Pills */}
       <GalleryHero
         categories={dynamicCategories}

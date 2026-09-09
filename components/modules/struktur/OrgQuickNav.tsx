@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Music } from "lucide-react";
+import { Disc, Users, ListMusic } from "lucide-react";
 import { motion } from "framer-motion";
 
 export interface DivisionConfigItem {
@@ -16,24 +16,19 @@ export interface OrgQuickNavProps {
   onScrollTo: (id: string) => void;
 }
 
-/**
- * Menghasilkan label kode ringkas untuk mode teardrop minimalis
- */
-const getShortCode = (name: string, slug: string): string => {
-  const s = slug.toLowerCase();
-  if (s.includes("medkom")) return "MEDKOM";
-  if (s.includes("lpt")) return "LPT";
-  if (s.includes("humas")) return "HUMAS";
-  if (s.includes("kwu") || s.includes("kewirausahaan")) return "KWU";
-  if (s.includes("psdm")) return "PSDM";
-  return name.replace(/divisi\s*/i, "").trim().toUpperCase();
-};
+// Standar urutan divisi selaras dengan DivisionQuickNav
+const divisionStandardList = [
+  { slug: "bph", name: "BPH", targetId: "hero-leadership" },
+  { slug: "psdm", name: "PSDM", targetId: "divisi-psdm" },
+  { slug: "lpt", name: "LPT", targetId: "divisi-lpt" },
+  { slug: "kwu", name: "KWU", targetId: "divisi-kwu" },
+  { slug: "medkominfo", name: "MEDKOMINFO", targetId: "divisi-medkominfo" },
+  { slug: "humas", name: "HUMAS", targetId: "divisi-humas" },
+];
 
 /**
- * Bar navigasi lompat cepat (*quick jump*) adaptif dengan animasi morphing Framer Motion:
- * - Tampilan luas saat di bagian atas halaman
- * - Berubah menjadi floating teardrop capsule minimalis yang ringkas saat di-scroll ke bawah
- * - Animasi transisi spring yang halus antar status
+ * Bar navigasi adaptif lompat cepat untuk Halaman Struktur Organisasi (/struktur),
+ * dibuat identik dengan DivisionQuickNav pada halaman per divisi.
  */
 export const OrgQuickNav: React.FC<OrgQuickNavProps> = ({
   divisionConfigs,
@@ -42,12 +37,9 @@ export const OrgQuickNav: React.FC<OrgQuickNavProps> = ({
   const [activeSection, setActiveSection] = useState<string>("hero-leadership");
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
 
-  // Monitor scroll position: beralih ke mode teardrop saat scroll ke bawah
-  // dan kembali ke ukuran normal HANYA saat halaman di-scroll kembali ke paling atas
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      setIsScrolled(currentScrollY > 100);
+      setIsScrolled(window.scrollY > 100);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -56,17 +48,12 @@ export const OrgQuickNav: React.FC<OrgQuickNavProps> = ({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Deteksi seksi aktif saat pengguna menggulir halaman
   useEffect(() => {
     const sectionIds = [
       "hero-leadership",
-      ...divisionConfigs.map((d) => `divisi-${d.slug}`),
+      "pengurus-bph",
+      ...divisionStandardList.filter((d) => d.slug !== "bph").map((d) => d.targetId),
     ];
-    const elements = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter(Boolean) as HTMLElement[];
-
-    if (elements.length === 0) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -76,159 +63,101 @@ export const OrgQuickNav: React.FC<OrgQuickNavProps> = ({
           }
         });
       },
-      {
-        rootMargin: "-15% 0px -65% 0px",
-        threshold: 0.05,
-      }
+      { rootMargin: "-30% 0px -60% 0px" }
     );
 
-    elements.forEach((el) => observer.observe(el));
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
 
     return () => observer.disconnect();
-  }, [divisionConfigs]);
+  }, []);
 
   const handleItemClick = (id: string) => {
     setActiveSection(id);
     onScrollTo(id);
   };
 
-  const isMinimal = isScrolled;
-
   return (
-    <div className="sticky top-16 sm:top-20 z-20 py-2 pointer-events-none flex justify-center w-full">
+    <div className="sticky top-20 z-30 flex justify-center py-2 px-2 pointer-events-none w-full">
       <motion.nav
         layout
         transition={{
           type: "spring",
-          stiffness: 280,
-          damping: 28,
-          mass: 0.8,
+          stiffness: 380,
+          damping: 30,
         }}
-        className={`pointer-events-auto backdrop-blur-2xl transition-colors duration-300 ${
-          isMinimal
-            ? "w-auto max-w-[95vw] sm:max-w-fit rounded-full sm:rounded-[2rem] rounded-tl-lg bg-[#0E121E]/90 border border-[#1DB954]/40 shadow-[0_16px_40px_rgba(0,0,0,0.85),0_0_20px_rgba(29,185,84,0.2)] p-2 sm:px-4 sm:py-2"
-            : "w-full rounded-2xl bg-[#121520]/95 border border-white/15 shadow-[0_12px_36px_rgba(0,0,0,0.85)] p-3.5 sm:p-4"
+        className={`pointer-events-auto rounded-full border-2 border-black bg-[#121212]/95 backdrop-blur-md shadow-2xl flex items-center transition-all ${
+          isScrolled
+            ? "px-3 py-1.5 gap-2 border-white/20"
+            : "px-4 sm:px-6 py-2 gap-3 sm:gap-4 border-white/10"
         }`}
-        aria-label="Navigasi Katalog Struktur"
+        aria-label="Katalog Struktur Organisasi"
       >
-        <div className="flex items-center justify-between gap-2.5 sm:gap-4 max-w-full">
-          {/* LEFT BRAND / TEARDROP ICON INDICATOR */}
-          <div className="flex items-center gap-2 shrink-0 select-none">
-            {isMinimal ? (
-              // Minimalist Teardrop Icon Indicator
-              <motion.div
-                key="minimal-icon"
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="flex items-center gap-2 pl-1"
-                title="Katalog Struktur"
+        {/* Left Brand / Top Scroll Anchor */}
+        <button
+          type="button"
+          onClick={() => handleItemClick("hero-leadership")}
+          className="flex items-center gap-1.5 text-xs font-mono font-bold text-slate-400 hover:text-white transition-colors pr-2 border-r border-white/10 shrink-0 cursor-pointer"
+          title="Ke Puncak Struktur Organisasi"
+        >
+          <Disc size={14} className="text-[#1DB954]" />
+          {!isScrolled && <span className="hidden sm:inline">Katalog</span>}
+        </button>
+
+        {/* Division Switcher */}
+        <div className="flex items-center gap-1 overflow-x-auto max-w-full scrollbar-none">
+          {divisionStandardList.map((div) => {
+            const isBph = div.slug === "bph";
+            const isActive = isBph
+              ? activeSection === "hero-leadership" || activeSection === "pengurus-bph"
+              : activeSection === div.targetId;
+
+            return (
+              <button
+                key={div.slug}
+                type="button"
+                onClick={() => handleItemClick(div.targetId)}
+                className={`px-2.5 sm:px-3 py-1 rounded-full text-xs font-mono font-bold transition-all whitespace-nowrap cursor-pointer ${
+                  isActive
+                    ? "bg-[#1DB954] text-black border-2 border-black shadow-[2px_2px_0px_0px_#000000] -rotate-1 hover:rotate-0 scale-105"
+                    : "text-slate-300 hover:text-white hover:bg-white/10 hover:-rotate-1"
+                }`}
               >
-                <div className="relative flex items-center justify-center">
-                  <span className="absolute h-2.5 w-2.5 rounded-full bg-[#1DB954] opacity-75 animate-ping" />
-                  <span className="relative flex h-6 w-6 items-center justify-center rounded-full bg-[#1DB954]/20 border border-[#1DB954]/60 text-[#1DB954]">
-                    <Music size={12} />
-                  </span>
-                </div>
-                <span className="hidden md:inline text-[11px] font-mono font-extrabold text-[#1DB954] tracking-wider">
-                  KATALOG
-                </span>
-                <span className="text-white/20 hidden sm:inline">|</span>
-              </motion.div>
-            ) : (
-              // Expanded Wide Title
-              <motion.div
-                key="expanded-icon"
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -8 }}
-                transition={{ duration: 0.25 }}
-                className="flex items-center gap-2.5"
-              >
-                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#1DB954]/15 border border-[#1DB954]/30 text-[#1DB954]">
-                  <Music size={18} />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs font-mono font-black uppercase text-[#1DB954] tracking-wider">
-                    STRUCTURE CATALOGUE
-                  </span>
-                  <span className="text-[10px] font-mono text-slate-400 hidden sm:inline">
-                    Navigasi Divisi
-                  </span>
-                </div>
-              </motion.div>
-            )}
-          </div>
+                {div.name}
+              </button>
+            );
+          })}
+        </div>
 
-          {/* RIGHT TABS / PILL BUTTONS */}
-          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto max-w-full py-0.5 custom-scrollbar">
-            {/* BPH BUTTON */}
-            <button
-              type="button"
-              onClick={() => handleItemClick("hero-leadership")}
-              className={`relative text-xs font-mono transition-all cursor-pointer shrink-0 select-none ${
-                isMinimal
-                  ? "px-2.5 py-1 text-[11px] font-bold rounded-full"
-                  : "px-3 py-1.5 rounded-full font-bold"
-              } ${
-                activeSection === "hero-leadership"
-                  ? "text-black font-black"
-                  : "text-slate-300 hover:text-white hover:bg-white/10"
-              }`}
-            >
-              {activeSection === "hero-leadership" && (
-                <motion.span
-                  layoutId="activePillGlider"
-                  transition={{
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 30,
-                  }}
-                  className="absolute inset-0 rounded-full bg-[#1DB954] border-2 border-black shadow-[0_0_15px_rgba(29,185,84,0.45)] z-0"
-                />
-              )}
-              <span className="relative z-10">BPH</span>
-            </button>
+        {/* Section Jump Anchors */}
+        <div className="hidden md:flex items-center gap-1 pl-2 border-l border-white/10">
+          <button
+            type="button"
+            onClick={() => onScrollTo("pengurus-bph")}
+            className={`p-1.5 rounded-full transition-colors cursor-pointer ${
+              activeSection === "pengurus-bph"
+                ? "text-[#1DB954] bg-white/10"
+                : "text-slate-400 hover:text-white"
+            }`}
+            title="Pengurus Inti BPH"
+          >
+            <Users size={15} />
+          </button>
 
-            {/* DIVISION BUTTONS */}
-            {divisionConfigs.map((d) => {
-              const id = `divisi-${d.slug}`;
-              const isActive = activeSection === id;
-              const displayName = isMinimal ? getShortCode(d.name, d.slug) : d.name;
-
-              return (
-                <button
-                  key={d.slug}
-                  type="button"
-                  onClick={() => handleItemClick(id)}
-                  title={d.name}
-                  className={`relative text-xs font-mono transition-all cursor-pointer shrink-0 select-none ${
-                    isMinimal
-                      ? "px-2.5 py-1 text-[11px] font-medium rounded-full"
-                      : "px-3 py-1.5 rounded-full"
-                  } ${
-                    isActive
-                      ? "text-black font-black"
-                      : "text-slate-300 hover:text-white hover:bg-white/10"
-                  }`}
-                >
-                  {isActive && (
-                    <motion.span
-                      layoutId="activePillGlider"
-                      transition={{
-                        type: "spring",
-                        stiffness: 400,
-                        damping: 30,
-                      }}
-                      className="absolute inset-0 rounded-full bg-[#1DB954] border-2 border-black shadow-[0_0_15px_rgba(29,185,84,0.45)] z-0"
-                    />
-                  )}
-                  <span className="relative z-10">{displayName}</span>
-                </button>
-              );
-            })}
-          </div>
+          <button
+            type="button"
+            onClick={() => onScrollTo("divisi-psdm")}
+            className={`p-1.5 rounded-full transition-colors cursor-pointer ${
+              activeSection.startsWith("divisi-")
+                ? "text-[#1DB954] bg-white/10"
+                : "text-slate-400 hover:text-white"
+            }`}
+            title="Album Seluruh Divisi"
+          >
+            <ListMusic size={15} />
+          </button>
         </div>
       </motion.nav>
     </div>

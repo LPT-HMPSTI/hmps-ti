@@ -86,7 +86,8 @@ export const StrukturTab: React.FC<StrukturTabProps> = ({
   }, [divisionMembers, currentPage]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+
       <GlassCard glowColor="yellow" className="p-6 sm:p-7 space-y-5 sm:space-y-6">
         <h3 className="text-base font-bold text-white border-b border-white/10 pb-3.5 mb-2">
           Tambah Pengurus BPH / Divisi

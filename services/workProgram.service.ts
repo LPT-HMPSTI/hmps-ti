@@ -17,6 +17,19 @@ let memoryWorkProgramStore: WorkProgram[] = [
 export async function fetchWorkPrograms(
   divisionSlug?: string
 ): Promise<WorkProgram[]> {
+  // Cek cache localStorage jika query seluruh proker
+  if (typeof window !== "undefined" && (!divisionSlug || divisionSlug === "all")) {
+    try {
+      const cached = localStorage.getItem("hmpsti_cached_work_programs");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          memoryWorkProgramStore = parsed as WorkProgram[];
+        }
+      }
+    } catch {}
+  }
+
   if (supabase) {
     try {
       let query = supabase
@@ -28,12 +41,17 @@ export async function fetchWorkPrograms(
         query = query.eq("division_slug", divisionSlug.toLowerCase());
       }
 
-      const { data, error }: any = await withTimeout(query, 2500);
+      const { data, error }: any = await withTimeout(query, 8000);
 
       if (!error && data && data.length > 0) {
-        // Update in-memory store
+        // Update in-memory store & cache
         if (!divisionSlug || divisionSlug === "all") {
           memoryWorkProgramStore = data as WorkProgram[];
+          if (typeof window !== "undefined") {
+            try {
+              localStorage.setItem("hmpsti_cached_work_programs", JSON.stringify(data));
+            } catch {}
+          }
         }
         return data as WorkProgram[];
       }

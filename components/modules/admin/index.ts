@@ -14,3 +14,4 @@ export * from "./tabs/KeanggotaanTab";
 export * from "./tabs/VisiMisiTab";
 export * from "./tabs/KaryaTab";
 export * from "./tabs/GaleriTab";
+export * from "./tabs/DivisionPhotosTab";

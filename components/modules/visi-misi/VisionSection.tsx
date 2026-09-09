@@ -12,7 +12,9 @@ export interface VisionSectionProps {
 }
 
 /**
- * Komponen seksi Visi Utama dengan quote badge neubrutalism dan efek animasi teks mesin ketik.
+ * Komponen Visi Utama HMPSTI SWU bergaya Spotify Canvas Neubrutalism Card.
+ * Menampilkan pernyataan visi dengan animasi typewriter, aksen quote neubrutalism,
+ * serta 3 pilar karakter mahasiswa Teknik Informatika.
  */
 export const VisionSection: React.FC<VisionSectionProps> = ({
   vision,
@@ -20,42 +22,69 @@ export const VisionSection: React.FC<VisionSectionProps> = ({
 }) => {
   return (
     <motion.section
-      initial={{ opacity: 0, y: 25 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="relative space-y-6 py-4"
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="relative w-full h-full flex flex-col"
     >
       {/* Ambient Subtle Radial Glow */}
-      <div className="absolute top-1/2 left-0 -translate-y-1/2 h-80 w-96 rounded-full bg-[#1DB954]/12 blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-80 w-80 rounded-full bg-[#1DB954]/12 blur-3xl pointer-events-none" />
 
-      {/* Monospace Section Tag */}
-      <div className="flex items-center justify-between border-b border-white/10 pb-4">
-        <div className="flex items-center gap-2 text-xs font-mono font-extrabold tracking-widest text-[#1DB954] uppercase">
-          VISI UTAMA HMPSTI SWU
+      {/* SPOTIFY CANVAS VISION CARD */}
+      <div className="relative z-10 overflow-hidden rounded-3xl border-2 border-black bg-[#121520] p-5 sm:p-6 lg:p-7 shadow-[6px_6px_0px_0px_#000000] backdrop-blur-xl h-full flex flex-col justify-between">
+        {/* Top Status & Audio Wave Bar */}
+        <div className="flex items-center justify-between border-b border-white/10 pb-3.5 mb-3">
+          <div className="flex items-center gap-2">
+            <span className="flex h-2.5 w-2.5 rounded-full bg-[#1DB954] shadow-[0_0_8px_#1DB954] animate-pulse" />
+            <span className="text-[11px] font-mono font-bold text-[#1DB954] uppercase tracking-wider">
+              VISI HMPS-TI
+            </span>
+          </div>
+
+          <Badge variant="cyan" tilt="right">
+            PERIODE {currentPeriod}
+          </Badge>
         </div>
-        <Badge variant="yellow" tilt="right">
-          KABINET {currentPeriod}
-        </Badge>
-      </div>
 
-      {/* GIANT UNBOXED VISI STATEMENT WITH NEUBRUTALIST HANDWRITING QUOTE BADGES */}
-      <div className="relative z-10 space-y-4 pt-2">
-        {/* Opening Quote Badge */}
-        <div className="inline-flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-2xl border-2 sm:border-3 border-black bg-[#1DB954] text-black shadow-[4px_4px_0px_0px_#000000] -rotate-3 hover:rotate-0 hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_#000000] hover:bg-[#1ed760] transition-all duration-300 cursor-pointer mb-5 sm:mb-7 shrink-0">
-          <Quotes size={28} weight="fill" className="text-black shrink-0" />
-        </div>
+        {/* Center Quote & Vision Statement Framed by Opening (Top-Left) and Closing (Bottom-Right) Quotes */}
+        <div className="flex flex-col justify-center my-auto py-2 w-full">
+          {/* Opening Quote Icon (Kiri Atas Teks) */}
+          <div className="flex justify-start mb-2">
+            <div className="inline-flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl border-2 border-black bg-[#1DB954] text-black shadow-[3px_3px_0px_0px_#000000] -rotate-6 hover:rotate-0 hover:-translate-y-0.5 transition-all duration-200 cursor-default">
+              <Quotes size={22} weight="fill" />
+            </div>
+          </div>
 
-        {/* Main Unboxed Visi Statement with Guaranteed Looping Typewriter */}
-        <TypewriterVisionText text={vision} />
+          {/* Typewriter text statement */}
+          <div className="px-2 sm:px-3">
+            <TypewriterVisionText text={vision} />
+          </div>
 
-        {/* Closing Quote Badge */}
-        <div className="flex justify-end mt-5 sm:mt-7">
-          <div className="inline-flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-2xl border-2 sm:border-3 border-black bg-[#1DB954] text-black shadow-[4px_4px_0px_0px_#000000] rotate-3 hover:rotate-0 hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_#000000] hover:bg-[#1ed760] transition-all duration-300 cursor-pointer shrink-0">
-            <Quotes size={28} weight="fill" className="text-black shrink-0 rotate-180" />
+          {/* Closing Quote Icon (Kanan Bawah Teks) */}
+          <div className="flex justify-end mt-2">
+            <div className="inline-flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl border-2 border-black bg-[#1DB954] text-black shadow-[3px_3px_0px_0px_#000000] rotate-186 hover:rotate-180 hover:-translate-y-0.5 transition-all duration-200 cursor-default">
+              <Quotes size={22} weight="fill" />
+            </div>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-4 pt-6 text-xs font-mono text-slate-400 border-t border-white/10" />
+        {/* Core Values / Pilar Karakter TI */}
+        <div className="w-full pt-4 border-t border-white/10 mt-3">
+          <span className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider block mb-2 text-center">
+            3 Pilar Inti Karakter Mahasiswa TI:
+          </span>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <Badge variant="cyan" tilt="left">
+              UNGGUL & INOVATIF
+            </Badge>
+            <Badge variant="spotify" tilt="right">
+              PENGUASAAN TEKNOLOGI
+            </Badge>
+            <Badge variant="yellow" tilt="left">
+              KONTRIBUSI NYATA
+            </Badge>
+          </div>
+        </div>
       </div>
     </motion.section>
   );

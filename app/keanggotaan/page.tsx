@@ -32,7 +32,46 @@ export default function KeanggotaanPage() {
     "Semua" | "Pengurus Aktif" | "Alumni" | "Dosen Penanggung Jawab"
   >("Semua");
   const [searchQuery, setSearchQuery] = useState("");
-  const [allCombinedMembers, setAllCombinedMembers] = useState<any[]>([]);
+  const [allCombinedMembers, setAllCombinedMembers] = useState<any[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const cachedDiv = localStorage.getItem("hmpsti_cached_division_members");
+        const cachedMemb = localStorage.getItem("hmpsti_cached_members_list");
+        if (cachedDiv || cachedMemb) {
+          const dList = cachedDiv ? JSON.parse(cachedDiv) : [];
+          const mList = cachedMemb ? JSON.parse(cachedMemb) : [];
+          if (dList.length > 0 || mList.length > 0) {
+            const mappedActivePengurus = (dList || []).map((p: any) => ({
+              id: `div-${p.id || p.nim}`,
+              name: p.name,
+              nim: p.nim,
+              cohort: "2023",
+              status: "PENGURUS AKTIF",
+              role: p.role || "Pengurus Himpunan",
+              division: p.division_slug ? p.division_slug.toUpperCase() : "HMPSTI",
+              avatar: p.avatar || p.image_url || null,
+              instagram_url: p.instagram_url || "",
+              github_url: p.github_url || "",
+              linkedin_url: p.linkedin_url || "",
+              email: p.email || "",
+              social_links: p.social_links || [],
+            }));
+            const existingNims = new Set(mappedActivePengurus.map((p: any) => p.nim));
+            const filteredMembersOnly = (mList || [])
+              .filter((m: any) => !existingNims.has(m.nim))
+              .map((m: any) => ({
+                ...m,
+                avatar: m.avatar || m.avatar_url || m.image_url || null,
+                division: m.division || "TEKNIK INFORMATIKA",
+                status: m.status || (m.cohort === "2022" ? "ALUMNI" : "PENGURUS AKTIF"),
+              }));
+            return [...mappedActivePengurus, ...filteredMembersOnly];
+          }
+        }
+      } catch {}
+    }
+    return [];
+  });
   const [settings, setSettings] = useState<SiteSettings>(fallbackSiteSettings as SiteSettings);
   const [currentPage, setCurrentPage] = useState(1);
   const [activePlayingId, setActivePlayingId] = useState<string | null>(null);
@@ -231,7 +270,7 @@ export default function KeanggotaanPage() {
   }, [allCombinedMembers, isLikedPlaylist]);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-7 max-w-7xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-7">
       {/* SPOTIFY PLAYLIST HEADER / HERO SHOWCASE */}
       <MemberHero
         settings={settings}

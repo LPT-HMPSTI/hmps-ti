@@ -54,12 +54,12 @@ export const TypewriterVisionText: React.FC<TypewriterVisionTextProps> = ({ text
   }, [text]);
 
   return (
-    <h2 className="text-xl sm:text-3xl lg:text-4xl font-extrabold text-white leading-relaxed sm:leading-[1.4] tracking-tight font-sans selection:bg-[#1DB954] selection:text-black relative z-10 min-h-[90px] sm:min-h-[140px] my-2">
+    <h2 className="text-lg sm:text-2xl lg:text-[26px] font-extrabold text-white leading-relaxed sm:leading-[1.4] tracking-tight font-sans selection:bg-[#1DB954] selection:text-black relative z-10 min-h-[90px] sm:min-h-[120px] my-2 text-center max-w-2xl mx-auto">
       {displayText}
       <motion.span
         animate={{ opacity: [1, 0, 1] }}
         transition={{ repeat: Infinity, duration: 0.6 }}
-        className="inline-block w-2 sm:w-3 h-6 sm:h-9 ml-1.5 bg-[#1DB954] align-middle shadow-[0_0_10px_#1DB954]"
+        className="inline-block w-2 sm:w-2.5 h-5 sm:h-7 ml-1.5 bg-[#1DB954] align-middle shadow-[0_0_10px_#1DB954]"
       />
     </h2>
   );

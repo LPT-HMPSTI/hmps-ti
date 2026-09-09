@@ -6,6 +6,7 @@ import { BphMemberDetailModal, BphMember } from "@/components/ui/BphMemberDetail
 import {
   fetchDivisionMembers,
   fetchSiteSettings,
+  fetchDivisionPhotos,
   getLocalLikeState,
   toggleDatabaseLike,
 } from "@/services";
@@ -28,41 +29,83 @@ const divisionMetaMap: Record<string, DivisionMeta> = {
     short: "BPH",
     tagline: "Sentral Manajemen & Pengambil Kebijakan Strategis HMPSTI SWU",
     desc: "Bertanggung jawab penuh atas tata kelola organisasi, perumusan visi dan kebijakan strategis, administrasi hukum persuratan, pengawasan anggaran finansial, serta orkestrasi sinergi seluruh divisi kepengurusan.",
+    themeColor: "#1DB954",
+    groupPhotoUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1600&auto=format&fit=crop",
+    badge: "Official Executive Council",
+    photoStory: "Sebagai pilar kepemimpinan utama, Badan Pengurus Harian menyatukan Ketua Umum, Wakil Ketua Umum, Sekretaris, dan Bendahara dalam satu ikrar komitmen kepengurusan yang transparan, visioner, dan akuntabel demi memajukan seluruh mahasiswa Teknik Informatika STMIK Widya Utama.",
+    coreValues: ["Integritas Kepemimpinan", "Tata Kelola Transparan", "Visi Progresif"],
+    sessionLocation: "Auditorium & Studio Utama STMIK Widya Utama",
+    photoQuote: "Memimpin dengan keteladanan nyata, melayani dengan dedikasi dan integritas tanpa henti.",
   },
   psdm: {
     slug: "psdm",
-    name: "Divisi PSDM",
+    name: "Pengembangan Sumber Daya Mahasiswa",
     short: "PSDM",
     tagline: "Kaderisasi, Upgrading & Menjaga Keakraban Internal Anggota",
     desc: "Fokus pada pengembangan karakter kepemimpinan mahasiswa baru, upgrading keahlian softskill, dan iklim keakraban antar angkatan.",
+    themeColor: "#A855F7",
+    groupPhotoUrl: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=1600&auto=format&fit=crop",
+    badge: "Human Resources & Talent",
+    photoStory: "Divisi PSDM merupakan wadah hangat pembinaan karakter dan kaderisasi insan mahasiswa TI. Menjaga soliditas internal, mendampingi mahasiswa baru beradaptasi di kampus, serta membangun atmosfer kekeluargaan yang inklusif dan suportif.",
+    coreValues: ["Kekeluargaan Hangat", "Kaderisasi Berkelanjutan", "Empati & Kepemimpinan"],
+    sessionLocation: "Creative Space STMIK Widya Utama",
+    photoQuote: "Merawat potensi setiap insan, membangun kebersamaan yang kokoh tanpa sekat.",
   },
   lpt: {
     slug: "lpt",
-    name: "Divisi LPT (Litbang)",
+    name: "Lembaga Pengembangan Teknologi (LPT)",
     short: "LPT",
     tagline: "Riset Teknologi, Pelatihan Koding & Kompetisi Software",
     desc: "Pusat riset dan pelatihan skill teknis mahasiswa (Next.js, Python, Supabase, AI, DevOps) serta pendampingan lomba coding.",
+    themeColor: "#00F2FE",
+    groupPhotoUrl: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1600&auto=format&fit=crop",
+    badge: "Research & Development Hub",
+    photoStory: "Laboratorium rekayasa teknologi dan inovasi digital HMPSTI. Tim ini mendedikasikan waktu untuk riset teknologi mutakhir, pelatihan programming intensif, dan pendampingan delegasi mahasiswa dalam kompetisi hackathon dan software development.",
+    coreValues: ["Inovasi Rekayasa", "Ketangkasan Koding", "Eksplorasi Teknologi"],
+    sessionLocation: "Lab Riset Rekayasa Perangkat Lunak STMIK Widya Utama",
+    photoQuote: "Dari baris-baris kode, kami merangkai solusi nyata bagi peradaban teknologi masa depan.",
   },
   kwu: {
     slug: "kwu",
-    name: "Divisi KWU (Kewirausahaan)",
+    name: "Kewirausahaan & Bisnis Mandiri (KWU)",
     short: "KWU",
     tagline: "Penggalangan Dana, Merchandise Resmi & Kemandirian Finansial",
     desc: "Pengelolaan usaha mandiri himpunan, penjualan merchandise eksklusif (Jaket Himpunan, Kaos), serta kemitraan sponsorship.",
+    themeColor: "#F59E0B",
+    groupPhotoUrl: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1600&auto=format&fit=crop",
+    badge: "Entrepreneurship & Business",
+    photoStory: "Inkubator bisnis mandiri dan kemandirian ekonomi himpunan. Berfokus pada inovasi produk kreatif merchandise resmi himpunan, pembinaan jiwa technopreneurship mahasiswa TI, serta eksplorasi kemitraan sponsorship strategis.",
+    coreValues: ["Kemandirian Finansial", "Kreativitas Produk", "Naluri Technopreneur"],
+    sessionLocation: "Creative Business Lounge STMIK Widya Utama",
+    photoQuote: "Kemandirian organisasi terwujud saat kreativitas bisnis bersinergi dengan ketulusan karya.",
   },
   medkominfo: {
     slug: "medkominfo",
-    name: "Divisi MEDKOMINFO",
+    name: "Media Komunikasi & Informasi",
     short: "MEDKOMINFO",
     tagline: "Branding Visual, Pengelolaan Sosmed & Publikasi Digital",
     desc: "Menangani identitas visual branding HMPSTI SWU, pembuatan konten feeds Instagram, video dokumentasi, serta pengelolaan website.",
+    themeColor: "#FF007F",
+    groupPhotoUrl: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1600&auto=format&fit=crop",
+    badge: "Creative Media & Broadcasting",
+    photoStory: "Jantung visual branding dan corong publikasi resmi HMPSTI STMIK Widya Utama. Mengabadikan setiap momen berharga organisasi melalui lensa fotografi, desain visual estetik, produksi konten sinematik, dan pengembangan portal web himpunan.",
+    coreValues: ["Estetika Visual", "Storytelling Berdampak", "Presisi Desain"],
+    sessionLocation: "Digital Media Studio STMIK Widya Utama",
+    photoQuote: "Membingkai setiap perjuangan dan karya himpunan menjadi jejak visual yang menginspirasi.",
   },
   humas: {
     slug: "humas",
-    name: "Divisi HUMAS",
+    name: "Hubungan Masyarakat & Kemitraan",
     short: "HUMAS",
     tagline: "Kemitraan Eksternal, Studi Banding & Pengabdian Masyarakat",
     desc: "Menghubungkan HMPSTI SWU dengan birokrasi kampus, himpunan universitas lain, serta kegiatan sosial pengabdian masyarakat.",
+    themeColor: "#3B82F6",
+    groupPhotoUrl: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1600&auto=format&fit=crop",
+    badge: "Public Relations & Diplomacy",
+    photoStory: "Jembatan diplomasi dan silaturahmi terbuka HMPSTI ke dunia luar. Mengokohkan jejaring kemitraan antar ormawa universitas di seluruh Indonesia, menjembatani aspirasi mahasiswa dengan kampus, serta mengabdi kepada masyarakat luas lewat teknologi.",
+    coreValues: ["Diplomasi Terbuka", "Jejaring Kolaboratif", "Pengabdian Sosial"],
+    sessionLocation: "Plaza Kampus STMIK Widya Utama",
+    photoQuote: "Menghubungkan hati dan gagasan, membuka gerbang kolaborasi tanpa batas.",
   },
 };
 
@@ -83,6 +126,7 @@ export default function ProfilDivisiPage() {
   const [divisionMembers, setDivisionMembers] = useState<DivisionMember[]>([]);
   const [workPrograms, setWorkPrograms] = useState<WorkProgram[]>([]);
   const [settings, setSettings] = useState<SiteSettings>(fallbackSiteSettings as SiteSettings);
+  const [customGroupPhoto, setCustomGroupPhoto] = useState<string>("");
 
   // Dual Leadership Carousel state (0 = Leader 1, 1 = Leader 2)
   const [activeLeaderIndex, setActiveLeaderIndex] = useState<number>(0);
@@ -98,14 +142,18 @@ export default function ProfilDivisiPage() {
     async function loadDivisionData() {
       setIsLoading(true);
       try {
-        const [allMembers, allProkers, siteSettings] = await Promise.all([
+        const [allMembers, allProkers, siteSettings, divisionPhotos] = await Promise.all([
           fetchDivisionMembers(),
           fetchWorkPrograms(slug),
           fetchSiteSettings(),
+          fetchDivisionPhotos(),
         ]);
 
         if (isMounted) {
           if (siteSettings) setSettings(siteSettings as SiteSettings);
+          if (divisionPhotos && divisionPhotos[slug]) {
+            setCustomGroupPhoto(divisionPhotos[slug]);
+          }
 
           // 1. Filter anggota divisi
           const filtered = (allMembers || []).filter((m) => {
@@ -169,24 +217,33 @@ export default function ProfilDivisiPage() {
     };
   }, [slug, isBph]);
 
-  // Identifikasi 2 pimpinan utama divisi
+  // Identifikasi pimpinan divisi
   const leader1 = useMemo(() => {
     const ketuaMatch = divisionMembers.find((m) => {
       const r = (m.role || "").toLowerCase();
-      return (r.includes("ketua") || r.includes("koordinator")) && !r.includes("wakil");
+      return (
+        (r.includes("ketua") || r.includes("koordinator") || r.includes("kadiv")) &&
+        !r.includes("wakil")
+      );
     });
     return ketuaMatch || divisionMembers[0] || (fallbackDivisionMembers[0] as DivisionMember);
   }, [divisionMembers]);
 
   const leader2 = useMemo(() => {
-    const wakilMatch = divisionMembers.find((m) => {
-      const r = (m.role || "").toLowerCase();
-      return r.includes("wakil") || r.includes("sekretaris");
-    });
+    const wakilMatch =
+      divisionMembers.find((m) => {
+        const r = (m.role || "").toLowerCase();
+        return r.includes("wakil") && !r.includes("ahli");
+      }) ||
+      divisionMembers.find((m) => {
+        const r = (m.role || "").toLowerCase();
+        return r.includes("sekretaris");
+      });
     return wakilMatch || divisionMembers[1] || (fallbackDivisionMembers[1] as DivisionMember);
   }, [divisionMembers]);
 
-  const activeLeader = activeLeaderIndex === 0 ? leader1 : leader2;
+  // Untuk BPH: gunakan indeks switch (Ketua / Wakil); Untuk non-BPH: selalu leader1 (Koordinator)
+  const activeLeader = isBph ? (activeLeaderIndex === 0 ? leader1 : leader2) : leader1;
 
   // Hydrate visitor like state when active leader changes
   useEffect(() => {
@@ -195,14 +252,14 @@ export default function ProfilDivisiPage() {
     }
   }, [activeLeaderIndex, activeLeader?.id]);
 
-  // Auto-switch leader every 25 seconds when playing (identik dengan /struktur)
+  // Auto-switch leader every 25 seconds when playing (hanya untuk BPH dual leadership)
   useEffect(() => {
-    if (!isPlayingHero) return;
+    if (!isPlayingHero || !isBph) return;
     const interval = setInterval(() => {
       setActiveLeaderIndex((prev) => (prev === 0 ? 1 : 0));
     }, 25000);
     return () => clearInterval(interval);
-  }, [isPlayingHero]);
+  }, [isPlayingHero, isBph]);
 
   const handleToggleLikeHero = useCallback(async () => {
     if (!activeLeader) return;
@@ -248,12 +305,20 @@ export default function ProfilDivisiPage() {
     return Math.round((completedCount / workPrograms.length) * 100);
   }, [workPrograms]);
 
+  const resolvedMeta = useMemo(
+    () => ({
+      ...currentMeta,
+      groupPhotoUrl: customGroupPhoto || currentMeta.groupPhotoUrl,
+    }),
+    [currentMeta, customGroupPhoto]
+  );
+
   if (isLoading) {
     return <DivisionLoading />;
   }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-12 space-y-12 max-w-7xl mx-auto min-h-screen bg-[#0B0D14] text-white relative">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-12 min-h-screen bg-[#0B0D14] text-white relative">
       {/* QUICK JUMP NAVIGATION BAR (IDENTIK DENGAN /STRUKTUR) */}
       <DivisionQuickNav
         currentSlug={slug}
@@ -262,7 +327,7 @@ export default function ProfilDivisiPage() {
 
       {/* 1. HERO SECTION: DUAL LEADERSHIP SPOTLIGHT (IDENTIK DENGAN /STRUKTUR) */}
       <DivisionHero
-        division={currentMeta}
+        division={resolvedMeta}
         members={divisionMembers}
         currentPeriod={settings.current_period || "2026/2027"}
         isLikedHero={isLikedHero}

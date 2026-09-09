@@ -14,6 +14,17 @@ let memoryMembersStore: MemberDirectory[] = [
   ...(fallbackMembers as MemberDirectory[]),
 ];
 
+function generateUUID(): string {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
 // ==========================================
 // PENGURUS DIVISI SERVICES
 // ==========================================
@@ -22,6 +33,19 @@ let memoryMembersStore: MemberDirectory[] = [
  * Mengambil daftar pengurus dan anggota divisi dari database Supabase.
  */
 export async function fetchDivisionMembers(): Promise<DivisionMember[]> {
+  // Cek cache localStorage terlebih dahulu untuk rendering instan
+  if (typeof window !== "undefined") {
+    try {
+      const cached = localStorage.getItem("hmpsti_cached_division_members");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          memoryDivisionStore = parsed as DivisionMember[];
+        }
+      }
+    } catch {}
+  }
+
   if (supabase) {
     try {
       const { data, error }: any = await withTimeout(
@@ -29,11 +53,16 @@ export async function fetchDivisionMembers(): Promise<DivisionMember[]> {
           .from("division_members")
           .select("*")
           .order("created_at", { ascending: true }),
-        2000
+        8000
       );
 
       if (!error && data && data.length > 0) {
         memoryDivisionStore = data as DivisionMember[];
+        if (typeof window !== "undefined") {
+          try {
+            localStorage.setItem("hmpsti_cached_division_members", JSON.stringify(data));
+          } catch {}
+        }
         return data as DivisionMember[];
       }
     } catch (e) {
@@ -51,10 +80,7 @@ export async function createDivisionMember(
 ): Promise<{ success: boolean; data?: DivisionMember; error?: string; isMock?: boolean }> {
   const payload = { ...member };
   if (!payload.id) {
-    payload.id =
-      typeof crypto !== "undefined" && crypto.randomUUID
-        ? crypto.randomUUID()
-        : `div-${Date.now()}`;
+    payload.id = generateUUID();
   }
 
   if (supabase) {
@@ -164,6 +190,19 @@ export async function deleteDivisionMember(
  * Mengambil daftar seluruh anggota aktif dan alumni dari database.
  */
 export async function fetchMembersList(): Promise<MemberDirectory[]> {
+  // Cek cache localStorage terlebih dahulu untuk rendering instan
+  if (typeof window !== "undefined") {
+    try {
+      const cached = localStorage.getItem("hmpsti_cached_members_list");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          memoryMembersStore = parsed as MemberDirectory[];
+        }
+      }
+    } catch {}
+  }
+
   if (supabase) {
     try {
       const { data, error }: any = await withTimeout(
@@ -171,11 +210,16 @@ export async function fetchMembersList(): Promise<MemberDirectory[]> {
           .from("members")
           .select("*")
           .order("cohort", { ascending: false }),
-        2000
+        8000
       );
 
       if (!error && data && data.length > 0) {
         memoryMembersStore = data as MemberDirectory[];
+        if (typeof window !== "undefined") {
+          try {
+            localStorage.setItem("hmpsti_cached_members_list", JSON.stringify(data));
+          } catch {}
+        }
         return data as MemberDirectory[];
       }
     } catch (e) {
@@ -193,10 +237,7 @@ export async function createMember(
 ): Promise<{ success: boolean; data?: MemberDirectory; error?: string; isMock?: boolean }> {
   const payload = { ...member };
   if (!payload.id) {
-    payload.id =
-      typeof crypto !== "undefined" && crypto.randomUUID
-        ? crypto.randomUUID()
-        : `m-${Date.now()}`;
+    payload.id = generateUUID();
   }
 
   if (supabase) {

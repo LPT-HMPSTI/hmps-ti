@@ -57,9 +57,11 @@ export const Badge: React.FC<BadgeProps> = ({
   };
 
   const tilts = {
-    left: "-rotate-2 hover:rotate-0 transition-transform duration-200",
-    right: "rotate-2 hover:rotate-0 transition-transform duration-200",
-    none: "rotate-0",
+    left: "-rotate-2 hover:rotate-0 hover:-translate-y-0.5 hover:scale-105 transition-all duration-200",
+    right: "rotate-2 hover:rotate-0 hover:-translate-y-0.5 hover:scale-105 transition-all duration-200",
+    none: variant !== "glass"
+      ? "-rotate-1 hover:rotate-0 hover:-translate-y-0.5 hover:scale-105 transition-all duration-200"
+      : "",
   };
 
   return (

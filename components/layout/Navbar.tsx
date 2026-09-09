@@ -8,7 +8,6 @@ import {
   List,
   X,
   CaretRight,
-  SignOut,
   ArrowSquareOut,
   Gauge,
 } from "@phosphor-icons/react";
@@ -133,7 +132,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
   return (
     <>
       <header
-        className={`sticky top-0 z-40 w-full transition-all duration-300 ${
+        className={`sticky top-0 z-50 w-full transition-all duration-300 ${
           scrolled
             ? "border-b border-white/10 bg-[#0B0D14]/95 shadow-lg shadow-black/40 backdrop-blur-xl"
             : "border-b border-white/5 bg-[#0B0D14]/80 backdrop-blur-lg"
@@ -178,13 +177,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
                 <Link
                   href="/admin"
                   prefetch={true}
-                  className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-[15px] font-semibold whitespace-nowrap transition-all duration-200 ${
+                  className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-[15px] whitespace-nowrap transition-all duration-200 ${
                     pathname.startsWith("/admin")
-                      ? "text-[#1DB954] bg-[#1DB954]/10 border border-[#1DB954]/25"
-                      : "text-slate-300 hover:text-white hover:bg-white/[0.06]"
+                      ? "text-[#1DB954] bg-[#1DB954]/10 font-semibold"
+                      : "text-slate-300 hover:text-white hover:bg-white/[0.06] font-semibold"
                   }`}
-                >
-                  <Gauge size={16} weight="bold" className="text-[#1DB954] shrink-0" />
+                >                  
                   <span className="whitespace-nowrap">Dashboard Admin</span>
                 </Link>
               )}
@@ -209,10 +207,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
                           if (timeoutRef.current) clearTimeout(timeoutRef.current);
                           setOpenDropdown(isOpen ? null : item.name);
                         }}
-                        className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-[15px] font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${
-                          isActive || isOpen
-                            ? "text-[#1DB954] bg-[#1DB954]/10 border border-[#1DB954]/25"
-                            : "text-slate-300 hover:text-white hover:bg-white/[0.06]"
+                        className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-[15px] whitespace-nowrap transition-all duration-200 cursor-pointer ${
+                          isActive
+                            ? "text-[#1DB954] bg-[#1DB954]/10 font-semibold"
+                            : isOpen
+                            ? "text-white bg-white/[0.08] font-semibold"
+                            : "text-slate-300 hover:text-white hover:bg-white/[0.06] font-semibold"
                         }`}
                         aria-expanded={isOpen}
                       >
@@ -228,10 +228,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
                       <Link
                         href={item.href}
                         prefetch={true}
-                        className={`flex items-center rounded-xl px-3 py-2 text-[15px] font-semibold whitespace-nowrap transition-all duration-200 ${
+                        className={`flex items-center rounded-xl px-3.5 py-2 text-[15px] whitespace-nowrap transition-all duration-200 ${
                           isActive
-                            ? "text-[#1DB954] bg-[#1DB954]/10 border border-[#1DB954]/25"
-                            : "text-slate-300 hover:text-white hover:bg-white/[0.06]"
+                            ? "text-[#1DB954] bg-[#1DB954]/10 font-semibold"
+                            : "text-slate-300 hover:text-white hover:bg-white/[0.06] font-semibold"
                         }`}
                       >
                         <span className="whitespace-nowrap">{item.name}</span>
@@ -240,7 +240,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
 
                     {/* Dropdown Panel */}
                     {hasChildren && isOpen && (
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50">
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-[60]">
                         {/* Invisible bridge to catch cursor movement seamlessly */}
                         <div className="absolute -top-2 inset-x-0 h-4 bg-transparent" />
                         <div className="min-w-[210px] rounded-2xl border border-white/10 bg-[#121520]/95 p-1.5 shadow-2xl shadow-black/60 backdrop-blur-2xl animate-in fade-in slide-in-from-top-1 duration-150">
@@ -257,10 +257,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
                                   if (timeoutRef.current) clearTimeout(timeoutRef.current);
                                   setOpenDropdown(null);
                                 }}
-                                className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[14px] font-medium transition-all duration-150 ${
+                                className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[14px] transition-all duration-150 ${
                                   childActive
-                                    ? "text-[#1DB954] bg-[#1DB954]/10"
-                                    : "text-slate-300 hover:text-white hover:bg-white/[0.06]"
+                                    ? "text-[#1DB954] bg-[#1DB954]/12 font-semibold border-l-2 border-[#1DB954]"
+                                    : "text-slate-300 hover:text-white hover:bg-white/[0.06] font-medium"
                                 }`}
                               >
                                 {/* Dot warna untuk divisi */}
@@ -291,15 +291,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
 
             {/* Admin Logout button (di sebelah kiri menu ORBIT) */}
             {isAdminLoggedIn && (
-              <Button
-                variant="glass"
-                size="sm"
-                icon={<SignOut size={15} weight="bold" />}
+              <button
+                type="button"
                 onClick={handleAdminLogout}
-                className="hidden sm:flex text-red-400 border-red-500/30 hover:bg-red-500/10 hover:border-red-500/50 whitespace-nowrap"
+                className="hidden sm:flex items-center rounded-xl px-3.5 py-2 text-[15px] whitespace-nowrap font-semibold text-slate-300 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200 cursor-pointer"
               >
-                <span>Keluar</span>
-              </Button>
+                <span>Logout</span>
+              </button>
             )}
 
             {/* ===== ORBIT (paling kanan, desktop) ===== */}
@@ -333,7 +331,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
               </button>
 
               {openDropdown === 'ORBIT' && (
-                <div className="absolute top-full right-0 pt-2 z-50">
+                <div className="absolute top-full right-0 pt-2 z-[60]">
                   <div className="absolute -top-2 inset-x-0 h-4 bg-transparent" />
                   <div className="min-w-[200px] rounded-2xl border border-white/10 bg-[#121520]/95 p-1.5 shadow-2xl shadow-black/60 backdrop-blur-2xl animate-in fade-in slide-in-from-top-1 duration-150">
                     <div className="pointer-events-none absolute inset-x-4 -top-px h-px bg-gradient-to-r from-transparent via-[#1DB954]/50 to-transparent" />
@@ -390,7 +388,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
                         <button
                           onClick={() => setMobileOpenDropdown(isMobileOpen ? null : item.name)}
                           className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold transition-all cursor-pointer ${
-                            isActive || isMobileOpen
+                            isActive
+                              ? "text-[#1DB954] bg-[#1DB954]/10 font-semibold"
+                              : isMobileOpen
                               ? "text-[#1DB954] bg-[#1DB954]/10"
                               : "text-slate-300 hover:text-white hover:bg-white/[0.05]"
                           }`}
@@ -416,14 +416,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
                                   onClick={() => setMobileMenuOpen(false)}
                                   className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-xs font-medium transition-all ${
                                     childActive
-                                      ? "text-[#1DB954]"
+                                      ? "text-[#1DB954] bg-[#1DB954]/10 font-semibold"
                                       : "text-slate-400 hover:text-white"
                                   }`}
                                 >
                                   {"color" in child && child.color ? (
                                     <span className={`h-1.5 w-1.5 rounded-full bg-gradient-to-r ${child.color} shrink-0`} />
                                   ) : (
-                                    <CaretRight size={10} weight="bold" className="text-slate-500 shrink-0" />
+                                    <CaretRight size={10} weight="bold" className={childActive ? "text-[#1DB954] shrink-0" : "text-slate-500 shrink-0"} />
                                   )}
                                   {child.name}
                                 </Link>
@@ -439,7 +439,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
                         onClick={() => setMobileMenuOpen(false)}
                         className={`flex items-center rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
                           isActive
-                            ? "text-[#1DB954] bg-[#1DB954]/10"
+                            ? "text-[#1DB954] bg-[#1DB954]/10 font-semibold"
                             : "text-slate-300 hover:text-white hover:bg-white/[0.05]"
                         }`}
                       >
@@ -509,18 +509,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
                     <Gauge size={16} weight="bold" className="text-[#1DB954]" />
                     Dashboard Admin
                   </Link>
-                  <Button
-                    variant="glass"
-                    size="sm"
-                    className="w-full text-red-400 border-red-500/30 hover:bg-red-500/10"
-                    icon={<SignOut size={16} weight="bold" />}
+                  <button
+                    type="button"
                     onClick={() => {
                       setMobileMenuOpen(false);
                       handleAdminLogout();
                     }}
+                    className="flex w-full items-center rounded-xl px-4 py-3 text-sm font-semibold text-slate-300 hover:text-red-400 hover:bg-red-500/10 transition-all cursor-pointer"
                   >
-                    Keluar Admin
-                  </Button>
+                    Logout
+                  </button>
                 </div>
               )}
             </div>

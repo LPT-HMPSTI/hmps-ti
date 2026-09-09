@@ -1,13 +1,28 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Play } from "lucide-react";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Badge } from "@/components/ui/Badge";
+import { fetchDivisionPhotos } from "@/services";
 
 export const DivisiPreviewSection: React.FC = () => {
+  const [divisionPhotos, setDivisionPhotos] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchDivisionPhotos().then((photos) => {
+      if (isMounted && photos) {
+        setDivisionPhotos(photos);
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const divisions = [
     {
       id: "bph",
@@ -62,7 +77,7 @@ export const DivisiPreviewSection: React.FC = () => {
 
   return (
     <section className="py-8 p-4 sm:p-6 lg:p-8">
-      <div className="mx-auto max-w-7xl space-y-6">
+      <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <Badge variant="spotify" tilt="left">
@@ -88,7 +103,11 @@ export const DivisiPreviewSection: React.FC = () => {
                   <div>
                     <div className="relative mx-auto mb-3 h-20 w-20">
                       <div className="h-full w-full rounded-full overflow-hidden border-2 border-white/10 group-hover:border-[#1DB954] transition-all duration-300">
-                        <img src={div.avatar} alt={div.name} className="h-full w-full object-cover group-hover:scale-105 transition-transform" />
+                        <img
+                          src={divisionPhotos[div.id] || div.avatar}
+                          alt={div.name}
+                          className="h-full w-full object-cover group-hover:scale-105 transition-transform"
+                        />
                       </div>
                       <div className="spotify-play-btn absolute -bottom-1 -right-1 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[#1DB954] text-black shadow-xl">
                         <Play size={14} fill="currentColor" />

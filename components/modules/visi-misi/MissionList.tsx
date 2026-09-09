@@ -16,71 +16,72 @@ export interface MissionListProps {
 }
 
 /**
- * Komponen daftar sekuensial pilar misi perjuangan organisasi dengan timeline neubrutalism.
+ * Komponen daftar pilar misi perjuangan organisasi dengan kartu neubrutalism interaktif.
  */
 export const MissionList: React.FC<MissionListProps> = ({ missions }) => {
   return (
     <motion.section
-      initial={{ opacity: 0, y: 25 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.2 }}
-      className="space-y-10 sm:space-y-12"
+      transition={{ duration: 0.5, delay: 0.1 }}
+      className="w-full space-y-6"
     >
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-white/10 pb-6">
-        <div className="space-y-2">
+      <div className="flex items-center justify-between border-b border-white/10 pb-4">
+        <div className="space-y-1">
           <Badge variant="cyan" tilt="left">
             POIN POIN MISI
           </Badge>
-          <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight">
             {missions?.length || 5} Poin Misi Perjuangan
           </h2>
         </div>
+
+        <Badge variant="spotify" tilt="right">
+          MISI HMPS-TI
+        </Badge>
       </div>
 
-      {/* CLEAN SEQUENTIAL TIMELINE LIST */}
-      <div className="space-y-8 sm:space-y-12">
+      {/* CLEAN SEQUENTIAL TIMELINE LIST (GARIS TIMELINE SEPERTI DESAIN AWAL) */}
+      <div className="space-y-4 sm:space-y-5 pt-1">
         {(missions || []).map((misi, idx) => {
           const isLast = idx === (missions || []).length - 1;
 
           return (
-            <motion.div
+            <div
               key={idx}
-              initial={{ opacity: 0, x: -15 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: idx * 0.08 }}
-              className="relative flex flex-col md:flex-row items-start gap-6 sm:gap-10 group"
+              className="relative flex items-start gap-4 sm:gap-5 group"
             >
-              {/* LEFT COLUMN: SEQUENTIAL NUMBER BOX */}
-              <div className="flex md:flex-col items-center gap-4 shrink-0">
-                <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl border-2 border-black bg-[#121520] text-white shadow-[4px_4px_0px_0px_#000000] font-mono text-xl sm:text-2xl font-black text-[#1DB954] group-hover:bg-[#1DB954] group-hover:text-black transition-all duration-300">
+              {/* LEFT COLUMN: SEQUENTIAL NUMBER BOX + CONNECTING TIMELINE LINE */}
+              <div className="flex flex-col items-center shrink-0">
+                <div className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-2xl border-2 border-black bg-[#121520] font-mono text-base sm:text-lg font-black text-[#1DB954] shadow-[3px_3px_0px_0px_#000000] group-hover:bg-[#1DB954] group-hover:text-black group-hover:shadow-[4px_4px_0px_0px_#000000] group-hover:-translate-y-0.5 transition-all duration-200 z-10">
                   {misi.number || `0${idx + 1}`}
                 </div>
                 {!isLast && (
-                  <div className="hidden md:block w-0.5 h-full min-h-[70px] bg-gradient-to-b from-[#1DB954]/40 via-white/10 to-transparent my-2" />
+                  <div className="w-0.5 flex-1 min-h-[36px] sm:min-h-[44px] bg-gradient-to-b from-[#1DB954]/50 via-white/15 to-white/5 my-1.5" />
                 )}
               </div>
 
               {/* RIGHT COLUMN: PURE CLEAN CONTENT */}
-              <div className="flex-1 space-y-3 pb-6 sm:pb-8 border-b border-white/10 group-hover:border-[#1DB954]/40 transition-colors">
-                <h3 className="text-xl sm:text-2xl font-extrabold text-white leading-snug font-sans group-hover:text-[#1DB954] transition-colors">
+              <div className="flex-1 min-w-0 space-y-1.5 pb-4 border-b border-white/10 group-hover:border-[#1DB954]/30 transition-colors">
+                <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-[#1DB954] transition-colors leading-snug font-sans">
                   {misi.title}
                 </h3>
 
-                <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-sans max-w-3xl">
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
                   {misi.desc}
                 </p>
 
-                {/* Sleek Target Indicator Pill */}
                 {misi.indicator && (
-                  <div className="pt-1.5">
-                    <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-1 text-xs font-mono font-bold text-slate-300 shadow-sm">
-                      Target: {misi.indicator}
+                  <div className="pt-1 flex items-center">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1DB954]/10 px-2.5 py-0.5 text-[11px] font-mono font-medium text-[#1DB954]">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#1DB954] animate-pulse" />
+                      <span>Target: {misi.indicator}</span>
                     </span>
                   </div>
                 )}
               </div>
-            </motion.div>
+            </div>
           );
         })}
       </div>

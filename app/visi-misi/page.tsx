@@ -38,18 +38,25 @@ export default function VisiMisiPage() {
   }, []);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-12 space-y-16 sm:space-y-24 max-w-5xl mx-auto min-h-screen">
-      {/* 1. TOP MINIMAL PAGE HEADER */}
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 w-full max-w-[1500px] mx-auto min-h-[calc(100vh-5.5rem)] flex flex-col justify-start">
+      {/* 1. TOP PAGE HEADER */}
       <VisionHero currentPeriod={settings.current_period} />
 
-      {/* 2. VISI UTAMA SECTION */}
-      <VisionSection
-        vision={visionData.vision}
-        currentPeriod={settings.current_period}
-      />
+      {/* 2. DUA SECTION BERJEJER HORIZONTAL: VISI DI KIRI, MISI DI KANAN */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start flex-1">
+        {/* KIRI: VISI UTAMA (SPOTIFY CANVAS CARD) */}
+        <div className="order-1 h-full">
+          <VisionSection
+            vision={visionData.vision}
+            currentPeriod={settings.current_period}
+          />
+        </div>
 
-      {/* 3. MISI PERJUANGAN SECTION */}
-      <MissionList missions={visionData.missions || []} />
+        {/* KANAN: 5 POIN MISI PERJUANGAN */}
+        <div className="order-2 h-full">
+          <MissionList missions={visionData.missions || []} />
+        </div>
+      </div>
     </div>
   );
 }

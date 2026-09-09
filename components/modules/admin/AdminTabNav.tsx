@@ -11,6 +11,7 @@ import {
   CodeBlock,
   Image as ImageIcon,
   CalendarCheck,
+  Camera,
 } from "@phosphor-icons/react";
 
 export type AdminTabType =
@@ -18,6 +19,7 @@ export type AdminTabType =
   | "aspirasi"
   | "berita"
   | "struktur"
+  | "foto-divisi"
   | "proker"
   | "keanggotaan"
   | "visi-misi"
@@ -47,6 +49,7 @@ export const AdminTabNav: React.FC<AdminTabNavProps> = ({
     },
     { id: "berita" as AdminTabType, label: "Berita & Event", icon: NewspaperClipping },
     { id: "struktur" as AdminTabType, label: "Struktur Divisi", icon: TreeStructure },
+    { id: "foto-divisi" as AdminTabType, label: "Potret Divisi", icon: Camera },
     { id: "proker" as AdminTabType, label: "Program Kerja", icon: CalendarCheck },
     { id: "keanggotaan" as AdminTabType, label: "Keanggotaan & Alumni", icon: Users },
     { id: "visi-misi" as AdminTabType, label: "Visi & Misi", icon: Target },

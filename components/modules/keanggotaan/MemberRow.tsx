@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { User, Play, Heart } from "lucide-react";
+import { User, Play, Pause, Heart } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { normalizeMemberStatus, getNeubrutalistSocialStyle } from "./memberUtils";
@@ -73,14 +73,17 @@ export const MemberRow: React.FC<MemberRowProps> = ({
     >
       {/* DESKTOP & TABLET ROW VIEW */}
       <div className="hidden md:grid grid-cols-12 gap-4 items-center px-6 py-3">
-        {/* Column 1: # Number / Equalizer / Play Button */}
+        {/* Column 1: # Number / Equalizer / Play/Pause Button */}
         <div className="col-span-1 flex items-center justify-center font-mono text-xs font-bold text-slate-400">
           {isPlaying ? (
-            <div className="flex items-end gap-0.5 h-4">
-              <span className="w-1 bg-[#1DB954] rounded-full animate-[bounce_0.8s_infinite] h-3" />
-              <span className="w-1 bg-[#1DB954] rounded-full animate-[bounce_0.6s_infinite] h-4" />
-              <span className="w-1 bg-[#1DB954] rounded-full animate-[bounce_1s_infinite] h-2" />
-            </div>
+            <>
+              <div className="flex items-end gap-0.5 h-4 group-hover:hidden">
+                <span className="w-1 bg-[#1DB954] rounded-full animate-[bounce_0.8s_infinite] h-3" />
+                <span className="w-1 bg-[#1DB954] rounded-full animate-[bounce_0.6s_infinite] h-4" />
+                <span className="w-1 bg-[#1DB954] rounded-full animate-[bounce_1s_infinite] h-2" />
+              </div>
+              <Pause size={14} className="hidden group-hover:block fill-[#1DB954] text-[#1DB954]" />
+            </>
           ) : (
             <>
               <span className="group-hover:hidden">{trackNumber}</span>
