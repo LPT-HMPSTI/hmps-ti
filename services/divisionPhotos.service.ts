@@ -38,6 +38,11 @@ export const fallbackDivisionPhotos: Record<string, { name: string; url: string;
     url: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1600&auto=format&fit=crop",
     themeColor: "#3B82F6",
   },
+  all_members: {
+    name: "Seluruh Anggota Himpunan (Kabinet HMPSTI SWU)",
+    url: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1600&auto=format&fit=crop",
+    themeColor: "#1DB954",
+  },
 };
 
 let memoryDivisionPhotos: Record<string, string> = {
@@ -47,6 +52,7 @@ let memoryDivisionPhotos: Record<string, string> = {
   kwu: fallbackDivisionPhotos.kwu.url,
   medkominfo: fallbackDivisionPhotos.medkominfo.url,
   humas: fallbackDivisionPhotos.humas.url,
+  all_members: fallbackDivisionPhotos.all_members.url,
 };
 
 /**

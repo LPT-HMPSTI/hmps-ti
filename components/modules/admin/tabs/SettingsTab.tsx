@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { FloppyDisk } from "@phosphor-icons/react";
+import React, { useState } from "react";
+import { FloppyDisk, Image as ImageIcon, LinkSimple, UploadSimple, Users } from "@phosphor-icons/react";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -18,115 +18,259 @@ export interface SettingsTabProps {
   settings: SettingsState;
   onSettingsChange: (newSettings: SettingsState) => void;
   onSaveSettings: (e: React.FormEvent) => void;
+  allMembersPhotoUrl?: string;
+  onAllMembersPhotoChange?: (url: string) => void;
+  onSaveAllMembersPhoto?: (e: React.FormEvent) => void;
+  onDeviceFileUpload?: (file: File, setter: (url: string) => void) => void;
 }
 
 /**
- * Tab Pengaturan Utama: Form konfigurasi tahun periode aktif, email, WhatsApp, alamat, dan Google Maps URL.
+ * Tab Pengaturan Utama: Form konfigurasi tahun periode aktif, email, WhatsApp, alamat, Google Maps URL,
+ * dan Card Pengaturan Foto Bersama Seluruh Anggota Himpunan (Kabinet HMPSTI SWU).
  */
 export const SettingsTab: React.FC<SettingsTabProps> = ({
   settings,
   onSettingsChange,
   onSaveSettings,
+  allMembersPhotoUrl = "",
+  onAllMembersPhotoChange,
+  onSaveAllMembersPhoto,
+  onDeviceFileUpload,
 }) => {
-  return (
-    <GlassCard glowColor="emerald" className="p-6 sm:p-8 space-y-6 sm:space-y-7">
-      <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-2">
-        <div>
-          <h2 className="text-lg font-bold text-white">Informasi Utama & Kontak Himpunan</h2>
-          <p className="text-xs text-slate-400 mt-1">
-            Ubah Tahun Periode, Email, WhatsApp, Alamat, dan Custom/Google Maps Embed URL
-          </p>
-        </div>
-        <div className="my-1 shrink-0">
-          <Badge variant="spotify" tilt="right">
-            PERIODE {settings.current_period}
-          </Badge>
-        </div>
-      </div>
+  const [uploadMode, setUploadMode] = useState<"url" | "file">("url");
 
-      <form onSubmit={onSaveSettings} className="space-y-4.5 sm:space-y-5">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && onDeviceFileUpload && onAllMembersPhotoChange) {
+      onDeviceFileUpload(file, (url) => {
+        onAllMembersPhotoChange(url);
+      });
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* CARD 1: INFORMASI UTAMA & KONTAK HIMPUNAN */}
+      <GlassCard glowColor="emerald" className="p-6 sm:p-8 space-y-6 sm:space-y-7">
+        <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-2">
           <div>
-            <label className="block text-xs font-mono text-slate-400 mb-1.5 sm:mb-2">
-              Tahun Periode Aktif
-            </label>
-            <input
-              type="text"
-              value={settings.current_period}
-              onChange={(e) =>
-                onSettingsChange({ ...settings, current_period: e.target.value })
-              }
-              placeholder="2026"
-              className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white focus:border-[#1DB954] focus:outline-none font-mono"
-            />
+            <h2 className="text-lg font-bold text-white">Informasi Utama &amp; Kontak Himpunan</h2>
+            <p className="text-xs text-slate-400 mt-1">
+              Ubah Tahun Periode, Email, WhatsApp, Alamat, dan Custom/Google Maps Embed URL
+            </p>
+          </div>
+          <div className="my-1 shrink-0">
+            <Badge variant="spotify" tilt="right">
+              PERIODE {settings.current_period}
+            </Badge>
+          </div>
+        </div>
+
+        <form onSubmit={onSaveSettings} className="space-y-4.5 sm:space-y-5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+            <div>
+              <label className="block text-xs font-mono text-slate-400 mb-1.5 sm:mb-2">
+                Tahun Periode Aktif
+              </label>
+              <input
+                type="text"
+                value={settings.current_period}
+                onChange={(e) =>
+                  onSettingsChange({ ...settings, current_period: e.target.value })
+                }
+                placeholder="2026"
+                className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white focus:border-[#1DB954] focus:outline-none font-mono"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-mono text-slate-400 mb-1.5 sm:mb-2">
+                Email Resmi HMPS-TI
+              </label>
+              <input
+                type="email"
+                value={settings.email}
+                onChange={(e) =>
+                  onSettingsChange({ ...settings, email: e.target.value })
+                }
+                placeholder="hmps-ti@stmik-widya-utama.ac.id"
+                className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white focus:border-[#1DB954] focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-mono text-slate-400 mb-1.5 sm:mb-2">
+                Nomor WhatsApp Hima
+              </label>
+              <input
+                type="text"
+                value={settings.whatsapp}
+                onChange={(e) =>
+                  onSettingsChange({ ...settings, whatsapp: e.target.value })
+                }
+                placeholder="+62 812-3456-7890"
+                className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white focus:border-[#1DB954] focus:outline-none font-mono"
+              />
+            </div>
           </div>
 
           <div>
             <label className="block text-xs font-mono text-slate-400 mb-1.5 sm:mb-2">
-              Email Resmi HMPS-TI
+              Alamat Lengkap Sekretariat
             </label>
-            <input
-              type="email"
-              value={settings.email}
+            <textarea
+              rows={2}
+              value={settings.address}
               onChange={(e) =>
-                onSettingsChange({ ...settings, email: e.target.value })
+                onSettingsChange({ ...settings, address: e.target.value })
               }
-              placeholder="hmps-ti@stmik-widya-utama.ac.id"
               className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white focus:border-[#1DB954] focus:outline-none"
             />
           </div>
 
           <div>
             <label className="block text-xs font-mono text-slate-400 mb-1.5 sm:mb-2">
-              Nomor WhatsApp Hima
+              Google Maps Embed URL (src)
             </label>
             <input
               type="text"
-              value={settings.whatsapp}
+              value={settings.map_embed_url}
               onChange={(e) =>
-                onSettingsChange({ ...settings, whatsapp: e.target.value })
+                onSettingsChange({ ...settings, map_embed_url: e.target.value })
               }
-              placeholder="+62 812-3456-7890"
+              placeholder="https://www.google.com/maps/embed?pb=..."
               className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white focus:border-[#1DB954] focus:outline-none font-mono"
             />
           </div>
+
+          <div className="pt-4 mt-5 border-t border-white/10 flex justify-start">
+            <Button variant="spotify" size="md" icon={<FloppyDisk size={16} weight="bold" />}>
+              Simpan Pengaturan Informasi
+            </Button>
+          </div>
+        </form>
+      </GlassCard>
+
+      {/* CARD 2: FOTO BERSAMA SELURUH ANGGOTA HIMPUNAN (KABINET HMPSTI SWU) */}
+      <GlassCard glowColor="spotify" className="p-6 sm:p-8 space-y-6 sm:space-y-7">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4 mb-2">
+          <div>
+            <div className="flex items-center gap-2">
+              <Users size={20} className="text-[#1DB954]" weight="bold" />
+              <h2 className="text-lg font-bold text-white">
+                Foto Bersama Seluruh Anggota Himpunan
+              </h2>
+            </div>
+            <p className="text-xs text-slate-400 mt-1">
+              Atur &amp; Upload Foto Dokumentasi Resmi Kabinet / Seluruh Anggota HMPSTI SWU (Tersimpan di Database Supabase <code className="text-[#1DB954]">division_photos</code>)
+            </p>
+          </div>
+          <div className="shrink-0">
+            <Badge variant="spotify" tilt="left">
+              KABINET HMPSTI SWU
+            </Badge>
+          </div>
         </div>
 
-        <div>
-          <label className="block text-xs font-mono text-slate-400 mb-1.5 sm:mb-2">
-            Alamat Lengkap Sekretariat
-          </label>
-          <textarea
-            rows={2}
-            value={settings.address}
-            onChange={(e) =>
-              onSettingsChange({ ...settings, address: e.target.value })
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (onSaveAllMembersPhoto) {
+              onSaveAllMembersPhoto(e);
             }
-            className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white focus:border-[#1DB954] focus:outline-none"
-          />
-        </div>
+          }}
+          className="space-y-5"
+        >
+          {/* Mode Switcher */}
+          <div className="flex items-center gap-2 bg-black/40 p-1.5 rounded-xl w-fit border border-white/10">
+            <button
+              type="button"
+              onClick={() => setUploadMode("url")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${uploadMode === "url"
+                  ? "bg-[#1DB954] text-black shadow-md"
+                  : "text-slate-400 hover:text-white"
+                }`}
+            >
+              <LinkSimple size={14} weight="bold" />
+              <span>URL Gambar</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setUploadMode("file")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${uploadMode === "file"
+                  ? "bg-[#1DB954] text-black shadow-md"
+                  : "text-slate-400 hover:text-white"
+                }`}
+            >
+              <UploadSimple size={14} weight="bold" />
+              <span>Upload dari Perangkat</span>
+            </button>
+          </div>
 
-        <div>
-          <label className="block text-xs font-mono text-slate-400 mb-1.5 sm:mb-2">
-            Google Maps Embed URL (src)
-          </label>
-          <input
-            type="text"
-            value={settings.map_embed_url}
-            onChange={(e) =>
-              onSettingsChange({ ...settings, map_embed_url: e.target.value })
-            }
-            placeholder="https://www.google.com/maps/embed?pb=..."
-            className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white focus:border-[#1DB954] focus:outline-none font-mono"
-          />
-        </div>
+          {/* Dual Input Area */}
+          {uploadMode === "url" ? (
+            <div>
+              <label className="block text-xs font-mono text-slate-400 mb-1.5">
+                URL Foto Bersama Seluruh Anggota (HTTPS Direct Link)
+              </label>
+              <input
+                type="url"
+                value={allMembersPhotoUrl ?? ""}
+                onChange={(e) => {
+                  if (onAllMembersPhotoChange) onAllMembersPhotoChange(e.target.value);
+                }}
+                placeholder="https://images.unsplash.com/photo-1522071820081-..."
+                className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white focus:border-[#1DB954] focus:outline-none font-mono"
+              />
+            </div>
+          ) : (
+            <div>
+              <label className="block text-xs font-mono text-slate-400 mb-1.5">
+                Pilih File Foto dari Perangkat (Max 5MB)
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-2.5 text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#1DB954] file:text-black hover:file:bg-[#1ed760] cursor-pointer"
+              />
+            </div>
+          )}
 
-        <div className="pt-4 mt-5 border-t border-white/10 flex justify-start">
-          <Button variant="spotify" size="md" icon={<FloppyDisk size={16} weight="bold" />}>
-            Simpan Pengaturan Informasi
-          </Button>
-        </div>
-      </form>
-    </GlassCard>
+          {/* Image Sneakpeek Preview */}
+          <div className="space-y-2">
+            <label className="block text-xs font-mono text-slate-400">
+              Pratinjau Foto Bersama Kabinet:
+            </label>
+            <div className="relative w-full h-[220px] sm:h-[300px] rounded-2xl overflow-hidden border border-white/10 bg-black shadow-xl">
+              {allMembersPhotoUrl ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={allMembersPhotoUrl}
+                  alt="Pratinjau Foto Bersama Seluruh Anggota Kabinet HMPSTI"
+                  className="w-full h-full object-cover object-center"
+                />
+              ) : (
+                <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 space-y-2">
+                  <ImageIcon size={36} />
+                  <span className="text-xs">Belum Ada Foto Kabinet Ditetapkan</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-white/10 flex justify-start">
+            <Button
+              variant="spotify"
+              size="md"
+              type="submit"
+              icon={<FloppyDisk size={16} weight="bold" />}
+            >
+              Simpan Foto Kabinet (Seluruh Anggota)
+            </Button>
+          </div>
+        </form>
+      </GlassCard>
+    </div>
   );
 };

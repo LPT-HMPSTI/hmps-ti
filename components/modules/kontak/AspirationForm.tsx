@@ -43,21 +43,42 @@ export const AspirationForm: React.FC<AspirationFormProps> = ({
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [rateLimitMsg, setRateLimitMsg] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim() || isSubmitting) return;
 
     setIsSubmitting(true);
+    setRateLimitMsg(null);
     const fullMessage = `[Topik: ${selectedTopic}]\n${message.trim()}`;
 
     try {
-      await onSubmitAspiration({
-        name: isAnonymous ? "Mahasiswa Anonim" : name.trim(),
-        email: isAnonymous ? "" : email.trim(),
-        message: fullMessage,
-        isAnonymous,
+      const res = await fetch("/api/aspirasi", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: isAnonymous ? "Mahasiswa Anonim" : name.trim(),
+          email: isAnonymous ? "" : email.trim(),
+          message: fullMessage,
+          isAnonymous,
+        }),
       });
+
+      const result = await res.json();
+
+      if (res.status === 429 && result.rateLimited) {
+        setRateLimitMsg(result.message);
+        return;
+      }
+
+      if (!result.success) {
+        setRateLimitMsg(result.message || "Gagal mengirim aspirasi, coba lagi.");
+        return;
+      }
+    } catch {
+      setRateLimitMsg("Terjadi kesalahan jaringan, coba lagi.");
+      return;
     } finally {
       setIsSubmitting(false);
     }
@@ -70,6 +91,7 @@ export const AspirationForm: React.FC<AspirationFormProps> = ({
       setSubmitted(false);
     }, 4500);
   };
+
 
   return (
     <div className="lg:col-span-7">
@@ -193,6 +215,14 @@ export const AspirationForm: React.FC<AspirationFormProps> = ({
                 className="w-full rounded-xl border border-white/10 bg-white/[0.03] p-3 text-xs text-white placeholder-slate-500 focus:border-[#1DB954] focus:outline-none transition-colors leading-relaxed font-mono"
               />
             </div>
+
+            {/* Rate limit / error notice */}
+            {rateLimitMsg && (
+              <div className="flex items-start gap-2.5 rounded-xl border border-orange-500/30 bg-orange-500/10 px-4 py-3 text-xs text-orange-300 font-mono leading-relaxed">
+                <span className="shrink-0 mt-0.5">⏳</span>
+                <span>{rateLimitMsg}</span>
+              </div>
+            )}
 
             <Button
               variant="spotify"

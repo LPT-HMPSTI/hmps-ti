@@ -130,6 +130,9 @@ export default function AdminDashboardPage() {
   const [divisionPhotos, setDivisionPhotos] = useState<Record<string, string>>({});
   const [isSavingDivisionPhotos, setIsSavingDivisionPhotos] = useState(false);
 
+  // Foto Bersama Seluruh Anggota (Kabinet) State
+  const [allMembersPhotoUrl, setAllMembersPhotoUrl] = useState<string>("");
+
   // Berita & Event Form State
   const [newsList, setNewsList] = useState<any[]>([]);
   const [imageUploadMode, setImageUploadMode] = useState<"url" | "file">("url");
@@ -425,6 +428,9 @@ export default function AdminDashboardPage() {
 
     const dpData = await fetchDivisionPhotos();
     setDivisionPhotos(dpData || {});
+    if (dpData && dpData.all_members) {
+      setAllMembersPhotoUrl(dpData.all_members);
+    }
   }
 
   // File Reader Helper for Device Image Upload (with Canvas Compression)
@@ -772,6 +778,19 @@ export default function AdminDashboardPage() {
     await updateDivisionPhoto(slug, name, url);
     stopProcessing();
     showNotify(`Foto bersama ${name} berhasil disimpan!`);
+  };
+
+  // Handler Foto Bersama Seluruh Anggota (Kabinet)
+  const handleSaveAllMembersPhoto = async (e: React.FormEvent) => {
+    e.preventDefault();
+    startProcessing("Menyimpan Foto Bersama Seluruh Anggota...");
+    await updateDivisionPhoto(
+      "all_members",
+      "Seluruh Anggota Himpunan (Kabinet HMPSTI SWU)",
+      allMembersPhotoUrl
+    );
+    stopProcessing();
+    showNotify("Foto bersama seluruh anggota himpunan berhasil disimpan!");
   };
 
   const handleSaveAllDivisionPhotos = async () => {
@@ -1125,6 +1144,10 @@ export default function AdminDashboardPage() {
           settings={settings}
           onSettingsChange={setSettings}
           onSaveSettings={handleSaveSettings}
+          allMembersPhotoUrl={allMembersPhotoUrl}
+          onAllMembersPhotoChange={setAllMembersPhotoUrl}
+          onSaveAllMembersPhoto={handleSaveAllMembersPhoto}
+          onDeviceFileUpload={handleDeviceFileUpload}
         />
       )}
 

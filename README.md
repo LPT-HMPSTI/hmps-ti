@@ -166,7 +166,7 @@ hmpsti-swu-website/
 
 ## Skema Data & Entitas Supabase
 
-Aplikasi terhubung ke database PostgreSQL via Supabase dengan 7 tabel domain utama:
+Aplikasi terhubung ke database PostgreSQL via Supabase dengan 10 tabel domain utama:
 
 ```mermaid
 erDiagram
@@ -174,14 +174,16 @@ erDiagram
         uuid id PK
         string title
         string slug UK
+        string category
+        boolean is_event
+        string author_name
+        timestamp event_date
+        string reading_time
+        int likes_count
         text excerpt
         text content
         string cover_image
-        string category
-        string author_name
-        timestamp event_date
-        boolean is_event
-        int likes_count
+        boolean featured
         timestamp created_at
     }
 
@@ -189,14 +191,17 @@ erDiagram
         uuid id PK
         string title
         string slug UK
-        text description
-        string cover_image
         string category
-        string author_name
-        string author_nim
-        string project_url
-        string github_url
+        text description
+        text content
         string[] tech_stack
+        string author_name
+        string author_role
+        string author_nim
+        string author_avatar
+        string cover_image
+        string demo_url
+        string github_url
         int likes_count
         timestamp created_at
     }
@@ -204,35 +209,73 @@ erDiagram
     DIVISION_MEMBERS {
         uuid id PK
         string name
-        string role
-        string division
         string nim
+        string role
+        string division_slug
         string avatar
-        string github_url
-        string instagram_url
-        string linkedin_url
         string email
+        string instagram_url
+        string github_url
+        string linkedin_url
+        string[] social_links
+        int likes_count
         boolean is_bph
         int sort_order
-        int likes_count
+        timestamp created_at
     }
 
     MEMBERS {
         uuid id PK
         string name
         string nim UK
-        string class_year
+        string cohort
         string status
-        string specialization
+        string role
         string avatar
+        string variant
         string email
+        string instagram_url
         string github_url
         string linkedin_url
-        string instagram_url
+        string[] social_links
         int likes_count
+        timestamp created_at
     }
 
-    ASPIRASI {
+    DIVISION_PHOTOS {
+        string division_slug PK
+        string division_name
+        string photo_url
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    GALLERY_ITEMS {
+        uuid id PK
+        string title
+        string category
+        string event_date
+        string url
+        text description
+        int likes_count
+        timestamp created_at
+    }
+
+    WORK_PROGRAMS {
+        uuid id PK
+        string division_slug
+        string title
+        string status
+        string execution_date
+        text description
+        string pic
+        string target_audience
+        string budget
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    FEEDBACK {
         uuid id PK
         string sender_name
         string sender_email
@@ -255,8 +298,7 @@ erDiagram
 
     VISION_MISSIONS {
         string id PK
-        string vision_title
-        text vision_text
+        text vision
         jsonb missions
         timestamp updated_at
     }
