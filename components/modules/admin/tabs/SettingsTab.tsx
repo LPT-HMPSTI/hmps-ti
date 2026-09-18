@@ -19,7 +19,9 @@ export interface SettingsTabProps {
   onSettingsChange: (newSettings: SettingsState) => void;
   onSaveSettings: (e: React.FormEvent) => void;
   allMembersPhotoUrl?: string;
+  allMembersPhotoName?: string;
   onAllMembersPhotoChange?: (url: string) => void;
+  onAllMembersPhotoNameChange?: (name: string) => void;
   onSaveAllMembersPhoto?: (e: React.FormEvent) => void;
   onDeviceFileUpload?: (file: File, setter: (url: string) => void) => void;
 }
@@ -33,7 +35,9 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
   onSettingsChange,
   onSaveSettings,
   allMembersPhotoUrl = "",
+  allMembersPhotoName = "",
   onAllMembersPhotoChange,
+  onAllMembersPhotoNameChange,
   onSaveAllMembersPhoto,
   onDeviceFileUpload,
 }) => {
@@ -181,6 +185,25 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           }}
           className="space-y-5"
         >
+          {/* Input Tulisan / Keterangan Foto (Masuk ke kolom division_name) */}
+          <div>
+            <label className="block text-xs font-mono text-slate-300 mb-1.5">
+              Tulisan / Keterangan Foto (Kolom `division_name`)
+            </label>
+            <input
+              type="text"
+              value={allMembersPhotoName ?? ""}
+              onChange={(e) => {
+                if (onAllMembersPhotoNameChange) onAllMembersPhotoNameChange(e.target.value);
+              }}
+              placeholder="Contoh: Seluruh Anggota Himpunan (Kabinet HMPSTI SWU)"
+              className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white focus:border-[#00F2FE] focus:outline-none font-sans font-semibold"
+            />
+            <p className="text-[11px] font-mono text-slate-400 mt-1">
+              *Teks ini akan tampil secara menimpa di bagian bawah-tengah foto pada beranda utama.
+            </p>
+          </div>
+
           {/* Mode Switcher */}
           <div className="flex items-center gap-2 bg-black/40 p-1.5 rounded-xl w-fit border border-white/10">
             <button
@@ -240,16 +263,28 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           {/* Image Sneakpeek Preview */}
           <div className="space-y-2">
             <label className="block text-xs font-mono text-slate-400">
-              Pratinjau Foto Bersama Kabinet:
+              Pratinjau Foto Bersama Kabinet &amp; Overlay Teks:
             </label>
             <div className="relative w-full h-[220px] sm:h-[300px] rounded-2xl overflow-hidden border border-white/10 bg-black shadow-xl">
               {allMembersPhotoUrl ? (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img
-                  src={allMembersPhotoUrl}
-                  alt="Pratinjau Foto Bersama Seluruh Anggota Kabinet HMPSTI"
-                  className="w-full h-full object-cover object-center"
-                />
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={allMembersPhotoUrl}
+                    alt="Pratinjau Foto Bersama Seluruh Anggota Kabinet HMPSTI"
+                    className="w-full h-full object-cover object-center"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+
+                  {/* Overlay text preview */}
+                  {allMembersPhotoName && (
+                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-lg text-center pointer-events-none">
+                      <p className="text-sm sm:text-lg font-extrabold text-white tracking-wide drop-shadow-[0_3px_10px_rgba(0,0,0,0.95)]">
+                        {allMembersPhotoName}
+                      </p>
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 space-y-2">
                   <ImageIcon size={36} />
@@ -266,7 +301,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
               type="submit"
               icon={<FloppyDisk size={16} weight="bold" />}
             >
-              Simpan Foto Kabinet (Seluruh Anggota)
+              Simpan Foto &amp; Keterangan Kabinet
             </Button>
           </div>
         </form>

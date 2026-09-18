@@ -84,6 +84,46 @@ export async function fetchDivisionPhotos(): Promise<Record<string, string>> {
 }
 
 /**
+ * Mengambil detail lengkap (url dan division_name) foto bersama seluruh divisi dari Supabase.
+ */
+export async function fetchDivisionPhotoDetails(): Promise<
+  Record<string, { url: string; name: string }>
+> {
+  const mapped: Record<string, { url: string; name: string }> = {};
+  Object.keys(fallbackDivisionPhotos).forEach((slug) => {
+    mapped[slug] = {
+      url: fallbackDivisionPhotos[slug].url,
+      name: fallbackDivisionPhotos[slug].name,
+    };
+  });
+
+  if (supabase) {
+    try {
+      const { data, error }: any = await withTimeout(
+        supabase.from("division_photos").select("*"),
+        2500
+      );
+
+      if (!error && Array.isArray(data) && data.length > 0) {
+        data.forEach((item: any) => {
+          if (item.division_slug) {
+            const clean = item.division_slug.toLowerCase().trim();
+            mapped[clean] = {
+              url: item.photo_url || mapped[clean]?.url || "",
+              name: item.division_name || mapped[clean]?.name || "",
+            };
+          }
+        });
+      }
+    } catch (e) {
+      console.warn("fetchDivisionPhotoDetails fallback used:", e);
+    }
+  }
+
+  return mapped;
+}
+
+/**
  * Memperbarui URL foto bersama satu divisi ke Supabase.
  */
 export async function updateDivisionPhoto(

@@ -37,6 +37,7 @@ import {
   updateWorkProgram,
   deleteWorkProgram,
   fetchDivisionPhotos,
+  fetchDivisionPhotoDetails,
   updateDivisionPhoto,
 } from "@/services";
 import { WorkProgram, CreateWorkProgramPayload } from "@/types";
@@ -132,6 +133,9 @@ export default function AdminDashboardPage() {
 
   // Foto Bersama Seluruh Anggota (Kabinet) State
   const [allMembersPhotoUrl, setAllMembersPhotoUrl] = useState<string>("");
+  const [allMembersPhotoName, setAllMembersPhotoName] = useState<string>(
+    "Seluruh Anggota Himpunan (Kabinet HMPSTI SWU)"
+  );
 
   // Berita & Event Form State
   const [newsList, setNewsList] = useState<any[]>([]);
@@ -428,8 +432,11 @@ export default function AdminDashboardPage() {
 
     const dpData = await fetchDivisionPhotos();
     setDivisionPhotos(dpData || {});
-    if (dpData && dpData.all_members) {
-      setAllMembersPhotoUrl(dpData.all_members);
+    
+    const dpDetails = await fetchDivisionPhotoDetails();
+    if (dpDetails && dpDetails.all_members) {
+      if (dpDetails.all_members.url) setAllMembersPhotoUrl(dpDetails.all_members.url);
+      if (dpDetails.all_members.name) setAllMembersPhotoName(dpDetails.all_members.name);
     }
   }
 
@@ -475,6 +482,24 @@ export default function AdminDashboardPage() {
     await updateSiteSettings(settings);
     stopProcessing();
     showNotify("Pengaturan informasi website berhasil disimpan!");
+  };
+
+  // Handle Save Foto & Keterangan Kabinet
+  const handleSaveAllMembersPhoto = async (e: React.FormEvent) => {
+    e.preventDefault();
+    startProcessing("Menyimpan Foto & Keterangan Kabinet...");
+    const res = await updateDivisionPhoto(
+      "all_members",
+      allMembersPhotoName || "Seluruh Anggota Himpunan (Kabinet HMPSTI SWU)",
+      allMembersPhotoUrl
+    );
+    stopProcessing();
+    if (res.success) {
+      showNotify("Foto & Keterangan Seluruh Anggota Kabinet berhasil diperbarui!");
+      await loadAllData();
+    } else {
+      showNotify("Gagal memperbarui foto kabinet.");
+    }
   };
 
   // Misi Dynamic Handlers
@@ -778,19 +803,6 @@ export default function AdminDashboardPage() {
     await updateDivisionPhoto(slug, name, url);
     stopProcessing();
     showNotify(`Foto bersama ${name} berhasil disimpan!`);
-  };
-
-  // Handler Foto Bersama Seluruh Anggota (Kabinet)
-  const handleSaveAllMembersPhoto = async (e: React.FormEvent) => {
-    e.preventDefault();
-    startProcessing("Menyimpan Foto Bersama Seluruh Anggota...");
-    await updateDivisionPhoto(
-      "all_members",
-      "Seluruh Anggota Himpunan (Kabinet HMPSTI SWU)",
-      allMembersPhotoUrl
-    );
-    stopProcessing();
-    showNotify("Foto bersama seluruh anggota himpunan berhasil disimpan!");
   };
 
   const handleSaveAllDivisionPhotos = async () => {
@@ -1145,7 +1157,9 @@ export default function AdminDashboardPage() {
           onSettingsChange={setSettings}
           onSaveSettings={handleSaveSettings}
           allMembersPhotoUrl={allMembersPhotoUrl}
+          allMembersPhotoName={allMembersPhotoName}
           onAllMembersPhotoChange={setAllMembersPhotoUrl}
+          onAllMembersPhotoNameChange={setAllMembersPhotoName}
           onSaveAllMembersPhoto={handleSaveAllMembersPhoto}
           onDeviceFileUpload={handleDeviceFileUpload}
         />
