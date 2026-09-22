@@ -133,7 +133,10 @@ VALUES
     ('kwu', 'Kewirausahaan & Bisnis Mandiri (KWU)', 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1600&auto=format&fit=crop'),
     ('medkominfo', 'Media Komunikasi & Informasi', 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1600&auto=format&fit=crop'),
     ('humas', 'Hubungan Masyarakat & Kemitraan', 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1600&auto=format&fit=crop'),
-    ('all_members', 'Seluruh Anggota Himpunan (Kabinet HMPSTI SWU)', 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1600&auto=format&fit=crop')
+    -- 3 slot slideshow foto kabinet di halaman utama
+    ('all_members_1', 'Foto Bersama Kabinet 1', ''),
+    ('all_members_2', 'Foto Bersama Kabinet 2', ''),
+    ('all_members_3', 'Foto Bersama Kabinet 3', '')
 ON CONFLICT (division_slug) DO UPDATE
 SET division_name = EXCLUDED.division_name, photo_url = EXCLUDED.photo_url, updated_at = timezone('utc'::text, now());
 

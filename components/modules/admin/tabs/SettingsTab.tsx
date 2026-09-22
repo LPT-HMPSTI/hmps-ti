@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { FloppyDisk, Image as ImageIcon, LinkSimple, UploadSimple, Users } from "@phosphor-icons/react";
+import { FloppyDisk, Image as ImageIcon, LinkSimple, UploadSimple, Users, Images } from "@phosphor-icons/react";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -14,42 +14,65 @@ export interface SettingsState {
   map_embed_url: string;
 }
 
+export interface CabinetSlideState {
+  url: string;
+  name: string;
+}
+
 export interface SettingsTabProps {
   settings: SettingsState;
   onSettingsChange: (newSettings: SettingsState) => void;
   onSaveSettings: (e: React.FormEvent) => void;
+  // 3-slot cabinet slideshow
+  cabinetSlides?: CabinetSlideState[];
+  onCabinetSlideChange?: (index: number, field: "url" | "name", value: string) => void;
+  onSaveCabinetSlide?: (index: number, e: React.FormEvent) => void;
+  onDeviceFileUpload?: (file: File, setter: (url: string) => void) => void;
+  // Legacy single-photo props (kept for backward compat, no longer rendered)
   allMembersPhotoUrl?: string;
   allMembersPhotoName?: string;
   onAllMembersPhotoChange?: (url: string) => void;
   onAllMembersPhotoNameChange?: (name: string) => void;
   onSaveAllMembersPhoto?: (e: React.FormEvent) => void;
-  onDeviceFileUpload?: (file: File, setter: (url: string) => void) => void;
 }
 
+const SLOT_LABELS = ["Foto Slideshow 1", "Foto Slideshow 2", "Foto Slideshow 3"];
+
 /**
- * Tab Pengaturan Utama: Form konfigurasi tahun periode aktif, email, WhatsApp, alamat, Google Maps URL,
- * dan Card Pengaturan Foto Bersama Seluruh Anggota Himpunan (Kabinet HMPSTI SWU).
+ * Tab Pengaturan Utama: Form konfigurasi website + 3 slot slideshow foto kabinet.
  */
 export const SettingsTab: React.FC<SettingsTabProps> = ({
   settings,
   onSettingsChange,
   onSaveSettings,
-  allMembersPhotoUrl = "",
-  allMembersPhotoName = "",
-  onAllMembersPhotoChange,
-  onAllMembersPhotoNameChange,
-  onSaveAllMembersPhoto,
+  cabinetSlides = [
+    { url: "", name: "" },
+    { url: "", name: "" },
+    { url: "", name: "" },
+  ],
+  onCabinetSlideChange,
+  onSaveCabinetSlide,
   onDeviceFileUpload,
 }) => {
-  const [uploadMode, setUploadMode] = useState<"url" | "file">("url");
+  const [uploadModes, setUploadModes] = useState<("url" | "file")[]>(["url", "url", "url"]);
+  const [savingIndex, setSavingIndex] = useState<number | null>(null);
+  const [savedIndex, setSavedIndex] = useState<number | null>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && onDeviceFileUpload && onAllMembersPhotoChange) {
-      onDeviceFileUpload(file, (url) => {
-        onAllMembersPhotoChange(url);
-      });
-    }
+  const setMode = (idx: number, mode: "url" | "file") => {
+    setUploadModes((prev) => {
+      const next = [...prev];
+      next[idx] = mode;
+      return next;
+    });
+  };
+
+  const handleSave = async (idx: number, e: React.FormEvent) => {
+    e.preventDefault();
+    setSavingIndex(idx);
+    if (onSaveCabinetSlide) await onSaveCabinetSlide(idx, e);
+    setSavingIndex(null);
+    setSavedIndex(idx);
+    setTimeout(() => setSavedIndex(null), 3000);
   };
 
   return (
@@ -155,156 +178,162 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
         </form>
       </GlassCard>
 
-      {/* CARD 2: FOTO BERSAMA SELURUH ANGGOTA HIMPUNAN (KABINET HMPSTI SWU) */}
-      <GlassCard glowColor="spotify" className="p-6 sm:p-8 space-y-6 sm:space-y-7">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4 mb-2">
+      {/* CARD 2: SLIDESHOW FOTO BERSAMA KABINET (3 SLOT) */}
+      <GlassCard glowColor="spotify" className="p-6 sm:p-8 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
           <div>
             <div className="flex items-center gap-2">
-              <Users size={20} className="text-[#1DB954]" weight="bold" />
+              <Images size={20} className="text-[#1DB954]" weight="bold" />
               <h2 className="text-lg font-bold text-white">
-                Foto Bersama Seluruh Anggota Himpunan
+                Slideshow Foto Bersama Kabinet
               </h2>
             </div>
             <p className="text-xs text-slate-400 mt-1">
-              Atur &amp; Upload Foto Dokumentasi Resmi Kabinet / Seluruh Anggota HMPSTI SWU (Tersimpan di Database Supabase <code className="text-[#1DB954]">division_photos</code>)
+              Upload hingga 3 foto untuk ditampilkan sebagai auto-slide di beranda. Foto yang URL-nya kosong tidak akan ditampilkan.
             </p>
           </div>
           <div className="shrink-0">
-            <Badge variant="spotify" tilt="left">
-              KABINET HMPSTI SWU
-            </Badge>
+            <Badge variant="spotify" tilt="left">3 SLOT FOTO</Badge>
           </div>
         </div>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (onSaveAllMembersPhoto) {
-              onSaveAllMembersPhoto(e);
-            }
-          }}
-          className="space-y-5"
-        >
-          {/* Input Tulisan / Keterangan Foto (Masuk ke kolom division_name) */}
-          <div>
-            <label className="block text-xs font-mono text-slate-300 mb-1.5">
-              Tulisan / Keterangan Foto (Kolom `division_name`)
-            </label>
-            <input
-              type="text"
-              value={allMembersPhotoName ?? ""}
-              onChange={(e) => {
-                if (onAllMembersPhotoNameChange) onAllMembersPhotoNameChange(e.target.value);
-              }}
-              placeholder="Contoh: Seluruh Anggota Himpunan (Kabinet HMPSTI SWU)"
-              className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white focus:border-[#00F2FE] focus:outline-none font-sans font-semibold"
-            />
-            <p className="text-[11px] font-mono text-slate-400 mt-1">
-              *Teks ini akan tampil secara menimpa di bagian bawah-tengah foto pada beranda utama.
-            </p>
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          {cabinetSlides.map((slide, idx) => {
+            const mode = uploadModes[idx] || "url";
+            const isSaving = savingIndex === idx;
+            const isSaved = savedIndex === idx;
 
-          {/* Mode Switcher */}
-          <div className="flex items-center gap-2 bg-black/40 p-1.5 rounded-xl w-fit border border-white/10">
-            <button
-              type="button"
-              onClick={() => setUploadMode("url")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${uploadMode === "url"
-                  ? "bg-[#1DB954] text-black shadow-md"
-                  : "text-slate-400 hover:text-white"
-                }`}
-            >
-              <LinkSimple size={14} weight="bold" />
-              <span>URL Gambar</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setUploadMode("file")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${uploadMode === "file"
-                  ? "bg-[#1DB954] text-black shadow-md"
-                  : "text-slate-400 hover:text-white"
-                }`}
-            >
-              <UploadSimple size={14} weight="bold" />
-              <span>Upload dari Perangkat</span>
-            </button>
-          </div>
+            return (
+              <form
+                key={idx}
+                onSubmit={(e) => handleSave(idx, e)}
+                className="flex flex-col gap-4 bg-white/[0.03] border border-white/10 rounded-2xl p-4 hover:border-white/20 transition-all"
+              >
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-mono font-bold text-[#1DB954]">
+                    // {SLOT_LABELS[idx]}
+                  </span>
+                  <span className="text-[10px] font-mono text-slate-500 bg-white/[0.04] px-2 py-0.5 rounded-md">
+                    all_members_{idx + 1}
+                  </span>
+                </div>
 
-          {/* Dual Input Area */}
-          {uploadMode === "url" ? (
-            <div>
-              <label className="block text-xs font-mono text-slate-400 mb-1.5">
-                URL Foto Bersama Seluruh Anggota (HTTPS Direct Link)
-              </label>
-              <input
-                type="url"
-                value={allMembersPhotoUrl ?? ""}
-                onChange={(e) => {
-                  if (onAllMembersPhotoChange) onAllMembersPhotoChange(e.target.value);
-                }}
-                placeholder="https://images.unsplash.com/photo-1522071820081-..."
-                className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white focus:border-[#1DB954] focus:outline-none font-mono"
-              />
-            </div>
-          ) : (
-            <div>
-              <label className="block text-xs font-mono text-slate-400 mb-1.5">
-                Pilih File Foto dari Perangkat (Max 5MB)
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-2.5 text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#1DB954] file:text-black hover:file:bg-[#1ed760] cursor-pointer"
-              />
-            </div>
-          )}
-
-          {/* Image Sneakpeek Preview */}
-          <div className="space-y-2">
-            <label className="block text-xs font-mono text-slate-400">
-              Pratinjau Foto Bersama Kabinet &amp; Overlay Teks:
-            </label>
-            <div className="relative w-full h-[220px] sm:h-[300px] rounded-2xl overflow-hidden border border-white/10 bg-black shadow-xl">
-              {allMembersPhotoUrl ? (
-                <>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={allMembersPhotoUrl}
-                    alt="Pratinjau Foto Bersama Seluruh Anggota Kabinet HMPSTI"
-                    className="w-full h-full object-cover object-center"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
-
-                  {/* Overlay text preview */}
-                  {allMembersPhotoName && (
-                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-lg text-center pointer-events-none">
-                      <p className="text-sm sm:text-lg font-extrabold text-white tracking-wide drop-shadow-[0_3px_10px_rgba(0,0,0,0.95)]">
-                        {allMembersPhotoName}
-                      </p>
+                {/* Preview */}
+                <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden border border-white/10 bg-black/50 flex items-center justify-center">
+                  {slide.url ? (
+                    <>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={slide.url}
+                        alt={slide.name || SLOT_LABELS[idx]}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = "none";
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
+                      {slide.name && (
+                        <div className="absolute bottom-2 left-0 right-0 text-center px-2">
+                          <p className="text-[10px] font-bold text-white drop-shadow-lg truncate">
+                            {slide.name}
+                          </p>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="flex flex-col items-center gap-2 text-slate-600">
+                      <ImageIcon size={28} />
+                      <span className="text-[11px] font-mono">Belum ada foto</span>
                     </div>
                   )}
-                </>
-              ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 space-y-2">
-                  <ImageIcon size={36} />
-                  <span className="text-xs">Belum Ada Foto Kabinet Ditetapkan</span>
                 </div>
-              )}
-            </div>
-          </div>
 
-          <div className="pt-4 border-t border-white/10 flex justify-start">
-            <Button
-              variant="spotify"
-              size="md"
-              type="submit"
-              icon={<FloppyDisk size={16} weight="bold" />}
-            >
-              Simpan Foto &amp; Keterangan Kabinet
-            </Button>
-          </div>
-        </form>
+                {/* Keterangan / Caption */}
+                <div>
+                  <label className="block text-[11px] font-mono text-slate-400 mb-1">
+                    Keterangan / Teks Foto
+                  </label>
+                  <input
+                    type="text"
+                    value={slide.name}
+                    onChange={(e) =>
+                      onCabinetSlideChange?.(idx, "name", e.target.value)
+                    }
+                    placeholder={`Contoh: Kabinet HMPSTI SWU 2026`}
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white focus:border-[#1DB954] focus:outline-none"
+                  />
+                </div>
+
+                {/* Mode Switcher */}
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => setMode(idx, "url")}
+                    className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer text-center ${
+                      mode === "url"
+                        ? "bg-[#1DB954] text-black shadow-md"
+                        : "bg-white/[0.04] text-slate-400 hover:text-white border border-white/10"
+                    }`}
+                  >
+                    <LinkSimple size={12} className="inline mr-1" weight="bold" />
+                    URL
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMode(idx, "file")}
+                    className={`flex-1 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer text-center ${
+                      mode === "file"
+                        ? "bg-[#1DB954] text-black shadow-md"
+                        : "bg-white/[0.04] text-slate-400 hover:text-white border border-white/10"
+                    }`}
+                  >
+                    <UploadSimple size={12} className="inline mr-1" weight="bold" />
+                    File
+                  </button>
+                </div>
+
+                {/* URL / File Input */}
+                {mode === "url" ? (
+                  <input
+                    type="url"
+                    value={slide.url}
+                    onChange={(e) =>
+                      onCabinetSlideChange?.(idx, "url", e.target.value)
+                    }
+                    placeholder="https://..."
+                    className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-[#1DB954] focus:outline-none font-mono"
+                  />
+                ) : (
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file && onDeviceFileUpload) {
+                        onDeviceFileUpload(file, (url) => {
+                          onCabinetSlideChange?.(idx, "url", url);
+                        });
+                      }
+                    }}
+                    className="w-full text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-mono file:font-bold file:bg-[#1DB954] file:text-black hover:file:bg-[#1ed760] cursor-pointer"
+                  />
+                )}
+
+                {/* Save Button */}
+                <Button
+                  variant={isSaved ? "primary" : "spotify"}
+                  size="sm"
+                  type="submit"
+                  icon={<FloppyDisk size={14} weight="bold" />}
+                  disabled={isSaving}
+                >
+                  {isSaving ? "Menyimpan..." : isSaved ? "Tersimpan!" : `Simpan Foto ${idx + 1}`}
+                </Button>
+              </form>
+            );
+          })}
+        </div>
       </GlassCard>
     </div>
   );

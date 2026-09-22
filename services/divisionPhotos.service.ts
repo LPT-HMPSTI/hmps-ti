@@ -159,3 +159,64 @@ export async function updateDivisionPhoto(
   }
   return { success: true, isMock: true };
 }
+
+/** Slugs for the 3 cabinet slideshow slots */
+export const CABINET_SLIDE_SLUGS = ["all_members_1", "all_members_2", "all_members_3"] as const;
+
+export interface CabinetSlide {
+  slug: string;
+  url: string;
+  name: string;
+}
+
+const fallbackCabinetSlides: CabinetSlide[] = [
+  { slug: "all_members_1", url: "", name: "Foto Bersama Kabinet 1" },
+  { slug: "all_members_2", url: "", name: "Foto Bersama Kabinet 2" },
+  { slug: "all_members_3", url: "", name: "Foto Bersama Kabinet 3" },
+];
+
+/**
+ * Mengambil 3 slide foto bersama kabinet (all_members_1/2/3) dari Supabase.
+ * Hanya mengembalikan slide yang memiliki URL (tidak kosong).
+ */
+export async function fetchCabinetSlidePhotos(): Promise<CabinetSlide[]> {
+  const slugs = CABINET_SLIDE_SLUGS;
+  if (supabase) {
+    try {
+      const { data, error }: any = await withTimeout(
+        supabase
+          .from("division_photos")
+          .select("*")
+          .in("division_slug", slugs),
+        3000
+      );
+
+      if (!error && Array.isArray(data)) {
+        const mapped: CabinetSlide[] = slugs.map((slug) => {
+          const row = data.find((d: any) => d.division_slug === slug);
+          return {
+            slug,
+            url: row?.photo_url || "",
+            name: row?.division_name || fallbackCabinetSlides.find((s) => s.slug === slug)?.name || "",
+          };
+        });
+        // Only return slides that have a URL
+        return mapped.filter((s) => !!s.url);
+      }
+    } catch (e) {
+      console.warn("fetchCabinetSlidePhotos fallback:", e);
+    }
+  }
+  return fallbackCabinetSlides.filter((s) => !!s.url);
+}
+
+/**
+ * Menyimpan satu slot foto slideshow kabinet.
+ */
+export async function updateCabinetSlidePhoto(
+  slug: string,
+  name: string,
+  url: string
+): Promise<{ success: boolean; isMock?: boolean }> {
+  return updateDivisionPhoto(slug, name, url);
+}

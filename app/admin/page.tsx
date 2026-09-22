@@ -37,7 +37,8 @@ import {
   updateWorkProgram,
   deleteWorkProgram,
   fetchDivisionPhotos,
-  fetchDivisionPhotoDetails,
+  fetchCabinetSlidePhotos,
+  updateCabinetSlidePhoto,
   updateDivisionPhoto,
 } from "@/services";
 import { WorkProgram, CreateWorkProgramPayload } from "@/types";
@@ -127,15 +128,16 @@ export default function AdminDashboardPage() {
   // Aspirasi State
   const [aspirasiList, setAspirasiList] = useState<any[]>([]);
 
-  // Foto Bersama Divisi State
+  // Foto Bersama Kabinet — 3 slide slots
+  const [cabinetSlides, setCabinetSlides] = useState([
+    { url: "", name: "Foto Bersama Kabinet 1" },
+    { url: "", name: "Foto Bersama Kabinet 2" },
+    { url: "", name: "Foto Bersama Kabinet 3" },
+  ]);
+
+  // Foto Bersama Divisi State (for DivisionPhotosTab)
   const [divisionPhotos, setDivisionPhotos] = useState<Record<string, string>>({});
   const [isSavingDivisionPhotos, setIsSavingDivisionPhotos] = useState(false);
-
-  // Foto Bersama Seluruh Anggota (Kabinet) State
-  const [allMembersPhotoUrl, setAllMembersPhotoUrl] = useState<string>("");
-  const [allMembersPhotoName, setAllMembersPhotoName] = useState<string>(
-    "Seluruh Anggota Himpunan (Kabinet HMPSTI SWU)"
-  );
 
   // Berita & Event Form State
   const [newsList, setNewsList] = useState<any[]>([]);
@@ -151,6 +153,7 @@ export default function AdminDashboardPage() {
     content: "",
     cover_image: "",
     event_date: "", // Custom Date-Time Picker for Event
+    published_at: "", // Manual Tanggal Terbit for Berita
   });
 
   // Edit Image Upload Mode State
@@ -432,12 +435,14 @@ export default function AdminDashboardPage() {
 
     const dpData = await fetchDivisionPhotos();
     setDivisionPhotos(dpData || {});
-    
-    const dpDetails = await fetchDivisionPhotoDetails();
-    if (dpDetails && dpDetails.all_members) {
-      if (dpDetails.all_members.url) setAllMembersPhotoUrl(dpDetails.all_members.url);
-      if (dpDetails.all_members.name) setAllMembersPhotoName(dpDetails.all_members.name);
-    }
+
+    const slides = await fetchCabinetSlidePhotos();
+    setCabinetSlides((prev) =>
+      prev.map((slot, idx) => {
+        const loaded = slides[idx];
+        return loaded ? { url: loaded.url, name: loaded.name } : slot;
+      })
+    );
   }
 
   // File Reader Helper for Device Image Upload (with Canvas Compression)
@@ -484,22 +489,25 @@ export default function AdminDashboardPage() {
     showNotify("Pengaturan informasi website berhasil disimpan!");
   };
 
-  // Handle Save Foto & Keterangan Kabinet
-  const handleSaveAllMembersPhoto = async (e: React.FormEvent) => {
+  // Handle Save individual cabinet slide (index 0-2)
+  const handleSaveCabinetSlide = async (index: number, e: React.FormEvent) => {
     e.preventDefault();
-    startProcessing("Menyimpan Foto & Keterangan Kabinet...");
-    const res = await updateDivisionPhoto(
-      "all_members",
-      allMembersPhotoName || "Seluruh Anggota Himpunan (Kabinet HMPSTI SWU)",
-      allMembersPhotoUrl
-    );
+    const slugs = ["all_members_1", "all_members_2", "all_members_3"];
+    const slug = slugs[index];
+    const slide = cabinetSlides[index];
+    if (!slide) return;
+    startProcessing(`Menyimpan Foto Slideshow ${index + 1}...`);
+    await updateCabinetSlidePhoto(slug, slide.name, slide.url);
     stopProcessing();
-    if (res.success) {
-      showNotify("Foto & Keterangan Seluruh Anggota Kabinet berhasil diperbarui!");
-      await loadAllData();
-    } else {
-      showNotify("Gagal memperbarui foto kabinet.");
-    }
+    showNotify(`Foto Slideshow ${index + 1} berhasil disimpan!`);
+  };
+
+  const handleCabinetSlideChange = (index: number, field: "url" | "name", value: string) => {
+    setCabinetSlides((prev) => {
+      const next = [...prev];
+      next[index] = { ...next[index], [field]: value };
+      return next;
+    });
   };
 
   // Misi Dynamic Handlers
@@ -563,6 +571,10 @@ export default function AdminDashboardPage() {
     startProcessing(isEvt ? "Menerbitkan Event Baru..." : "Menerbitkan Berita Baru...");
     const generatedSlug = newArticle.slug || newArticle.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
     const uploadTimestamp = new Date().toISOString();
+    // Use manually selected date if provided, otherwise fallback to now
+    const publishedAt = (!isEvt && newArticle.published_at)
+      ? new Date(newArticle.published_at).toISOString()
+      : uploadTimestamp;
 
     const payload = {
       title: newArticle.title,
@@ -573,7 +585,7 @@ export default function AdminDashboardPage() {
       excerpt: newArticle.excerpt || newArticle.content.substring(0, 140),
       content: newArticle.content,
       cover_image: newArticle.cover_image || "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=800&auto=format&fit=crop",
-      created_at: uploadTimestamp,
+      created_at: publishedAt,
       event_date: isEvt ? (newArticle.event_date ? new Date(newArticle.event_date).toISOString() : uploadTimestamp) : null,
       reading_time: newArticle.reading_time || "4 min read",
     };
@@ -594,6 +606,7 @@ export default function AdminDashboardPage() {
         content: "",
         cover_image: "",
         event_date: "",
+        published_at: "",
       });
       await loadAllData();
     }
@@ -1156,11 +1169,9 @@ export default function AdminDashboardPage() {
           settings={settings}
           onSettingsChange={setSettings}
           onSaveSettings={handleSaveSettings}
-          allMembersPhotoUrl={allMembersPhotoUrl}
-          allMembersPhotoName={allMembersPhotoName}
-          onAllMembersPhotoChange={setAllMembersPhotoUrl}
-          onAllMembersPhotoNameChange={setAllMembersPhotoName}
-          onSaveAllMembersPhoto={handleSaveAllMembersPhoto}
+          cabinetSlides={cabinetSlides}
+          onCabinetSlideChange={handleCabinetSlideChange}
+          onSaveCabinetSlide={handleSaveCabinetSlide}
           onDeviceFileUpload={handleDeviceFileUpload}
         />
       )}
