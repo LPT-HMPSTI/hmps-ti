@@ -26,6 +26,7 @@ export interface StudentProject {
   cover_image: string;
   demo_url?: string;
   github_url?: string;
+  orbit_url?: string;
   content?: string;
   likes_count?: number;
   created_at?: string;

@@ -8,7 +8,9 @@ import { Badge } from "@/components/ui/Badge";
 export interface AspirasiItem {
   id: string;
   sender_name?: string;
+  sender_email?: string;
   email?: string;
+  subject?: string;
   message: string;
   is_anonymous: boolean;
   is_read: boolean;
@@ -25,11 +27,12 @@ export interface AspirasiTabProps {
 
 /** Mengubah list aspirasi menjadi file CSV dan memicunya agar terunduh. */
 const exportToCSV = (data: AspirasiItem[]) => {
-  const headers = ["ID", "Nama / Anonim", "Email", "Pesan", "Status Baca", "Tanggal"];
+  const headers = ["ID", "Nama / Anonim", "Email", "Subjek", "Pesan", "Status Baca", "Tanggal"];
   const rows = data.map((asp) => [
     asp.id,
     asp.is_anonymous ? "Anonim" : (asp.sender_name ?? "—"),
-    asp.email ?? "—",
+    asp.sender_email || asp.email || "—",
+    `"${(asp.subject ?? "Aspirasi Mahasiswa").replace(/"/g, '""')}"`,
     `"${(asp.message ?? "").replace(/"/g, '""')}"`, // escape quotes
     asp.is_read ? "Sudah Dibaca" : "Belum Dibaca",
     asp.created_at ? new Date(asp.created_at).toLocaleString("id-ID") : "—",
@@ -105,47 +108,55 @@ export const AspirasiTab: React.FC<AspirasiTabProps> = ({
       </div>
 
       <div className="space-y-3">
-        {aspirasiList.map((asp) => (
-          <GlassCard key={asp.id} glowColor="magenta" className="p-5 space-y-3">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <div className="flex items-center gap-2">
-                <Badge variant={asp.is_anonymous ? "magenta" : "spotify"} tilt="left">
-                  {asp.is_anonymous ? "ANONIM" : asp.sender_name}
-                </Badge>
-                {asp.email && (
-                  <span className="text-xs font-mono text-slate-400">({asp.email})</span>
-                )}
-                {asp.created_at && (
-                  <span className="text-xs font-mono text-slate-500 hidden sm:inline">
-                    {new Date(asp.created_at).toLocaleDateString("id-ID", {
-                      day: "2-digit", month: "short", year: "numeric"
-                    })}
-                  </span>
-                )}
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => onToggleReadStatus(asp.id, asp.is_read)}
-                  title={asp.is_read ? "Sudah Dibaca" : "Tandai Dibaca"}
-                  className={`p-2 rounded-md border-2 border-black text-black shadow-[2px_2px_0px_0px_#000000] transition-all cursor-pointer flex items-center justify-center ${
-                    asp.is_read ? "bg-[#00F2FE] -rotate-1" : "bg-[#1DB954] rotate-1"
-                  }`}
-                >
-                  <CheckCircle size={14} weight="bold" />
-                </button>
+        {aspirasiList.map((asp) => {
+          const userEmail = asp.sender_email || asp.email;
+          return (
+            <GlassCard key={asp.id} glowColor="magenta" className="p-5 space-y-3">
+              <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Badge variant={asp.is_anonymous ? "magenta" : "spotify"} tilt="left">
+                    {asp.is_anonymous ? "ANONIM" : asp.sender_name || "Mahasiswa"}
+                  </Badge>
+                  {userEmail && (
+                    <span className="text-xs font-mono text-slate-400">({userEmail})</span>
+                  )}
+                  {asp.subject && asp.subject !== "Aspirasi Mahasiswa" && (
+                    <span className="text-xs font-semibold text-[#00F2FE] bg-[#00F2FE]/10 px-2 py-0.5 rounded border border-[#00F2FE]/30">
+                      {asp.subject}
+                    </span>
+                  )}
+                  {asp.created_at && (
+                    <span className="text-xs font-mono text-slate-500 hidden sm:inline">
+                      {new Date(asp.created_at).toLocaleDateString("id-ID", {
+                        day: "2-digit", month: "short", year: "numeric"
+                      })}
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => onToggleReadStatus(asp.id, asp.is_read)}
+                    title={asp.is_read ? "Sudah Dibaca" : "Tandai Dibaca"}
+                    className={`p-2 rounded-md border-2 border-black text-black shadow-[2px_2px_0px_0px_#000000] transition-all cursor-pointer flex items-center justify-center ${
+                      asp.is_read ? "bg-[#00F2FE] -rotate-1" : "bg-[#1DB954] rotate-1"
+                    }`}
+                  >
+                    <CheckCircle size={14} weight="bold" />
+                  </button>
 
-                <button
-                  onClick={() => onDeleteAspirasi(asp)}
-                  title="Hapus Aspirasi"
-                  className="p-2 rounded-md border-2 border-black bg-[#FF007F] text-white shadow-[2px_2px_0px_0px_#000000] rotate-2 hover:rotate-0 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all cursor-pointer flex items-center justify-center"
-                >
-                  <Trash size={14} weight="bold" />
-                </button>
+                  <button
+                    onClick={() => onDeleteAspirasi(asp)}
+                    title="Hapus Aspirasi"
+                    className="p-2 rounded-md border-2 border-black bg-[#FF007F] text-white shadow-[2px_2px_0px_0px_#000000] rotate-2 hover:rotate-0 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all cursor-pointer flex items-center justify-center"
+                  >
+                    <Trash size={14} weight="bold" />
+                  </button>
+                </div>
               </div>
-            </div>
-            <p className="text-xs text-white leading-relaxed pt-1">{asp.message}</p>
-          </GlassCard>
-        ))}
+              <p className="text-xs text-white leading-relaxed pt-1">{asp.message}</p>
+            </GlassCard>
+          );
+        })}
       </div>
     </div>
   );

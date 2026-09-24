@@ -1,0 +1,165 @@
+"use client";
+
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { ArrowsOut, X } from "@phosphor-icons/react";
+import { fetchCabinetSlidePhotos, CabinetSlide } from "@/services";
+
+const SLIDE_INTERVAL_MS = 4000;
+
+export const CabinetPhotoSection: React.FC = () => {
+  const [slides, setSlides] = useState<CabinetSlide[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [withTransition, setWithTransition] = useState(true);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Load slides on mount
+  useEffect(() => {
+    let isMounted = true;
+    fetchCabinetSlidePhotos().then((data) => {
+      if (isMounted && data.length > 0) setSlides(data);
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Duplicate first slide at the end to create seamless infinite loop animation
+  const displaySlides = slides.length > 1 ? [...slides, slides[0]] : slides;
+
+  // Auto-slide right-to-left
+  const nextSlide = useCallback(() => {
+    setWithTransition(true);
+    setCurrentIndex((prev) => prev + 1);
+  }, []);
+
+  useEffect(() => {
+    if (slides.length <= 1 || isPaused) return;
+    timerRef.current = setInterval(nextSlide, SLIDE_INTERVAL_MS);
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [slides.length, isPaused, nextSlide]);
+
+  // Reset to original index 0 seamlessly after transition to clone finishes
+  const handleTransitionEnd = () => {
+    if (currentIndex >= slides.length) {
+      setWithTransition(false);
+      setCurrentIndex(0);
+    }
+  };
+
+  // If no slides loaded yet, show nothing
+  if (slides.length === 0) return null;
+
+  const activeIndex = currentIndex % slides.length;
+  const current = slides[activeIndex] || slides[0];
+
+  return (
+    <>
+      {/* Full-bleed cabinet slideshow */}
+      <section id="cabinet-section" className="relative overflow-hidden px-4 sm:px-6 lg:px-8 scroll-mt-24">
+        <div
+          onClick={() => setIsLightboxOpen(true)}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          className="relative w-full h-[300px] sm:h-[440px] lg:h-[560px] rounded-3xl overflow-hidden border border-white/10 bg-black cursor-pointer group shadow-2xl"
+        >
+          {/* Horizontal Slide Track */}
+          <div
+            className={`flex w-full h-full ${
+              withTransition ? "transition-transform duration-600 cubic-bezier(0.25, 1, 0.5, 1)" : "transition-none"
+            }`}
+            style={{ transform: `translate3d(-${currentIndex * 100}%, 0, 0)` }}
+            onTransitionEnd={handleTransitionEnd}
+          >
+            {displaySlides.map((slide, idx) => (
+              <div key={`${slide.slug}-${idx}`} className="w-full h-full flex-shrink-0 relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={slide.url}
+                  alt={slide.name || "Foto Bersama Seluruh Pengurus & Anggota HMPSTI SWU"}
+                  className="w-full h-full object-cover object-center"
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent pointer-events-none z-10" />
+
+          {/* Caption text */}
+          {current.name && (
+            <div className="absolute bottom-10 sm:bottom-14 lg:bottom-16 left-1/2 -translate-x-1/2 w-[92%] max-w-3xl pointer-events-none z-20 text-center">
+              <h3 className="text-base sm:text-xl md:text-2xl lg:text-3xl font-extrabold tracking-wide text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]">
+                {current.name}
+              </h3>
+            </div>
+          )}
+
+          {/* Dot indicators */}
+          {slides.length > 1 && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20 pointer-events-none">
+              {slides.map((_, idx) => (
+                <span
+                  key={idx}
+                  className={`block rounded-full transition-all duration-300 ${
+                    idx === activeIndex
+                      ? "w-5 h-1.5 bg-[#1DB954]"
+                      : "w-1.5 h-1.5 bg-white/30"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Bottom-right expand pill — only shows on hover */}
+          <div className="absolute bottom-4 right-4 sm:bottom-5 sm:right-5 pointer-events-none z-20">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/60 backdrop-blur-md px-3 py-1.5 text-[11px] font-mono text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <ArrowsOut size={12} weight="bold" className="text-[#1DB954]" />
+              Perbesar
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* LIGHTBOX MODAL */}
+      {isLightboxOpen && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 p-4 sm:p-8 backdrop-blur-md"
+          onClick={() => setIsLightboxOpen(false)}
+        >
+          {/* Close button */}
+          <button
+            type="button"
+            onClick={() => setIsLightboxOpen(false)}
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-all cursor-pointer shadow-xl"
+            aria-label="Tutup foto"
+          >
+            <X size={22} weight="bold" />
+          </button>
+
+          <div
+            className="relative max-w-6xl w-full max-h-[90vh] rounded-3xl overflow-hidden border border-white/20 shadow-2xl bg-black flex flex-col items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={current.url}
+              alt={current.name || "Foto Bersama Seluruh Anggota HMPSTI SWU Full"}
+              className="w-full h-full max-h-[82vh] object-contain mx-auto"
+            />
+            {current.name && (
+              <div className="w-full bg-black/80 border-t border-white/10 p-3 sm:p-4 text-center">
+                <p className="text-xs sm:text-sm font-semibold text-white font-mono">
+                  {current.name}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
+};

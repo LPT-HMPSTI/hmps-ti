@@ -23,11 +23,11 @@ export const VisionHero: React.FC<VisionHeroProps> = ({ currentPeriod }) => {
       </div>
 
       <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight uppercase">
-        Visi & Misi Organisasi
+        Identitas Organisasi
       </h1>
 
-      <p className="text-xs sm:text-sm font-medium text-slate-400 max-w-xl leading-relaxed">
-        Komitmen arah gerak, fondasi filosofis, dan manifesto perjuangan Himpunan Mahasiswa Program Studi Teknik Informatika STMIK Widya Utama.
+      <p className="text-xs sm:text-sm font-medium text-slate-400 max-w-2xl leading-relaxed">
+        Makna logo resmi, komitmen visi utama, dan manifesto misi perjuangan Himpunan Mahasiswa Program Studi Teknik Informatika STMIK Widya Utama.
       </p>
     </div>
   );

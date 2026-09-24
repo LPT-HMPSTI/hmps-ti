@@ -11,7 +11,7 @@ export const MAIN_NAV_LINKS = [
     name: "Tentang HMPS-TI",
     href: "#",
     children: [
-      { name: "Visi & Misi", href: "/visi-misi" },
+      { name: "Identitas Organisasi", href: "/visi-misi" },
       { name: "Struktur Organisasi", href: "/struktur" },
       { name: "Keanggotaan", href: "/keanggotaan" },
       { name: "Galeri Kegiatan", href: "/galeri" },

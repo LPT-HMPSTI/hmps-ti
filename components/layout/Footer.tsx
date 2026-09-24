@@ -99,7 +99,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <Link href="/visi-misi" className="transition-colors hover:text-cyan-300">
-                  Visi & Misi
+                  Identitas Organisasi
                 </Link>
               </li>
               <li>

@@ -28,6 +28,7 @@ export interface NewProjectState {
   tech_stack: string | string[];
   github_url: string;
   demo_url: string;
+  orbit_url: string;
   cover_image: string;
 }
 
@@ -139,7 +140,7 @@ export const KaryaTab: React.FC<KaryaTabProps> = ({
 
             <div className="sm:col-span-1">
               <label className="block text-xs font-mono text-slate-400 mb-1.5 sm:mb-2">
-                NIM Pembuat (Opsional)
+                NIM Pembuat
               </label>
               <input
                 type="text"
@@ -237,8 +238,8 @@ export const KaryaTab: React.FC<KaryaTabProps> = ({
             </div>
           </div>
 
-          {/* Row 3: Tech Stack, Github Repo URL, Demo URL */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-4.5">
+          {/* Row 3: Tech Stack, Github Repo URL, Demo URL, Orbit Profile URL */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-4.5">
             <div>
               <label className="block text-xs font-mono text-slate-400 mb-1.5 sm:mb-2">
                 Teknologi Digunakan (Pisahkan Koma) *
@@ -256,7 +257,7 @@ export const KaryaTab: React.FC<KaryaTabProps> = ({
                 onChange={(e) =>
                   onNewProjectChange({ ...newProject, tech_stack: e.target.value })
                 }
-                placeholder="e.g. Next.js, TypeScript, Tailwind CSS, Supabase"
+                placeholder="e.g. Next.js, TypeScript, Tailwind"
                 className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white focus:border-[#1DB954] focus:outline-none font-mono"
               />
             </div>
@@ -266,12 +267,12 @@ export const KaryaTab: React.FC<KaryaTabProps> = ({
                 Tautan GitHub Repositori
               </label>
               <input
-                type="url"
+                type="text"
                 value={newProject.github_url}
                 onChange={(e) =>
                   onNewProjectChange({ ...newProject, github_url: e.target.value })
                 }
-                placeholder="https://github.com/username/project"
+                placeholder="https://github.com/..."
                 className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white focus:border-[#1DB954] focus:outline-none font-mono"
               />
             </div>
@@ -281,12 +282,27 @@ export const KaryaTab: React.FC<KaryaTabProps> = ({
                 Tautan Live Demo / Aplikasi
               </label>
               <input
-                type="url"
+                type="text"
                 value={newProject.demo_url}
                 onChange={(e) =>
                   onNewProjectChange({ ...newProject, demo_url: e.target.value })
                 }
                 placeholder="https://my-app.vercel.app"
+                className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white focus:border-[#1DB954] focus:outline-none font-mono"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-mono text-slate-400 mb-1.5 sm:mb-2">
+                Tautan Profil Orbit
+              </label>
+              <input
+                type="text"
+                value={newProject.orbit_url || ""}
+                onChange={(e) =>
+                  onNewProjectChange({ ...newProject, orbit_url: e.target.value })
+                }
+                placeholder="https://... (Profil Orbit)"
                 className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white focus:border-[#1DB954] focus:outline-none font-mono"
               />
             </div>
@@ -437,12 +453,23 @@ export const KaryaTab: React.FC<KaryaTabProps> = ({
                   )}
                 </div>
 
-                {/* Footer: Author Name & External Links */}
                 <div className="text-[11px] font-mono text-slate-400 border-t border-white/10 pt-3 mt-1 flex items-center justify-between">
-                  <span className="truncate max-w-[180px]">
+                  <span className="truncate max-w-[150px]">
                     {p.author_name || p.author || "Mahasiswa TI"}
                   </span>
                   <div className="flex items-center gap-2 shrink-0">
+                    {p.orbit_url && (
+                      <a
+                        href={p.orbit_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        title="Tautan Profil Orbit"
+                        className="px-2 py-1 rounded-md border-2 border-black bg-cyan-400 text-black shadow-[2px_2px_0px_0px_#000000] -rotate-1 hover:rotate-0 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all cursor-pointer flex items-center gap-1 text-xs font-mono font-extrabold"
+                      >
+                        <span>Orbit</span>
+                        <ArrowSquareOut size={12} weight="bold" />
+                      </a>
+                    )}
                     {p.github_url && (
                       <a
                         href={p.github_url}
