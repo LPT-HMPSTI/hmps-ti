@@ -12,6 +12,7 @@ import {
   Image as ImageIcon,
   CalendarCheck,
   Camera,
+  UserGear,
 } from "@phosphor-icons/react";
 
 export type AdminTabType =
@@ -24,7 +25,8 @@ export type AdminTabType =
   | "keanggotaan"
   | "visi-misi"
   | "karya"
-  | "galeri";
+  | "galeri"
+  | "admin-users";
 
 export interface AdminTabNavProps {
   activeTab: AdminTabType;
@@ -52,9 +54,10 @@ export const AdminTabNav: React.FC<AdminTabNavProps> = ({
     { id: "foto-divisi" as AdminTabType, label: "Potret Divisi", icon: Camera },
     { id: "proker" as AdminTabType, label: "Program Kerja", icon: CalendarCheck },
     { id: "keanggotaan" as AdminTabType, label: "Keanggotaan & Alumni", icon: Users },
-    { id: "visi-misi" as AdminTabType, label: "Visi & Misi", icon: Target },
+    { id: "visi-misi" as AdminTabType, label: "Identitas & Visi Misi", icon: Target },
     { id: "karya" as AdminTabType, label: "Showcase Karya", icon: CodeBlock },
     { id: "galeri" as AdminTabType, label: "Galeri Kegiatan", icon: ImageIcon },
+    { id: "admin-users" as AdminTabType, label: "Kelola User Admin", icon: UserGear },
   ];
 
   return (

@@ -4,6 +4,8 @@ import React from "react";
 import { Eye, EyeSlash, ArrowRight } from "@phosphor-icons/react";
 
 export interface LoginFormProps {
+  username: string;
+  onUsernameChange: (val: string) => void;
   password: string;
   onPasswordChange: (val: string) => void;
   showPassword: boolean;
@@ -14,9 +16,11 @@ export interface LoginFormProps {
 }
 
 /**
- * Formulir login admin dengan input kata sandi, tombol intip sandi, dan status pemrosesan.
+ * Formulir login admin dengan input username + kata sandi.
  */
 export const LoginForm: React.FC<LoginFormProps> = ({
+  username,
+  onUsernameChange,
   password,
   onPasswordChange,
   showPassword,
@@ -25,6 +29,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   loading,
   errorMsg,
 }) => {
+  const inputClass =
+    "w-full rounded-xl border border-white/10 bg-white/[0.04] py-2.5 pl-3.5 pr-10 text-xs text-white placeholder-slate-500 focus:border-[#1DB954] focus:outline-none font-mono";
+
   return (
     <>
       {/* Error Message */}
@@ -34,21 +41,37 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         </div>
       )}
 
-      {/* Form Login Minimalis */}
       <form onSubmit={onSubmit} className="space-y-4">
+        {/* Username */}
         <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-xs text-slate-400 font-mono">
-            <span>Kata Sandi</span>
-            <span className="text-[10px] text-[#1DB954]">Default: admin123</span>
-          </div>
+          <label className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider">
+            Username
+          </label>
+          <input
+            type="text"
+            required
+            autoComplete="username"
+            value={username}
+            onChange={(e) => onUsernameChange(e.target.value)}
+            placeholder="Username admin..."
+            className={inputClass}
+          />
+        </div>
+
+        {/* Password */}
+        <div className="space-y-1.5">
+          <label className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider">
+            Kata Sandi
+          </label>
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
               required
+              autoComplete="current-password"
               value={password}
               onChange={(e) => onPasswordChange(e.target.value)}
-              placeholder="Password..."
-              className="w-full rounded-xl border border-white/10 bg-white/[0.04] py-2.5 pl-3.5 pr-10 text-xs text-white placeholder-slate-500 focus:border-[#1DB954] focus:outline-none font-mono"
+              placeholder="Kata sandi..."
+              className={inputClass}
             />
             <button
               type="button"
@@ -63,9 +86,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-2.5 px-4 rounded-xl font-mono text-xs font-bold uppercase bg-[#1DB954] text-black hover:bg-[#1ed760] transition-colors cursor-pointer flex items-center justify-center gap-2"
+          className="w-full py-2.5 px-4 rounded-xl font-mono text-xs font-bold uppercase bg-[#1DB954] text-black hover:bg-[#1ed760] transition-colors cursor-pointer flex items-center justify-center gap-2 disabled:opacity-70"
         >
-          <span>{loading ? "Memproses..." : "Masuk"}</span>
+          <span>{loading ? "Memverifikasi..." : "Masuk"}</span>
           <ArrowRight size={14} weight="bold" />
         </button>
       </form>

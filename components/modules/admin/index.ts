@@ -15,3 +15,5 @@ export * from "./tabs/VisiMisiTab";
 export * from "./tabs/KaryaTab";
 export * from "./tabs/GaleriTab";
 export * from "./tabs/DivisionPhotosTab";
+export * from "./tabs/AdminUsersTab";
+

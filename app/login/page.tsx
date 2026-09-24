@@ -5,12 +5,14 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { LoginHeader, LoginForm } from "@/components/modules/login";
+import { loginAdminUser } from "@/services/adminUsers.service";
 
 /**
  * Halaman Otentikasi Login Admin HMPSTI SWU.
- * Mengorkestrasi sesi backoffice dan verifikasi passcode pengurus.
+ * Login dengan username & password yang diverifikasi ke tabel admin_users di Supabase.
  */
 export default function LoginPage() {
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -29,22 +31,33 @@ export default function LoginPage() {
   }, [router]);
 
   const handleLogin = useCallback(
-    (e: React.FormEvent) => {
+    async (e: React.FormEvent) => {
       e.preventDefault();
       setLoading(true);
       setErrorMsg(null);
 
-      // Verifikasi Passcode Admin (Default passcode: admin123 / hmpsti2026)
-      if (password === "admin123" || password === "hmpsti2026") {
+      const result = await loginAdminUser(username.trim(), password);
+
+      if (result.success && result.user) {
+        // Simpan sesi dengan info user
         sessionStorage.setItem("hmpsti_admin_session", "authenticated");
+        sessionStorage.setItem(
+          "hmpsti_admin_user",
+          JSON.stringify({
+            id: result.user.id,
+            username: result.user.username,
+            keterangan: result.user.keterangan,
+            role: result.user.role,
+          })
+        );
         localStorage.removeItem("hmpsti_admin_session");
         router.replace("/admin");
       } else {
         setLoading(false);
-        setErrorMsg("Kata sandi tidak valid. Silakan periksa kembali.");
+        setErrorMsg(result.error || "Username atau kata sandi tidak valid.");
       }
     },
-    [password, router]
+    [username, password, router]
   );
 
   return (
@@ -58,6 +71,8 @@ export default function LoginPage() {
         <GlassCard glowColor="spotify" className="p-8 space-y-6 border-white/10 bg-[#121520]/90">
           <LoginHeader />
           <LoginForm
+            username={username}
+            onUsernameChange={setUsername}
             password={password}
             onPasswordChange={setPassword}
             showPassword={showPassword}

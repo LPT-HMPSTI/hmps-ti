@@ -38,6 +38,8 @@ import {
   deleteWorkProgram,
   fetchDivisionPhotos,
   updateDivisionPhoto,
+  fetchAdminUsers,
+  AdminUser,
 } from "@/services";
 import { WorkProgram, CreateWorkProgramPayload } from "@/types";
 import {
@@ -56,6 +58,7 @@ import {
   VisiMisiTab,
   KaryaTab,
   GaleriTab,
+  AdminUsersTab,
   EditModalState,
   DeleteConfirmModalState,
   AdminTabType,
@@ -86,6 +89,12 @@ export default function AdminDashboardPage() {
 
   const [notification, setNotification] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Current logged-in admin user info
+  const [currentAdminId, setCurrentAdminId] = useState<string | undefined>(undefined);
+
+  // Admin Users List State
+  const [adminUsersList, setAdminUsersList] = useState<AdminUser[]>([]);
 
   // Confirmation Modal State for Delete
   const [deleteConfirmModal, setDeleteConfirmModal] = useState<{
@@ -344,6 +353,16 @@ export default function AdminDashboardPage() {
 
       const session = sessionStorage.getItem("hmpsti_admin_session");
       if (session === "authenticated") {
+        // Parse saved admin user info from session
+        try {
+          const userJson = sessionStorage.getItem("hmpsti_admin_user");
+          if (userJson) {
+            const userInfo = JSON.parse(userJson);
+            setCurrentAdminId(userInfo.id);
+          }
+        } catch {
+          // ignore parse errors
+        }
         setIsAuthenticated(true);
         setIsCheckingAuth(false);
         loadAllData();
@@ -358,6 +377,7 @@ export default function AdminDashboardPage() {
   const handleLogout = () => {
     if (typeof window !== "undefined") {
       sessionStorage.removeItem("hmpsti_admin_session");
+      sessionStorage.removeItem("hmpsti_admin_user");
       localStorage.removeItem("hmpsti_admin_session");
     }
     setIsAuthenticated(false);
@@ -425,6 +445,9 @@ export default function AdminDashboardPage() {
 
     const dpData = await fetchDivisionPhotos();
     setDivisionPhotos(dpData || {});
+
+    const uData = await fetchAdminUsers();
+    setAdminUsersList(uData || []);
   }
 
   // File Reader Helper for Device Image Upload (with Canvas Compression)
@@ -1278,6 +1301,18 @@ export default function AdminDashboardPage() {
           onDeleteGallery={(g) =>
             promptDelete(g.title, () => deleteGalleryItem(g.id))
           }
+        />
+      )}
+
+      {activeTab === "admin-users" && (
+        <AdminUsersTab
+          adminUsersList={adminUsersList}
+          currentUserId={currentAdminId}
+          onRefresh={async () => {
+            const uData = await fetchAdminUsers();
+            setAdminUsersList(uData || []);
+          }}
+          onNotify={showNotify}
         />
       )}
     </div>
