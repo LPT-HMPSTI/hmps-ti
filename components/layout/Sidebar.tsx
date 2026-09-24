@@ -31,7 +31,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenDirectLink }) => {
   const mainNav = [
     { name: "Beranda", href: "/", icon: House },
     { name: "Portal Berita", href: "/berita", icon: NewspaperClipping },
-    { name: "Visi & Misi", href: "/visi-misi", icon: Target },
+    { name: "Identitas Organisasi", href: "/visi-misi", icon: Target },
     { name: "Struktur Organisasi", href: "/struktur", icon: UsersThree },
     { name: "Keanggotaan", href: "/keanggotaan", icon: UserCheck },
     { name: "Showcase Karya", href: "/karya", icon: Code },
