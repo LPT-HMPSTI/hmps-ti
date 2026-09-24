@@ -140,7 +140,7 @@ export const KaryaTab: React.FC<KaryaTabProps> = ({
 
             <div className="sm:col-span-1">
               <label className="block text-xs font-mono text-slate-400 mb-1.5 sm:mb-2">
-                NIM Pembuat (Opsional)
+                NIM Pembuat
               </label>
               <input
                 type="text"
@@ -267,7 +267,7 @@ export const KaryaTab: React.FC<KaryaTabProps> = ({
                 Tautan GitHub Repositori
               </label>
               <input
-                type="url"
+                type="text"
                 value={newProject.github_url}
                 onChange={(e) =>
                   onNewProjectChange({ ...newProject, github_url: e.target.value })
@@ -282,7 +282,7 @@ export const KaryaTab: React.FC<KaryaTabProps> = ({
                 Tautan Live Demo / Aplikasi
               </label>
               <input
-                type="url"
+                type="text"
                 value={newProject.demo_url}
                 onChange={(e) =>
                   onNewProjectChange({ ...newProject, demo_url: e.target.value })
@@ -297,7 +297,7 @@ export const KaryaTab: React.FC<KaryaTabProps> = ({
                 Tautan Profil Orbit
               </label>
               <input
-                type="url"
+                type="text"
                 value={newProject.orbit_url || ""}
                 onChange={(e) =>
                   onNewProjectChange({ ...newProject, orbit_url: e.target.value })

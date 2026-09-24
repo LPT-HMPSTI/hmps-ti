@@ -659,7 +659,7 @@ export const AdminEditModal: React.FC<AdminEditModalProps> = ({
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-mono text-slate-400 mb-1">NIM Pembuat (Opsional)</label>
+                      <label className="block text-xs font-mono text-slate-400 mb-1">NIM Pembuat</label>
                       <input
                         type="text"
                         value={editModal.item.author_nim || ""}

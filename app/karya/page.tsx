@@ -1,6 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
+import Link from "next/link";
+import { PaperPlaneTilt } from "@phosphor-icons/react";
+import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
 import {
   fetchProjectsList,
   fetchSiteSettings,
@@ -143,6 +147,39 @@ export default function KaryaPage() {
         likedProjects={likedProjects}
         onToggleLike={handleToggleLike}
       />
+
+      {/* CTA Submission Banner di Bagian Bawah Halaman */}
+      <div className="mt-12 rounded-3xl border border-[#1DB954]/30 bg-gradient-to-r from-[#121520] via-[#161B2A] to-[#121520] p-6 sm:p-8 md:p-10 text-center relative overflow-hidden shadow-2xl group">
+        <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#1DB954]/10 blur-3xl group-hover:bg-[#1DB954]/20 transition-all duration-500" />
+        <div className="pointer-events-none absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl" />
+
+        <div className="relative z-10 max-w-2xl mx-auto space-y-4">
+          <div className="inline-block">
+            <Badge variant="spotify" tilt="left">
+              PUBLIKASI KARYA INOVASI MAHASISWA
+            </Badge>
+          </div>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight">
+            Mau Karyamu Kami Post?
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-xl mx-auto">
+            Punya produk software, mobile app, riset AI, atau proyek IoT buatanmu yang ingin dipamerkan di etalase resmi HMPSTI SWU? Kirimkan detail karyamu sekarang untuk ditinjau oleh tim admin!
+          </p>
+
+          <div className="pt-2">
+            <Link href="/karya/submit">
+              <Button
+                variant="spotify"
+                size="lg"
+                icon={<PaperPlaneTilt size={20} weight="fill" />}
+                className="transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(29,185,84,0.6)]"
+              >
+                Kirim Karyamu Sekarang!
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
