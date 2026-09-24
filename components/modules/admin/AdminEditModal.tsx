@@ -747,7 +747,7 @@ export const AdminEditModal: React.FC<AdminEditModalProps> = ({
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                     <div>
                       <label className="block text-xs font-mono text-slate-400 mb-1">Tech Stack (Dipisah Koma)</label>
                       <input
@@ -779,6 +779,16 @@ export const AdminEditModal: React.FC<AdminEditModalProps> = ({
                         type="text"
                         value={editModal.item.demo_url || ""}
                         onChange={(e) => setEditModal({ ...editModal, item: { ...editModal.item, demo_url: e.target.value } })}
+                        className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-mono text-slate-400 mb-1">Tautan Profil Orbit</label>
+                      <input
+                        type="text"
+                        value={editModal.item.orbit_url || ""}
+                        onChange={(e) => setEditModal({ ...editModal, item: { ...editModal.item, orbit_url: e.target.value } })}
+                        placeholder="https://... (Profil Orbit)"
                         className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white font-mono"
                       />
                     </div>

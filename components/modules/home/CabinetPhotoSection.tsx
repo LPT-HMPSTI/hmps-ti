@@ -9,6 +9,7 @@ const SLIDE_INTERVAL_MS = 4000;
 export const CabinetPhotoSection: React.FC = () => {
   const [slides, setSlides] = useState<CabinetSlide[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [withTransition, setWithTransition] = useState(true);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -24,10 +25,14 @@ export const CabinetPhotoSection: React.FC = () => {
     };
   }, []);
 
-  // Auto-slide loop
+  // Duplicate first slide at the end to create seamless infinite loop animation
+  const displaySlides = slides.length > 1 ? [...slides, slides[0]] : slides;
+
+  // Auto-slide right-to-left
   const nextSlide = useCallback(() => {
-    setCurrentIndex((prev) => (slides.length > 1 ? (prev + 1) % slides.length : 0));
-  }, [slides.length]);
+    setWithTransition(true);
+    setCurrentIndex((prev) => prev + 1);
+  }, []);
 
   useEffect(() => {
     if (slides.length <= 1 || isPaused) return;
@@ -37,40 +42,56 @@ export const CabinetPhotoSection: React.FC = () => {
     };
   }, [slides.length, isPaused, nextSlide]);
 
+  // Reset to original index 0 seamlessly after transition to clone finishes
+  const handleTransitionEnd = () => {
+    if (currentIndex >= slides.length) {
+      setWithTransition(false);
+      setCurrentIndex(0);
+    }
+  };
+
   // If no slides loaded yet, show nothing
   if (slides.length === 0) return null;
 
-  const current = slides[currentIndex] || slides[0];
+  const activeIndex = currentIndex % slides.length;
+  const current = slides[activeIndex] || slides[0];
 
   return (
     <>
       {/* Full-bleed cabinet slideshow */}
-      <section className="relative overflow-hidden px-4 sm:px-6 lg:px-8">
+      <section id="cabinet-section" className="relative overflow-hidden px-4 sm:px-6 lg:px-8 scroll-mt-24">
         <div
           onClick={() => setIsLightboxOpen(true)}
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
           className="relative w-full h-[300px] sm:h-[440px] lg:h-[560px] rounded-3xl overflow-hidden border border-white/10 bg-black cursor-pointer group shadow-2xl"
         >
-          {/* Slides — cross-fade via opacity transition */}
-          {slides.map((slide, idx) => (
-            <img
-              key={slide.slug}
-              // eslint-disable-next-line @next/next/no-img-element
-              src={slide.url}
-              alt={slide.name || "Foto Bersama Seluruh Pengurus & Anggota HMPSTI SWU"}
-              className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-700 ${
-                idx === currentIndex ? "opacity-100" : "opacity-0"
-              }`}
-            />
-          ))}
+          {/* Horizontal Slide Track */}
+          <div
+            className={`flex w-full h-full ${
+              withTransition ? "transition-transform duration-600 cubic-bezier(0.25, 1, 0.5, 1)" : "transition-none"
+            }`}
+            style={{ transform: `translate3d(-${currentIndex * 100}%, 0, 0)` }}
+            onTransitionEnd={handleTransitionEnd}
+          >
+            {displaySlides.map((slide, idx) => (
+              <div key={`${slide.slug}-${idx}`} className="w-full h-full flex-shrink-0 relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={slide.url}
+                  alt={slide.name || "Foto Bersama Seluruh Pengurus & Anggota HMPSTI SWU"}
+                  className="w-full h-full object-cover object-center"
+                />
+              </div>
+            ))}
+          </div>
 
           {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent pointer-events-none z-10" />
 
           {/* Caption text */}
           {current.name && (
-            <div className="absolute bottom-10 sm:bottom-14 lg:bottom-16 left-1/2 -translate-x-1/2 w-[92%] max-w-3xl pointer-events-none z-10 text-center">
+            <div className="absolute bottom-10 sm:bottom-14 lg:bottom-16 left-1/2 -translate-x-1/2 w-[92%] max-w-3xl pointer-events-none z-20 text-center">
               <h3 className="text-base sm:text-xl md:text-2xl lg:text-3xl font-extrabold tracking-wide text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]">
                 {current.name}
               </h3>
@@ -84,7 +105,7 @@ export const CabinetPhotoSection: React.FC = () => {
                 <span
                   key={idx}
                   className={`block rounded-full transition-all duration-300 ${
-                    idx === currentIndex
+                    idx === activeIndex
                       ? "w-5 h-1.5 bg-[#1DB954]"
                       : "w-1.5 h-1.5 bg-white/30"
                   }`}

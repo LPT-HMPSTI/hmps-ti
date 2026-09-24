@@ -188,6 +188,7 @@ CREATE TABLE IF NOT EXISTS public.student_projects (
     cover_image TEXT,
     demo_url TEXT,
     github_url TEXT,
+    orbit_url TEXT,
     likes_count INT NOT NULL DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );

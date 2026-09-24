@@ -322,6 +322,7 @@ export default function AdminDashboardPage() {
     tech_stack: string | string[];
     github_url: string;
     demo_url: string;
+    orbit_url: string;
     cover_image: string;
   }>({
     title: "",
@@ -331,8 +332,9 @@ export default function AdminDashboardPage() {
     author_name: "",
     author_nim: "",
     tech_stack: "Next.js, TypeScript, Tailwind",
-    github_url: "https://github.com",
-    demo_url: "https://demo.example.com",
+    github_url: "",
+    demo_url: "",
+    orbit_url: "",
     cover_image: "",
   });
 
@@ -907,8 +909,9 @@ export default function AdminDashboardPage() {
         author_name: "",
         author_nim: "",
         tech_stack: "Next.js, TypeScript, Tailwind",
-        github_url: "https://github.com",
-        demo_url: "https://demo.example.com",
+        github_url: "",
+        demo_url: "",
+        orbit_url: "",
         cover_image: "",
       });
       await loadAllData();

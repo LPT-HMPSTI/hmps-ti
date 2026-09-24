@@ -151,3 +151,97 @@ html, body {
 .dark-map-embed:hover {
   filter: invert(90%) hue-rotate(180deg) brightness(100%) contrast(95%) saturate(100%);
 }
+
+/* Hero Section Ambient Animations & Accessibility */
+@keyframes radial-breathing {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.65;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes twinkle-float {
+  0%, 100% {
+    opacity: 0.15;
+    transform: translateY(0px);
+  }
+  50% {
+    opacity: 0.55;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes hero-fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 0.9;
+  }
+}
+
+@keyframes orbit-pulse {
+  0%, 100% {
+    opacity: 0.12;
+    transform: rotate(-25deg) scale(1);
+  }
+  50% {
+    opacity: 0.22;
+    transform: rotate(-25deg) scale(1.03);
+  }
+}
+
+.animate-radial-breath {
+  animation: radial-breathing 5s ease-in-out infinite;
+}
+
+.animate-twinkle {
+  animation: twinkle-float var(--twinkle-duration, 6s) ease-in-out infinite;
+  animation-delay: var(--twinkle-delay, 0s);
+}
+
+.animate-hero-fade {
+  animation: hero-fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.animate-bounce-slow {
+  animation: hero-bounce-slow 2.5s ease-in-out infinite;
+}
+
+.animate-orbit {
+  animation: orbit-pulse 8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-radial-breath,
+  .animate-twinkle,
+  .animate-hero-fade,
+  .animate-bounce-slow,
+  .animate-orbit,
+  .cursor-glow-hero {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .cursor-glow-hero {
+    display: none !important;
+  }
+}
