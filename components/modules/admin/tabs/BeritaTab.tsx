@@ -37,6 +37,7 @@ export interface NewArticleState {
   content: string;
   cover_image: string;
   event_date: string;
+  published_at: string;
 }
 
 export interface BeritaTabProps {
@@ -191,14 +192,13 @@ export const BeritaTab: React.FC<BeritaTabProps> = ({
                   label="Tanggal Event *"
                 />
               ) : (
-                <div className="space-y-1.5">
-                  <label className="block text-xs font-mono text-slate-400 mb-1.5">
-                    Tanggal Terbit
-                  </label>
-                  <div className="rounded-xl border border-white/10 bg-white/[0.02] p-3 text-xs font-mono text-slate-300 font-medium text-center">
-                    Hari Ini (Otomatis)
-                  </div>
-                </div>
+                <CyberDateTimePicker
+                  value={newArticle.published_at || ""}
+                  onChange={(val) =>
+                    onNewArticleChange({ ...newArticle, published_at: val })
+                  }
+                  label="Tanggal Terbit"
+                />
               )}
             </div>
 

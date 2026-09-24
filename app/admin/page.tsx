@@ -37,6 +37,8 @@ import {
   updateWorkProgram,
   deleteWorkProgram,
   fetchDivisionPhotos,
+  fetchCabinetSlidePhotos,
+  updateCabinetSlidePhoto,
   updateDivisionPhoto,
 } from "@/services";
 import { WorkProgram, CreateWorkProgramPayload } from "@/types";
@@ -126,7 +128,14 @@ export default function AdminDashboardPage() {
   // Aspirasi State
   const [aspirasiList, setAspirasiList] = useState<any[]>([]);
 
-  // Foto Bersama Divisi State
+  // Foto Bersama Kabinet — 3 slide slots
+  const [cabinetSlides, setCabinetSlides] = useState([
+    { url: "", name: "Foto Bersama Kabinet 1" },
+    { url: "", name: "Foto Bersama Kabinet 2" },
+    { url: "", name: "Foto Bersama Kabinet 3" },
+  ]);
+
+  // Foto Bersama Divisi State (for DivisionPhotosTab)
   const [divisionPhotos, setDivisionPhotos] = useState<Record<string, string>>({});
   const [isSavingDivisionPhotos, setIsSavingDivisionPhotos] = useState(false);
 
@@ -144,6 +153,7 @@ export default function AdminDashboardPage() {
     content: "",
     cover_image: "",
     event_date: "", // Custom Date-Time Picker for Event
+    published_at: "", // Manual Tanggal Terbit for Berita
   });
 
   // Edit Image Upload Mode State
@@ -312,6 +322,7 @@ export default function AdminDashboardPage() {
     tech_stack: string | string[];
     github_url: string;
     demo_url: string;
+    orbit_url: string;
     cover_image: string;
   }>({
     title: "",
@@ -321,8 +332,9 @@ export default function AdminDashboardPage() {
     author_name: "",
     author_nim: "",
     tech_stack: "Next.js, TypeScript, Tailwind",
-    github_url: "https://github.com",
-    demo_url: "https://demo.example.com",
+    github_url: "",
+    demo_url: "",
+    orbit_url: "",
     cover_image: "",
   });
 
@@ -425,6 +437,14 @@ export default function AdminDashboardPage() {
 
     const dpData = await fetchDivisionPhotos();
     setDivisionPhotos(dpData || {});
+
+    const slides = await fetchCabinetSlidePhotos();
+    setCabinetSlides((prev) =>
+      prev.map((slot, idx) => {
+        const loaded = slides[idx];
+        return loaded ? { url: loaded.url, name: loaded.name } : slot;
+      })
+    );
   }
 
   // File Reader Helper for Device Image Upload (with Canvas Compression)
@@ -469,6 +489,27 @@ export default function AdminDashboardPage() {
     await updateSiteSettings(settings);
     stopProcessing();
     showNotify("Pengaturan informasi website berhasil disimpan!");
+  };
+
+  // Handle Save individual cabinet slide (index 0-2)
+  const handleSaveCabinetSlide = async (index: number, e: React.FormEvent) => {
+    e.preventDefault();
+    const slugs = ["all_members_1", "all_members_2", "all_members_3"];
+    const slug = slugs[index];
+    const slide = cabinetSlides[index];
+    if (!slide) return;
+    startProcessing(`Menyimpan Foto Slideshow ${index + 1}...`);
+    await updateCabinetSlidePhoto(slug, slide.name, slide.url);
+    stopProcessing();
+    showNotify(`Foto Slideshow ${index + 1} berhasil disimpan!`);
+  };
+
+  const handleCabinetSlideChange = (index: number, field: "url" | "name", value: string) => {
+    setCabinetSlides((prev) => {
+      const next = [...prev];
+      next[index] = { ...next[index], [field]: value };
+      return next;
+    });
   };
 
   // Misi Dynamic Handlers
@@ -532,6 +573,10 @@ export default function AdminDashboardPage() {
     startProcessing(isEvt ? "Menerbitkan Event Baru..." : "Menerbitkan Berita Baru...");
     const generatedSlug = newArticle.slug || newArticle.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
     const uploadTimestamp = new Date().toISOString();
+    // Use manually selected date if provided, otherwise fallback to now
+    const publishedAt = (!isEvt && newArticle.published_at)
+      ? new Date(newArticle.published_at).toISOString()
+      : uploadTimestamp;
 
     const payload = {
       title: newArticle.title,
@@ -542,7 +587,7 @@ export default function AdminDashboardPage() {
       excerpt: newArticle.excerpt || newArticle.content.substring(0, 140),
       content: newArticle.content,
       cover_image: newArticle.cover_image || "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=800&auto=format&fit=crop",
-      created_at: uploadTimestamp,
+      created_at: publishedAt,
       event_date: isEvt ? (newArticle.event_date ? new Date(newArticle.event_date).toISOString() : uploadTimestamp) : null,
       reading_time: newArticle.reading_time || "4 min read",
     };
@@ -563,6 +608,7 @@ export default function AdminDashboardPage() {
         content: "",
         cover_image: "",
         event_date: "",
+        published_at: "",
       });
       await loadAllData();
     }
@@ -863,8 +909,9 @@ export default function AdminDashboardPage() {
         author_name: "",
         author_nim: "",
         tech_stack: "Next.js, TypeScript, Tailwind",
-        github_url: "https://github.com",
-        demo_url: "https://demo.example.com",
+        github_url: "",
+        demo_url: "",
+        orbit_url: "",
         cover_image: "",
       });
       await loadAllData();
@@ -1125,6 +1172,10 @@ export default function AdminDashboardPage() {
           settings={settings}
           onSettingsChange={setSettings}
           onSaveSettings={handleSaveSettings}
+          cabinetSlides={cabinetSlides}
+          onCabinetSlideChange={handleCabinetSlideChange}
+          onSaveCabinetSlide={handleSaveCabinetSlide}
+          onDeviceFileUpload={handleDeviceFileUpload}
         />
       )}
 

@@ -147,6 +147,18 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
 
           {/* Action Link Buttons */}
           <div className="flex items-center gap-2 shrink-0">
+            {project.orbit_url && (
+              <a
+                href={project.orbit_url}
+                target="_blank"
+                rel="noreferrer"
+                title="Tautan Profil Orbit Pembuat"
+                className="px-2.5 py-1 rounded-md border-2 border-black bg-cyan-400 text-black shadow-[2px_2px_0px_0px_#000000] -rotate-1 hover:rotate-0 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all cursor-pointer flex items-center gap-1 text-[11px] font-mono font-black"
+              >
+                <span>Orbit</span>
+                <ExternalLink size={11} />
+              </a>
+            )}
             {project.github_url && (
               <a
                 href={project.github_url}

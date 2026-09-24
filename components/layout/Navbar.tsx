@@ -35,7 +35,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileOpenDropdown, setMobileOpenDropdown] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleMouseEnter = (name: string) => {
@@ -85,10 +85,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
     return () => window.removeEventListener("storage", checkAuth);
   }, [pathname]);
 
-  // Tutup dropdown saat klik luar
+  // Tutup dropdown saat klik luar header
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (headerRef.current && !headerRef.current.contains(e.target as Node)) {
         if (timeoutRef.current) {
           clearTimeout(timeoutRef.current);
           timeoutRef.current = null;
@@ -132,6 +132,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
   return (
     <>
       <header
+        ref={headerRef}
         className={`sticky top-0 z-50 w-full transition-all duration-300 ${
           scrolled
             ? "border-b border-white/10 bg-[#0B0D14]/95 shadow-lg shadow-black/40 backdrop-blur-xl"
@@ -168,7 +169,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
           {/* ===== MAIN NAV — Desktop (Centered Absolute) ===== */}
           {/* ===== MAIN NAV — Desktop (Centered Absolute) ===== */}
           <div
-            ref={dropdownRef}
             className="hidden lg:flex items-center absolute left-1/2 -translate-x-1/2 max-w-[calc(100%-450px)]"
           >
             <nav className="flex items-center gap-1 xl:gap-1.5 whitespace-nowrap">
