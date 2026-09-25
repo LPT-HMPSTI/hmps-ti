@@ -44,19 +44,19 @@ TO public
 USING (true);
 
 -- 4. Tambahkan User Default (Super Admin & Admin Divisi)
--- Note: Password default adalah "admin123" (sudah di-hash sha256: 8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918)
+-- Note: Password default adalah "admin123"
 INSERT INTO public.admin_users (username, password_hash, keterangan, role, is_active)
 VALUES 
   (
     'superadmin', 
-    '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 
+    '29f810798608aab16834a999e0ab11270b92d36a16382f251c5b5f33860b0480', 
     'Super Admin Utama HMPSTI', 
     'superadmin', 
     true
   ),
   (
     'admin_hmpsti', 
-    '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 
+    '29f810798608aab16834a999e0ab11270b92d36a16382f251c5b5f33860b0480', 
     'Pengurus HMPSTI', 
     'admin', 
     true
