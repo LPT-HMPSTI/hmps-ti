@@ -52,17 +52,45 @@ export default function SubmitKaryaPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState("");
+  const [selectedFileName, setSelectedFileName] = useState("");
 
-  const handleDeviceFileUpload = (file: File) => {
-    if (file.size > 4 * 1024 * 1024) {
-      alert("Ukuran file terlalu besar! Maksimal 4MB.");
+  const handleDeviceFileUpload = async (file: File) => {
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Ukuran file terlalu besar! Maksimal 5MB.");
       return;
     }
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFormData((prev) => ({ ...prev, cover_image: reader.result as string }));
-    };
-    reader.readAsDataURL(file);
+
+    setSelectedFileName(file.name);
+    setIsUploading(true);
+    setUploadProgress("Mengunggah gambar...");
+
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+
+      const res = await fetch("/api/upload-image", {
+        method: "POST",
+        body: fd,
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setFormData((prev) => ({ ...prev, cover_image: data.url }));
+        setUploadProgress("Berhasil diunggah!");
+      } else {
+        setUploadProgress("");
+        alert(data.error || "Gagal mengunggah gambar.");
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+      setUploadProgress("");
+      alert("Gagal mengunggah gambar. Periksa koneksi internet.");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -290,7 +318,7 @@ export default function SubmitKaryaPage() {
                   Gambar Cover / Screenshot Proyek
                 </label>
                 <div className="flex flex-col sm:flex-row items-center gap-3">
-                  {formData.cover_image && (
+                  {formData.cover_image && !formData.cover_image.startsWith("data:") && (
                     <div className="relative shrink-0">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
@@ -311,15 +339,30 @@ export default function SubmitKaryaPage() {
                         className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white font-mono focus:border-[#1DB954] focus:outline-none"
                       />
                     ) : (
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) handleDeviceFileUpload(file);
-                        }}
-                        className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-2 text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#1DB954] file:text-black file:font-bold file:text-xs hover:file:bg-[#1ed760] cursor-pointer"
-                      />
+                      <div className="space-y-2">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          disabled={isUploading}
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) handleDeviceFileUpload(file);
+                          }}
+                          className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-2 text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#1DB954] file:text-black file:font-bold file:text-xs hover:file:bg-[#1ed760] cursor-pointer disabled:opacity-50"
+                        />
+                        {isUploading && (
+                          <div className="flex items-center gap-2 text-xs text-yellow-400 font-mono animate-pulse">
+                            <div className="h-3 w-3 rounded-full border-2 border-yellow-400 border-t-transparent animate-spin" />
+                            {uploadProgress}
+                          </div>
+                        )}
+                        {!isUploading && uploadProgress === "Berhasil diunggah!" && selectedFileName && (
+                          <div className="flex items-center gap-2 text-xs text-[#1DB954] font-mono">
+                            <CheckCircle size={14} weight="fill" />
+                            {selectedFileName} — berhasil diunggah
+                          </div>
+                        )}
+                      </div>
                     )}
                   </div>
 
@@ -455,11 +498,11 @@ export default function SubmitKaryaPage() {
               <Button
                 variant="spotify"
                 size="lg"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isUploading}
                 icon={<PaperPlaneTilt size={18} weight="fill" />}
                 className="w-full sm:w-auto"
               >
-                {isSubmitting ? "Mengirimkan Karya..." : "Kirimkan Karya Sekarang"}
+                {isUploading ? "Mengunggah Gambar..." : isSubmitting ? "Mengirimkan Karya..." : "Kirimkan Karya Sekarang"}
               </Button>
             </div>
           </form>

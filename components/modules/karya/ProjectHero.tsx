@@ -1,8 +1,11 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { Search } from "lucide-react";
+import { PaperPlaneTilt } from "@phosphor-icons/react";
 import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
 
 export interface ProjectHeroProps {
   currentPeriod: string;
@@ -27,14 +30,27 @@ export const ProjectHero: React.FC<ProjectHeroProps> = ({
 }) => {
   return (
     <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#121520] p-6 sm:p-10 backdrop-blur-xl shadow-2xl">
-      <div className="relative z-10 space-y-3">
-        <div className="flex items-center gap-2 flex-wrap">
-          <Badge variant="cyan" tilt="left">
-            KATALOG INOVASI & KARYA
-          </Badge>
-          <Badge variant="glass" tilt="right">
-            PERIODE {currentPeriod}
-          </Badge>
+      <div className="relative z-10 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-2 flex-wrap">
+            <Badge variant="cyan" tilt="left">
+              KATALOG INOVASI & KARYA
+            </Badge>
+            <Badge variant="glass" tilt="right">
+              PERIODE {currentPeriod}
+            </Badge>
+          </div>
+
+          <Link href="/karya/submit" className="self-start sm:self-auto">
+            <Button
+              variant="spotify"
+              size="sm"
+              icon={<PaperPlaneTilt size={16} weight="fill" />}
+              className="transition-all duration-300 hover:scale-105 shadow-[0_0_15px_rgba(29,185,84,0.3)] text-xs font-mono font-bold"
+            >
+              Kirim Karya
+            </Button>
+          </Link>
         </div>
 
         <h1 className="text-3xl font-extrabold text-white sm:text-5xl tracking-tight">

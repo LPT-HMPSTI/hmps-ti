@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1149.0",
     "@phosphor-icons/react": "^2.1.10",
     "@supabase/supabase-js": "^2.48.1",
     "clsx": "^2.1.1",

@@ -35,11 +35,15 @@ export async function POST(req: Request) {
     const formattedDemo = demo_url?.trim() ? demo_url.trim() : "-";
     const formattedOrbit = orbit_url?.trim() ? orbit_url.trim() : "-";
 
-    const displayCoverHtml = cover_image?.trim()
+    // Build cover image HTML — only show if it's a valid URL (no base64)
+    const coverUrl = cover_image?.trim() || "";
+    const isValidUrl = coverUrl.startsWith("http://") || coverUrl.startsWith("https://");
+
+    const displayCoverHtml = isValidUrl
       ? `<div style="margin-top: 20px; text-align: center;">
           <p style="color: #1DB954; font-weight: bold; margin-bottom: 8px;">Cover Image / Gambar Preview:</p>
-          <img src="${cover_image.trim()}" alt="Preview Karya" style="max-width: 100%; max-height: 320px; border-radius: 12px; border: 1px solid #333; object-fit: cover;" />
-          ${!cover_image.startsWith("data:image") ? `<p style="font-size: 11px; color: #888; margin-top: 4px;">URL: ${cover_image.trim()}</p>` : ""}
+          <img src="${coverUrl}" alt="Preview Karya" style="max-width: 100%; max-height: 320px; border-radius: 12px; border: 1px solid #333; object-fit: cover;" />
+          <p style="font-size: 11px; color: #888; margin-top: 8px;">URL Gambar: <a href="${coverUrl}" style="color: #00F2FE;" target="_blank">${coverUrl}</a></p>
          </div>`
       : `<div style="margin-top: 15px; font-size: 12px; color: #888;">Gambar Cover: <i>(Tidak dilampirkan)</i></div>`;
 
