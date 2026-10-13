@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { LenisProvider } from "./LenisProvider";
 import { NavigationProgressBar } from "./NavigationProgressBar";
 import { Navbar } from "./Navbar";
@@ -9,12 +9,18 @@ import { BottomPlayerBar } from "./BottomPlayerBar";
 import { DirectLinkDrawer } from "./DirectLinkDrawer";
 import { DirectPortalProvider, useDirectPortal } from "./DirectPortalContext";
 import { RadarSyncProvider } from "./RadarSyncContext";
+import { PageTransitionLoader } from "@/components/ui/PageTransitionLoader";
 
 const ShellContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isOpen, openDrawer, closeDrawer } = useDirectPortal();
 
   return (
     <div className="relative flex min-h-screen flex-col bg-[#0B0D14] text-[#FFFFFF] antialiased">
+      {/* Global Page Transition Loading Overlay */}
+      <Suspense fallback={null}>
+        <PageTransitionLoader />
+      </Suspense>
+
       {/* Laser Top Navigation Progress Bar */}
       <NavigationProgressBar />
 

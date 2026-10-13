@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/Button";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
 export const ASPIRASI_TOPICS = [
   "Akademik & Fasilitas",
@@ -95,6 +96,13 @@ export const AspirationForm: React.FC<AspirationFormProps> = ({
 
   return (
     <div className="lg:col-span-7">
+      {/* Overlay loading saat pengiriman aspirasi */}
+      {isSubmitting && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#0B0D14]/90 backdrop-blur-sm">
+          <LoadingSpinner size={200} label="Mengirimkan Aspirasi..." />
+        </div>
+      )}
+
       <GlassCard glowColor="emerald" className="p-6 sm:p-8 space-y-6">
         {/* Form Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
@@ -231,7 +239,7 @@ export const AspirationForm: React.FC<AspirationFormProps> = ({
               disabled={isSubmitting}
               icon={<Send size={15} />}
             >
-              {isSubmitting ? "Mengirimkan..." : "Kirim Aspirasi Sekarang"}
+              Kirim Aspirasi Sekarang
             </Button>
           </form>
         )}

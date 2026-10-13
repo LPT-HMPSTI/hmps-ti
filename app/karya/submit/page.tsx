@@ -21,6 +21,7 @@ import { GlassCard } from "@/components/ui/GlassCard";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { CyberSelect } from "@/components/ui/CyberSelect";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
 const CATEGORY_OPTIONS = [
   "WEB APP",
@@ -128,6 +129,19 @@ export default function SubmitKaryaPage() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-4xl mx-auto">
+      {/* Overlay loading saat upload gambar */}
+      {isUploading && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#0B0D14]/90 backdrop-blur-sm">
+          <LoadingSpinner size={200} label="Mengunggah Gambar ke Server..." />
+        </div>
+      )}
+
+      {/* Overlay loading saat submit form */}
+      {isSubmitting && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#0B0D14]/90 backdrop-blur-sm">
+          <LoadingSpinner size={200} label="Mengirimkan Karya ke Admin..." />
+        </div>
+      )}
       {/* Back to Showcase button & Page Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-6">
         <div>
@@ -351,7 +365,7 @@ export default function SubmitKaryaPage() {
                           className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-2 text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#1DB954] file:text-black file:font-bold file:text-xs hover:file:bg-[#1ed760] cursor-pointer disabled:opacity-50"
                         />
                         {isUploading && (
-                          <div className="flex items-center gap-2 text-xs text-yellow-400 font-mono animate-pulse">
+                          <div className="flex items-center gap-2 text-xs text-yellow-400 font-mono">
                             <div className="h-3 w-3 rounded-full border-2 border-yellow-400 border-t-transparent animate-spin" />
                             {uploadProgress}
                           </div>
@@ -502,7 +516,7 @@ export default function SubmitKaryaPage() {
                 icon={<PaperPlaneTilt size={18} weight="fill" />}
                 className="w-full sm:w-auto"
               >
-                {isUploading ? "Mengunggah Gambar..." : isSubmitting ? "Mengirimkan Karya..." : "Kirimkan Karya Sekarang"}
+                Kirimkan Karya Sekarang
               </Button>
             </div>
           </form>

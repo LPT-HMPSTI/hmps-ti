@@ -340,10 +340,52 @@ CREATE POLICY "Public Manage Feedback" ON public.feedback FOR ALL TO public USIN
 
 
 -- ==============================================================================
--- 11. STORED PROCEDURE (RPC): increment_like_atomic
+-- 11. TABEL: admin_users (Manajemen Akun Pengurus / Backoffice Console)
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS public.admin_users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    username TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    keterangan TEXT DEFAULT 'Pengurus HMPSTI',
+    role TEXT NOT NULL DEFAULT 'admin' CHECK (role IN ('superadmin', 'admin')),
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+ALTER TABLE public.admin_users ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Public Read Admin Users" ON public.admin_users;
+CREATE POLICY "Public Read Admin Users" ON public.admin_users FOR SELECT TO public USING (true);
+
+DROP POLICY IF EXISTS "Public Manage Admin Users" ON public.admin_users;
+CREATE POLICY "Public Manage Admin Users" ON public.admin_users FOR ALL TO public USING (true) WITH CHECK (true);
+
+-- Seed Akun Admin Default (Passcode: admin123, hash SHA-256 ber-salt hmpsti_salt_swu)
+INSERT INTO public.admin_users (username, password_hash, keterangan, role, is_active)
+VALUES 
+    (
+        'superadmin',
+        '29f810798608aab16834a999e0ab11270b92d36a16382f251c5b5f33860b0480',
+        'Super Admin Utama HMPSTI',
+        'superadmin',
+        true
+    ),
+    (
+        'admin_hmpsti',
+        '29f810798608aab16834a999e0ab11270b92d36a16382f251c5b5f33860b0480',
+        'Admin Pengurus HMPSTI',
+        'admin',
+        true
+    )
+ON CONFLICT (username) DO NOTHING;
+
+
+-- ==============================================================================
+-- 12. STORED PROCEDURE (RPC): increment_like_atomic
 -- ==============================================================================
 -- Fungsi ini menangani mutasi jumlah like secara atomik dan aman dari race condition
--- untuk 4 tabel utama: news, student_projects, members, division_members.
+-- untuk 5 tabel: news, student_projects, members, division_members, gallery_items.
 -- ==============================================================================
 CREATE OR REPLACE FUNCTION public.increment_like_atomic(
     table_name TEXT,
@@ -380,6 +422,12 @@ BEGIN
         SET likes_count = GREATEST(0, COALESCE(likes_count, 0) + delta_val)
         WHERE id = row_id::uuid
         RETURNING likes_count INTO new_count;
+
+    ELSIF table_name = 'gallery_items' THEN
+        UPDATE public.gallery_items 
+        SET likes_count = GREATEST(0, COALESCE(likes_count, 0) + delta_val)
+        WHERE id = row_id::uuid
+        RETURNING likes_count INTO new_count;
         
     END IF;
 
@@ -389,7 +437,7 @@ $$;
 
 
 -- ==============================================================================
--- INDEXING UNTUK OPTIMASI PERFORMA KUERI
+-- 13. INDEXING UNTUK OPTIMASI PERFORMA KUERI
 -- ==============================================================================
 CREATE INDEX IF NOT EXISTS idx_news_created_at ON public.news (created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_news_is_event ON public.news (is_event);
@@ -398,3 +446,16 @@ CREATE INDEX IF NOT EXISTS idx_div_members_slug ON public.division_members (divi
 CREATE INDEX IF NOT EXISTS idx_members_nim ON public.members (nim);
 CREATE INDEX IF NOT EXISTS idx_work_programs_slug ON public.work_programs (division_slug);
 CREATE INDEX IF NOT EXISTS idx_feedback_created_at ON public.feedback (created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_admin_users_username ON public.admin_users (username);
+
+
+-- ==============================================================================
+-- 14. PATCH MIGRATION HELPER (IDEMPOTENT UNTUK DATABASE YANG SUDAH BERJALAN)
+-- ==============================================================================
+-- Jika Anda sebelumnya sudah menjalankan schema versi lama, jalankan blok berikut
+-- agar kolom-kolom baru terpasang tanpa menghapus data yang sudah ada:
+-- ==============================================================================
+ALTER TABLE public.gallery_items ADD COLUMN IF NOT EXISTS photos TEXT[] DEFAULT '{}';
+ALTER TABLE public.gallery_items ADD COLUMN IF NOT EXISTS drive_url TEXT;
+ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS email TEXT;
+ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS sender_email TEXT;

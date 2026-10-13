@@ -178,7 +178,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
                   href="/manage"
                   prefetch={true}
                   className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-[15px] whitespace-nowrap transition-all duration-200 ${
-                    pathname.startsWith("/manage") || pathname.startsWith("/admin")
+                    pathname.startsWith("/manage")
                       ? "text-[#1DB954] bg-[#1DB954]/10 font-semibold"
                       : "text-slate-300 hover:text-white hover:bg-white/[0.06] font-semibold"
                   }`}
