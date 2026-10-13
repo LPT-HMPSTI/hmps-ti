@@ -66,6 +66,8 @@ export default function GaleriPage() {
       category: item.category,
       date: item.event_date || (item as any).date || "2026",
       url: item.url,
+      photos: item.photos,
+      drive_url: item.drive_url,
       description: item.description,
     });
   }, []);

@@ -17,6 +17,8 @@ export interface GalleryItem {
   category: GalleryCategory;
   event_date: string;
   url: string;
+  photos?: string[];
+  drive_url?: string;
   description: string;
   created_at?: string;
   likes_count?: number;

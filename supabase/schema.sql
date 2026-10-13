@@ -271,6 +271,8 @@ CREATE TABLE IF NOT EXISTS public.gallery_items (
     category TEXT NOT NULL DEFAULT 'WORKSHOP & SEMINAR',
     event_date TEXT NOT NULL,
     url TEXT NOT NULL,
+    photos TEXT[] DEFAULT '{}',
+    drive_url TEXT,
     description TEXT,
     likes_count INT NOT NULL DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL

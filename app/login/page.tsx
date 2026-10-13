@@ -25,7 +25,7 @@ export default function LoginPage() {
       localStorage.removeItem("hmpsti_admin_session");
       const activeSession = sessionStorage.getItem("hmpsti_admin_session");
       if (activeSession === "authenticated") {
-        router.replace("/admin");
+        router.replace("/manage");
       }
     }
   }, [router]);
@@ -51,7 +51,7 @@ export default function LoginPage() {
           })
         );
         localStorage.removeItem("hmpsti_admin_session");
-        router.replace("/admin");
+        router.replace("/manage");
       } else {
         setLoading(false);
         setErrorMsg(result.error || "Username atau kata sandi tidak valid.");

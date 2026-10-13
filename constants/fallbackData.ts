@@ -607,6 +607,13 @@ export const fallbackGalleryItems = [
     category: "MAKRAB & INAUGURASI",
     event_date: "18 Oktober 2026",
     url: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=800&auto=format&fit=crop",
+    photos: [
+      "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1528605248644-14dd04022da1?q=80&w=800&auto=format&fit=crop",
+    ],
+    drive_url: "https://drive.google.com/drive/folders/hmpsti-makrab-2026",
     description: "Momen kebersamaan dan keakraban mahasiswa baru prodi Teknik Informatika STMIK Widya Utama di Baturraden.",
   },
   {
@@ -615,6 +622,12 @@ export const fallbackGalleryItems = [
     category: "WORKSHOP",
     event_date: "28 Agustus 2026",
     url: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=800&auto=format&fit=crop",
+    photos: [
+      "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop",
+    ],
+    drive_url: "https://drive.google.com/drive/folders/hmpsti-workshop-lpt-2026",
     description: "Pelatihan intensif pengembangan aplikasi web berbasis App Router dan Edge Database di Lab Komputer.",
   },
   {
@@ -623,6 +636,10 @@ export const fallbackGalleryItems = [
     category: "KOMPETISI",
     event_date: "12 Juli 2026",
     url: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=800&auto=format&fit=crop",
+    photos: [
+      "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=800&auto=format&fit=crop",
+    ],
+    drive_url: "https://drive.google.com/drive/folders/hmpsti-hackathon-2026",
     description: "Pemberian trofi penghargaan Juara 1 Hackathon Nasional kepada tim HMPSTI STMIK Widya Utama.",
   },
 ];

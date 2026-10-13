@@ -9,6 +9,8 @@ import {
   Calendar,
   LinkSimple,
   UploadSimple,
+  Images,
+  Trash,
 } from "@phosphor-icons/react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -826,129 +828,197 @@ export const AdminEditModal: React.FC<AdminEditModalProps> = ({
                 </form>
               )}
 
-              {editModal.type === "galeri" && (
-                <form onSubmit={handleUpdateGallery} className="space-y-3.5">
-                  <div>
-                    <label className="block text-xs font-mono text-slate-400 mb-1">Judul Kegiatan *</label>
-                    <input
-                      type="text"
-                      required
-                      value={editModal.item.title || ""}
-                      onChange={(e) => setEditModal({ ...editModal, item: { ...editModal.item, title: e.target.value } })}
-                      className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white"
-                    />
-                  </div>
+              {editModal.type === "galeri" && (() => {
+                const editPhotos = (() => {
+                  const arr = Array.isArray(editModal.item?.photos) ? [...editModal.item.photos] : [];
+                  if (arr.length === 0 && editModal.item?.url) {
+                    arr[0] = editModal.item.url;
+                  }
+                  while (arr.length < 4) {
+                    arr.push("");
+                  }
+                  return arr.slice(0, 4);
+                })();
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
-                    <CyberSelect
-                      label="Kategori Galeri"
-                      value={editModal.item.category || "Makrab & Pelantikan"}
-                      onChange={(val) => setEditModal({ ...editModal, item: { ...editModal.item, category: val } })}
-                      options={["Makrab & Pelantikan", "Rapat Wajib", "Pertemuan", "Workshop", "Kompetisi", "Pengabdian"]}
-                    />
+                const handleUpdateEditPhotoSlot = (index: number, val: string) => {
+                  const nextPhotos = [...editPhotos];
+                  nextPhotos[index] = val;
+                  const firstValid = nextPhotos.find((p) => typeof p === "string" && p.trim() !== "") || "";
+                  setEditModal({
+                    ...editModal,
+                    item: {
+                      ...editModal.item,
+                      photos: nextPhotos,
+                      url: nextPhotos[0] || firstValid || "",
+                    },
+                  });
+                };
 
-                    <CyberDateTimePicker
-                      label="Tanggal Kegiatan *"
-                      value={editModal.item.event_date || ""}
-                      onChange={(val) => setEditModal({ ...editModal, item: { ...editModal.item, event_date: val } })}
-                      dateOnly
-                    />
-                  </div>
+                return (
+                  <form onSubmit={handleUpdateGallery} className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-mono text-slate-400 mb-1">Judul Kegiatan *</label>
+                      <input
+                        type="text"
+                        required
+                        value={editModal.item.title || ""}
+                        onChange={(e) => setEditModal({ ...editModal, item: { ...editModal.item, title: e.target.value } })}
+                        className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white"
+                      />
+                    </div>
 
-                  {/* Dual Mode Foto Galeri & Sneakpeek Preview */}
-                  <div className="space-y-1">
-                    <label className="block text-xs font-mono text-slate-400 mb-1">Foto Galeri (URL / Device)</label>
-                    <div className="flex flex-col sm:flex-row items-center gap-3">
-                      {/* Sneakpeek Preview Persegi Panjang */}
-                      {editModal.item?.url && (
-                        <div className="relative shrink-0 group">
-                          <img
-                            src={editModal.item.url}
-                            alt="Sneakpeek Galeri"
-                            className="h-12 w-24 rounded-xl border-2 border-black bg-slate-900 object-cover shadow-[2px_2px_0px_0px_#000000]"
-                          />
-                          <span className="absolute -top-1.5 -right-1 px-1.5 py-0.2 text-[7px] font-mono font-black bg-[#FFD700] text-black border border-black rounded shadow-[1px_1px_0px_0px_#000]">
-                            PREVIEW
-                          </span>
-                        </div>
-                      )}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
+                      <CyberSelect
+                        label="Kategori Galeri"
+                        value={editModal.item.category || "Makrab & Pelantikan"}
+                        onChange={(val) => setEditModal({ ...editModal, item: { ...editModal.item, category: val } })}
+                        options={["Makrab & Pelantikan", "Rapat Wajib", "Pertemuan", "Workshop", "Kompetisi", "Pengabdian", "Internal Himpunan"]}
+                      />
 
-                      <div className="flex-1 w-full">
-                        {editGalleryUploadMode === "url" ? (
-                          <input
-                            key="gallery-edit-url-input"
-                            type="text"
-                            value={editModal.item.url || ""}
-                            onChange={(e) => setEditModal({ ...editModal, item: { ...editModal.item, url: e.target.value } })}
-                            placeholder="https://..."
-                            className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white font-mono"
-                          />
-                        ) : (
-                          <input
-                            key="gallery-edit-file-input"
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              if (file) {
-                                handleDeviceFileUpload(file, (base64Url) => {
-                                  setEditModal({ ...editModal, item: { ...editModal.item, url: base64Url } });
-                                });
-                              }
-                            }}
-                            className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-2 text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#1DB954] file:text-black file:font-bold file:text-xs hover:file:bg-[#1ed760] cursor-pointer"
-                          />
-                        )}
+                      <CyberDateTimePicker
+                        label="Tanggal Kegiatan *"
+                        value={editModal.item.event_date || ""}
+                        onChange={(val) => setEditModal({ ...editModal, item: { ...editModal.item, event_date: val } })}
+                        dateOnly
+                      />
+                    </div>
+
+                    {/* Link Google Drive */}
+                    <div>
+                      <label className="block text-xs font-mono text-slate-400 mb-1 flex items-center justify-between">
+                        <span className="flex items-center gap-1.5">
+                          <LinkSimple size={14} className="text-[#1DB954]" /> Link Google Drive Dokumentasi (Opsional)
+                        </span>
+                        <span className="text-slate-500 text-[10px]">Folder arsip lengkap</span>
+                      </label>
+                      <input
+                        type="url"
+                        value={editModal.item.drive_url || ""}
+                        onChange={(e) => setEditModal({ ...editModal, item: { ...editModal.item, drive_url: e.target.value } })}
+                        placeholder="https://drive.google.com/drive/folders/..."
+                        className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white font-mono focus:border-[#1DB954] focus:outline-none"
+                      />
+                    </div>
+
+                    {/* 4 Slot Foto Dokumentasi Kegiatan */}
+                    <div className="space-y-2.5">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                        <label className="block text-xs font-mono text-slate-300 font-bold">
+                          Foto Kegiatan (Maksimal 4 Foto) *
+                        </label>
+                        <p className="text-[11px] font-mono text-slate-400">
+                          Slot 1 foto utama. Slot 2-4 opsional untuk slider foto.
+                        </p>
                       </div>
 
-                      <div className="flex items-center gap-2 shrink-0">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setEditGalleryUploadMode("url");
-                            if (editModal.item?.url?.startsWith("data:image")) {
-                              setEditModal({ ...editModal, item: { ...editModal.item, url: "" } });
-                            }
-                          }}
-                          className={`flex items-center gap-1.5 text-xs font-mono px-3 py-2.5 rounded-xl border transition-all cursor-pointer ${
-                            editGalleryUploadMode === "url"
-                              ? "bg-[#1DB954] text-black font-bold border-[#1DB954] shadow-md"
-                              : "bg-white/[0.04] text-slate-400 border-white/10 hover:text-white hover:bg-white/10"
-                          }`}
-                        >
-                          <LinkSimple size={14} weight="bold" /> URL Gambar
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setEditGalleryUploadMode("file")}
-                          className={`flex items-center gap-1.5 text-xs font-mono px-3 py-2.5 rounded-xl border transition-all cursor-pointer ${
-                            editGalleryUploadMode === "file"
-                              ? "bg-[#1DB954] text-black font-bold border-[#1DB954] shadow-md"
-                              : "bg-white/[0.04] text-slate-400 border-white/10 hover:text-white hover:bg-white/10"
-                          }`}
-                        >
-                          <UploadSimple size={14} weight="bold" /> Upload Device
-                        </button>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {[0, 1, 2, 3].map((slotIdx) => {
+                          const slotPhoto = editPhotos[slotIdx] || "";
+                          const isPrimary = slotIdx === 0;
+                          return (
+                            <div
+                              key={slotIdx}
+                              className={`p-3 rounded-2xl border transition-all ${
+                                slotPhoto
+                                  ? "border-[#1DB954]/40 bg-[#121520]/80 shadow-[0_0_12px_rgba(29,185,84,0.08)]"
+                                  : "border-white/10 bg-white/[0.02]"
+                              }`}
+                            >
+                              <div className="flex items-center justify-between mb-2">
+                                <span className="text-xs font-mono font-bold text-white flex items-center gap-1.5">
+                                  <Images
+                                    size={13}
+                                    className={slotPhoto ? "text-[#1DB954]" : "text-slate-400"}
+                                  />
+                                  Foto #{slotIdx + 1} {isPrimary ? "(Utama *)" : "(Opsional)"}
+                                </span>
+                                {slotPhoto && (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleUpdateEditPhotoSlot(slotIdx, "")}
+                                    className="text-[11px] font-mono text-red-400 hover:text-red-300 flex items-center gap-1 cursor-pointer"
+                                    title="Hapus foto dari slot ini"
+                                  >
+                                    <Trash size={12} /> Hapus
+                                  </button>
+                                )}
+                              </div>
+
+                              <div className="flex items-center gap-3">
+                                {/* Sneakpeek Preview Box */}
+                                <div className="relative h-14 w-20 shrink-0 rounded-xl overflow-hidden border border-white/15 bg-slate-900 flex items-center justify-center">
+                                  {slotPhoto ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img
+                                      src={slotPhoto}
+                                      alt={`Slot ${slotIdx + 1}`}
+                                      className="h-full w-full object-cover"
+                                    />
+                                  ) : (
+                                    <span className="text-[10px] font-mono text-slate-500 text-center px-1">
+                                      Kosong
+                                    </span>
+                                  )}
+                                  {slotPhoto && (
+                                    <span className="absolute -top-1 -right-1 px-1 py-0.2 text-[6px] font-mono font-black bg-[#FFD700] text-black border border-black rounded shadow-[1px_1px_0px_0px_#000]">
+                                      #{slotIdx + 1}
+                                    </span>
+                                  )}
+                                </div>
+
+                                <div className="flex-1 space-y-2">
+                                  <input
+                                    type="text"
+                                    value={slotPhoto}
+                                    onChange={(e) => handleUpdateEditPhotoSlot(slotIdx, e.target.value)}
+                                    placeholder="Paste URL foto..."
+                                    className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-2 text-xs text-white font-mono focus:border-[#1DB954] focus:outline-none"
+                                  />
+                                  <div className="flex items-center gap-2">
+                                    <label className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] text-[11px] font-mono text-slate-300 hover:text-white border border-white/10 cursor-pointer transition-all">
+                                      <UploadSimple size={12} />
+                                      <span>Upload Device</span>
+                                      <input
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={(e) => {
+                                          const file = e.target.files?.[0];
+                                          if (file) {
+                                            handleDeviceFileUpload(file, (base64Url) => {
+                                              handleUpdateEditPhotoSlot(slotIdx, base64Url);
+                                            });
+                                          }
+                                        }}
+                                      />
+                                    </label>
+                                    <span className="text-[10px] font-mono text-slate-500">Maks 5MB</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
-                  </div>
 
-                  <div>
-                    <label className="block text-xs font-mono text-slate-400 mb-1.5 sm:mb-2">Deskripsi / Catatan Kegiatan *</label>
-                    <textarea
-                      rows={14}
-                      value={editModal.item.description || ""}
-                      onChange={(e) => setEditModal({ ...editModal, item: { ...editModal.item, description: e.target.value } })}
-                      placeholder="Keterangan lengkap dokumentasi kegiatan..."
-                      className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-4 text-xs sm:text-sm text-white focus:border-[#1DB954] focus:outline-none leading-relaxed font-sans min-h-[320px]"
-                    />
-                  </div>
+                    <div>
+                      <label className="block text-xs font-mono text-slate-400 mb-1.5 sm:mb-2">Deskripsi / Catatan Kegiatan *</label>
+                      <textarea
+                        rows={8}
+                        value={editModal.item.description || ""}
+                        onChange={(e) => setEditModal({ ...editModal, item: { ...editModal.item, description: e.target.value } })}
+                        placeholder="Keterangan lengkap dokumentasi kegiatan..."
+                        className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-4 text-xs sm:text-sm text-white focus:border-[#1DB954] focus:outline-none leading-relaxed font-sans min-h-[160px]"
+                      />
+                    </div>
 
-                  <Button variant="spotify" size="md" className="w-full" icon={<FloppyDisk size={16} weight="bold" />}>
-                    Simpan Perubahan Galeri
-                  </Button>
-                </form>
-              )}
+                    <Button variant="spotify" size="md" className="w-full" icon={<FloppyDisk size={16} weight="bold" />}>
+                      Simpan Perubahan Galeri
+                    </Button>
+                  </form>
+                );
+              })()}
 
               {/* Edit Program Kerja Form */}
               {editModal.type === "proker" && (

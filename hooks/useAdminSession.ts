@@ -59,7 +59,7 @@ export function useAdminSession(): UseAdminSessionReturn {
     sessionStorage.removeItem(ADMIN_SESSION_KEY);
     localStorage.removeItem(ADMIN_SESSION_KEY);
     setIsAuthenticated(false);
-    router.push("/login");
+    router.push("/manage/login");
   };
 
   return {

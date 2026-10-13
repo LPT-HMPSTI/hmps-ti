@@ -115,7 +115,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
     sessionStorage.removeItem("hmpsti_admin_session");
     localStorage.removeItem("hmpsti_admin_session");
     setIsAdminLoggedIn(false);
-    router.push("/login");
+    router.push("/manage/login");
   };
 
   const navLinks = MAIN_NAV_LINKS as readonly NavItem[];
@@ -175,10 +175,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
               {/* Dashboard Admin Button (jika admin sedang login, ditaruh di sebelah kiri menu berita) */}
               {isAdminLoggedIn && (
                 <Link
-                  href="/admin"
+                  href="/manage"
                   prefetch={true}
                   className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-[15px] whitespace-nowrap transition-all duration-200 ${
-                    pathname.startsWith("/admin")
+                    pathname.startsWith("/manage") || pathname.startsWith("/admin")
                       ? "text-[#1DB954] bg-[#1DB954]/10 font-semibold"
                       : "text-slate-300 hover:text-white hover:bg-white/[0.06] font-semibold"
                   }`}
@@ -501,7 +501,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
               {isAdminLoggedIn && (
                 <div className="pt-2 border-t border-white/10 mt-2 flex flex-col gap-2">
                   <Link
-                    href="/admin"
+                    href="/manage"
                     prefetch={true}
                     onClick={() => setMobileMenuOpen(false)}
                     className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-slate-200 hover:text-[#1DB954] hover:bg-white/[0.05] transition-all"
