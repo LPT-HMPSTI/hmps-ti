@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Plus_Jakarta_Sans, Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { AppShell } from "@/components/layout/AppShell";
@@ -92,6 +93,17 @@ export default function RootLayout({
         suppressHydrationWarning
         className="bg-[#0B0D14] text-[#FFFFFF] font-sans antialiased selection:bg-[#1DB954]/30 selection:text-[#1DB954]"
       >
+        {process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
+          <Script
+            defer
+            src={
+              process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL ||
+              "https://cloud.umami.is/script.js"
+            }
+            data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
+            strategy="afterInteractive"
+          />
+        )}
         <AppShell>{children}</AppShell>
       </body>
     </html>

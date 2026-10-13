@@ -13,6 +13,7 @@ Pusat warta informasi, showcase karya teknologi mahasiswa, direktori kepengurusa
 [![Cloudflare R2](https://img.shields.io/badge/Cloudflare_R2-Object_Storage-F38020?style=flat-square&logo=cloudflare&logoColor=white)](https://www.cloudflare.com/products/r2/)
 [![Resend](https://img.shields.io/badge/Resend-Email_API-000000?style=flat-square&logo=resend&logoColor=white)](https://resend.com/)
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-12.4-black?style=flat-square&logo=framer&logoColor=white)](https://www.framer.com/motion/)
+[![Umami Analytics](https://img.shields.io/badge/Umami-Analytics-24292e?style=flat-square&logo=umami&logoColor=white)](https://umami.is/)
 
 </div>
 
@@ -34,6 +35,7 @@ Pusat warta informasi, showcase karya teknologi mahasiswa, direktori kepengurusa
 - **Ergonomic Loading Screen System**: Animasi logo resmi HMPSTI dikelilingi dual-orbiting green glowing rings pada transisi halaman (Next.js App Router Suspense), client router change, upload media ke Cloudflare R2, dan submit form.
 - **Halaman Not Found 404 Kustom**: Tampilan ramah pengguna dengan branding resmi HMPSTI untuk menangani rute yang tidak ditemukan. Rute lama `/admin` dan `/login` telah dialihkan/diarahkan ke 404 untuk memperkuat keamanan URL `/manage`.
 - **Atomic Optimistic Likes Engine**: Mesin reaksi apresiasi (like) yang concurrency-safe via Stored Procedure Supabase (RPC), instan tanpa jeda visual (*zero-lag UI*), dan tersinkronisasi ke PostgreSQL.
+- **Privacy-Friendly Web Analytics (Umami)**: Pelacakan statistik kunjungan situs (pengunjung unik, tampilan halaman, rujukan, dan perangkat) tanpa cookie dan ramah privasi menggunakan Umami Analytics (mendukung Cloud maupun Self-Hosted di VPS).
 
 ---
 
@@ -430,8 +432,41 @@ erDiagram
 | `R2_BUCKET_NAME` | Opsional | Nama bucket Cloudflare R2 (default: `hmpsti`). |
 | `R2_PUBLIC_URL` | Opsional | Public URL dev atau custom domain R2 (contoh: `https://pub-xxx.r2.dev`). |
 | `NEXT_PUBLIC_SITE_URL` | Opsional | Domain kanonikal website untuk resolusi sitemap dan Open Graph. Default: `https://hmpsti-swu.vercel.app`. |
+| `ADMIN_API_SECRET` | Opsional | Token rahasia otentikasi server untuk proteksi endpoint internal (`DELETE /api/upload-image`). |
+| `NEXT_PUBLIC_UMAMI_WEBSITE_ID` | Opsional | Website ID dari dasbor Umami Analytics untuk pelacakan kunjungan pengunjung. |
+| `NEXT_PUBLIC_UMAMI_SCRIPT_URL` | Opsional | URL skrip pelacak Umami (default: `https://cloud.umami.is/script.js` atau URL instance self-hosted). |
 
 > *\*) Catatan:* Jika kredensial Supabase tidak diisi, website otomatis beralih ke mode **Fallback Offline Data** tanpa mengalami crash atau error tampilan.
+
+---
+
+## 🚀 Panduan Deployment VPS (PM2 & Standalone)
+
+Proyek ini telah dikonfigurasi dengan mode **Next.js Standalone Output** dan siap dijalankan menggunakan **PM2** di VPS (Ubuntu/Debian) tanpa memerlukan Docker:
+
+```bash
+# 1. Unduh repositori & pasang dependensi
+git clone <repository_url>
+cd hmps-ti
+npm install
+
+# 2. Siapkan variabel lingkungan
+cp .env.local.example .env.local
+# (Sesuaikan kredensial Supabase, Cloudflare R2, dan Umami Analytics)
+
+# 3. Kompilasi build standalone produksi
+npm run build
+
+# 4. Salin aset statis ke folder standalone
+cp -r public .next/standalone/
+cp -r .next/static .next/standalone/.next/
+
+# 5. Jalankan server via PM2 cluster
+pm2 start ecosystem.config.js
+pm2 save
+pm2 startup
+```
+
 
 ---
 
