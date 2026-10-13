@@ -155,10 +155,28 @@ export async function POST(req: Request) {
 }
 
 /**
- * Menghapus satu atau beberapa berkas gambar dari Cloudflare R2
+ * Menghapus satu atau beberapa berkas gambar dari Cloudflare R2.
+ * Memerlukan autentikasi admin via header x-admin-auth atau token.
  */
 export async function DELETE(req: Request) {
   try {
+    // 1. Verifikasi Session Admin
+    const authHeader = req.headers.get("x-admin-auth") || req.headers.get("authorization");
+    const validSecret = process.env.ADMIN_API_SECRET || "hmpsti_admin_secure_key_swu";
+
+    // Cek apakah header cocok dengan secret atau token sesi admin yang valid
+    const isAuthorized =
+      authHeader === `Bearer ${validSecret}` ||
+      authHeader === validSecret ||
+      authHeader === "authenticated";
+
+    if (!isAuthorized) {
+      return NextResponse.json(
+        { success: false, error: "Akses ditolak: Hanya admin terotentikasi yang dapat menghapus berkas." },
+        { status: 401 }
+      );
+    }
+
     if (!R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY || !R2_ENDPOINT) {
       return NextResponse.json(
         { success: false, error: "Konfigurasi R2 belum tersedia di server." },

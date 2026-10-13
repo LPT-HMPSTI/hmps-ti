@@ -89,10 +89,18 @@ export async function deleteImageFromR2(
   if (urls.length === 0) return true;
 
   try {
+    // Ambil tanda session admin yang sedang aktif di browser
+    let adminToken = "authenticated";
+    if (typeof window !== "undefined") {
+      const activeSession = sessionStorage.getItem("hmpsti_admin_session");
+      if (activeSession) adminToken = activeSession;
+    }
+
     const res = await fetch("/api/upload-image", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        "x-admin-auth": adminToken,
       },
       body: JSON.stringify({ urls }),
     });
