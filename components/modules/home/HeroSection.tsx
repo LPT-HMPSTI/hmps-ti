@@ -80,7 +80,7 @@ export const HeroSection: React.FC = () => {
         <div className="relative w-[340px] h-[340px] md:w-[500px] md:h-[500px] lg:w-[620px] lg:h-[620px] opacity-[0.11] filter grayscale brightness-125 blur-[2.5px] transform translate-x-1/4">
           <Image
             src="/logo-hmpsti.webp"
-            alt="HMPSTI Watermark Logo"
+            alt="HMPS-TI Watermark Logo"
             fill
             className="object-contain object-right"
             priority
@@ -139,14 +139,14 @@ export const HeroSection: React.FC = () => {
         {/* Badge */}
         <div className="inline-block pb-0.5 animate-hero-fade" style={{ animationDelay: "0ms", paddingBottom: "20px", marginTop: "-20px" }}>
           <Badge variant="spotify" tilt="left">
-            OFFICIAL HMPSTI SWU HUB
+            OFFICIAL HMPS-TI SWU HUB
           </Badge>
         </div>
 
         {/* Typography Hierarchy */}
         <h1 className="flex flex-col space-y-1 animate-hero-fade" style={{ animationDelay: "100ms", paddingBottom: "15px" }}>
           <span className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-none" style={{ paddingBottom: "10px" }}>
-            HMPSTI SWU
+            HMPS-TI SWU
           </span>
           <span className="text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#1DB954] leading-tight">
             Official Hub

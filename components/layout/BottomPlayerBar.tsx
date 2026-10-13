@@ -61,7 +61,7 @@ export const BottomPlayerBar: React.FC<BottomPlayerBarProps> = ({ onOpenDirectLi
           <div className="flex items-center gap-3 text-xs font-mono text-slate-300">
             <span>STMIK Widya Utama</span>
             <span>•</span>
-            <span className="text-[#1DB954] font-bold">HMPSTI</span>
+            <span className="text-[#1DB954] font-bold">HMPS-TI</span>
             <span>•</span>
             <span>Official Hub</span>
           </div>

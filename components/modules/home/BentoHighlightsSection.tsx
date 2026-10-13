@@ -86,7 +86,7 @@ export const BentoHighlightsSection: React.FC = () => {
               HIGHLIGHTS {settings.current_period}
             </Badge>
             <h2 className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-              Trending Berita & <span className="text-[#1DB954]">Agenda HMPSTI</span>
+              Trending Berita & <span className="text-[#1DB954]">Agenda HMPS-TI</span>
             </h2>
           </div>
           <Link href="/berita">

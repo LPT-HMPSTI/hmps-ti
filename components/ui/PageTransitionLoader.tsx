@@ -50,7 +50,7 @@ export const PageTransitionLoader: React.FC = () => {
       aria-live="polite"
       aria-label="Memuat halaman"
     >
-      <LoadingSpinner size={200} label="Memuat Halaman HMPSTI SWU..." />
+      <LoadingSpinner size={200} label="Memuat Halaman HMPS-TI SWU..." />
     </div>
   );
 };

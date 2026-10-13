@@ -26,14 +26,14 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://hmpsti-swu.vercel.a
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "HMPSTI STMIK Widya Utama | Official Portal & Student Hub",
-    template: "%s | HMPSTI SWU",
+    default: "HMPS-TI STMIK Widya Utama | Official Portal & Student Hub",
+    template: "%s | HMPS-TI SWU",
   },
   description:
-    "Portal Resmi Himpunan Mahasiswa Teknik Informatika (HMTI/HMPSTI) STMIK Widya Utama Purwokerto. Pusat Berita, Karya Mahasiswa, & Direct Portal Akses Kampus.",
+    "Portal Resmi Himpunan Mahasiswa Teknik Informatika (HMTI/HMPS-TI) STMIK Widya Utama Purwokerto. Pusat Berita, Karya Mahasiswa, & Direct Portal Akses Kampus.",
   keywords: [
     "HMTI",
-    "HMPSTI",
+    "HMPS-TI",
     "STMIK Widya Utama",
     "Teknik Informatika",
     "SWU",
@@ -42,25 +42,25 @@ export const metadata: Metadata = {
     "Komunitas IT Kampus",
     "Organisasi Mahasiswa",
   ],
-  authors: [{ name: "HMPSTI STMIK Widya Utama", url: "https://stmik-widya-utama.ac.id" }],
+  authors: [{ name: "HMPS-TI STMIK Widya Utama", url: "https://stmik-widya-utama.ac.id" }],
   icons: {
     icon: "/logo-hmpsti.webp",
     apple: "/logo-hmpsti.webp",
   },
-  creator: "HMPSTI STMIK Widya Utama",
+  creator: "HMPS-TI STMIK Widya Utama",
   publisher: "STMIK Widya Utama",
   openGraph: {
     type: "website",
     locale: "id_ID",
     url: siteUrl,
-    title: "HMPSTI STMIK Widya Utama | Official Portal & Student Hub",
+    title: "HMPS-TI STMIK Widya Utama | Official Portal & Student Hub",
     description:
       "Portal Resmi Himpunan Mahasiswa Teknik Informatika STMIK Widya Utama Purwokerto. Pusat Berita, Karya Mahasiswa, & Direct Portal Akses Kampus.",
-    siteName: "HMPSTI STMIK Widya Utama",
+    siteName: "HMPS-TI STMIK Widya Utama",
   },
   twitter: {
     card: "summary_large_image",
-    title: "HMPSTI STMIK Widya Utama | Official Portal & Student Hub",
+    title: "HMPS-TI STMIK Widya Utama | Official Portal & Student Hub",
     description:
       "Portal Resmi Himpunan Mahasiswa Teknik Informatika STMIK Widya Utama Purwokerto. Pusat Berita, Karya Mahasiswa, & Direct Portal Akses Kampus.",
   },

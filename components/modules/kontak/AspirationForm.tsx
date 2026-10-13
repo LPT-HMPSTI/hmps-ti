@@ -142,7 +142,7 @@ export const AspirationForm: React.FC<AspirationFormProps> = ({
             </div>
             <h3 className="text-xl font-bold text-white">Aspirasi Berhasil Disampaikan!</h3>
             <p className="text-xs text-slate-300 max-w-md mx-auto leading-relaxed font-mono">
-              Terima kasih atas partisipasi Anda. Pesan Anda telah tersimpan secara aman di database dan akan ditinjau pada agenda evaluasi HMPSTI SWU.
+              Terima kasih atas partisipasi Anda. Pesan Anda telah tersimpan secara aman di database dan akan ditinjau pada agenda evaluasi HMPS-TI SWU.
             </p>
           </motion.div>
         ) : (

@@ -35,13 +35,13 @@ export const Footer: React.FC = () => {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/logo-hmpsti.webp"
-                  alt="Logo Resmi HMPSTI SWU"
+                  alt="Logo Resmi HMPS-TI SWU"
                   className="h-full w-full object-contain drop-shadow"
                 />
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
-                  <span className="font-mono font-bold tracking-wider text-white text-lg">HMPSTI</span>
+                  <span className="font-mono font-bold tracking-wider text-white text-lg">HMPS-TI</span>
                   <span className="text-xs font-semibold px-1.5 py-0.5 rounded border border-[#1DB954]/40 bg-[#1DB954]/10 text-[#1DB954]">SWU</span>
                 </div>
                 <p className="text-xs text-slate-400">STMIK Widya Utama Purwokerto</p>
@@ -54,11 +54,11 @@ export const Footer: React.FC = () => {
 
             <div className="flex items-center gap-3 pt-2">
               <a
-                href="https://github.com/LPT-HMPSTI"
+                href="https://github.com/LPT-HMPS-TI"
                 target="_blank"
                 rel="noreferrer"
                 className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-slate-400 transition-colors hover:border-cyan-400/40 hover:bg-white/[0.08] hover:text-cyan-400"
-                aria-label="GitHub HMPSTI"
+                aria-label="GitHub HMPS-TI"
               >
                 <Github size={18} strokeWidth={1.5} />
               </a>
@@ -67,7 +67,7 @@ export const Footer: React.FC = () => {
                 target="_blank"
                 rel="noreferrer"
                 className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-slate-400 transition-colors hover:border-cyan-400/40 hover:bg-white/[0.08] hover:text-cyan-400"
-                aria-label="Instagram HMPSTI"
+                aria-label="Instagram HMPS-TI"
               >
                 <Instagram size={18} strokeWidth={1.5} />
               </a>
@@ -76,7 +76,7 @@ export const Footer: React.FC = () => {
                 target="_blank"
                 rel="noreferrer"
                 className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-slate-400 transition-colors hover:border-cyan-400/40 hover:bg-white/[0.08] hover:text-cyan-400"
-                aria-label="LinkedIn HMPSTI"
+                aria-label="LinkedIn HMPS-TI"
               >
                 <Linkedin size={18} strokeWidth={1.5} />
               </a>
@@ -132,7 +132,7 @@ export const Footer: React.FC = () => {
 
           {/* Divisi Column */}
           <div className="space-y-3">
-            <h4 className="text-xs font-mono uppercase tracking-wider font-semibold text-white">Divisi HMPSTI</h4>
+            <h4 className="text-xs font-mono uppercase tracking-wider font-semibold text-white">Divisi HMPS-TI</h4>
             <ul className="space-y-2 text-xs">
               <li>
                 <Link href="/divisi/medkominfo" className="transition-colors hover:text-cyan-300">
@@ -180,7 +180,7 @@ export const Footer: React.FC = () => {
               <a
                 href={`mailto:${settings.email || "hmps-ti@stmik-widya-utama.ac.id"}`}
                 className="flex items-center gap-2 group transition-colors hover:text-cyan-300"
-                title="Kirim Email ke HMPSTI"
+                title="Kirim Email ke HMPS-TI"
               >
                 <Mail size={16} strokeWidth={1.5} className="text-cyan-400 shrink-0 group-hover:scale-110 transition-transform" />
                 <span>{settings.email || "hmps-ti@stmik-widya-utama.ac.id"}</span>
@@ -191,7 +191,7 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Bar */}
         <div className="mt-12 flex flex-col items-center justify-center gap-4 border-t border-white/10 pt-6 text-center text-xs text-slate-500 sm:flex-row sm:text-left">
-          <p>© {settings.current_period || "2026"} HMPSTI STMIK Widya Utama. All rights reserved.</p>
+          <p>© {settings.current_period || "2026"} HMPS-TI STMIK Widya Utama. All rights reserved.</p>
         </div>
       </div>
     </footer>

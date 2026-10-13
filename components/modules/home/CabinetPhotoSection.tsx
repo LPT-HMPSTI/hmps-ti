@@ -79,7 +79,7 @@ export const CabinetPhotoSection: React.FC = () => {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={slide.url}
-                  alt={slide.name || "Foto Bersama Seluruh Pengurus & Anggota HMPSTI SWU"}
+                  alt={slide.name || "Foto Bersama Seluruh Pengurus & Anggota HMPS-TI SWU"}
                   className="w-full h-full object-cover object-center"
                 />
               </div>
@@ -147,7 +147,7 @@ export const CabinetPhotoSection: React.FC = () => {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={current.url}
-              alt={current.name || "Foto Bersama Seluruh Anggota HMPSTI SWU Full"}
+              alt={current.name || "Foto Bersama Seluruh Anggota HMPS-TI SWU Full"}
               className="w-full h-full max-h-[82vh] object-contain mx-auto"
             />
             {current.name && (

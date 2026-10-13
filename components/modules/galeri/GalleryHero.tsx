@@ -30,10 +30,10 @@ export const GalleryHero: React.FC<GalleryHeroProps> = ({
           DOKUMENTASI FOTO
         </Badge>
         <h1 className="text-3xl font-extrabold text-white sm:text-5xl">
-          Galeri Kegiatan <span className="text-[#1DB954]">HMPSTI SWU</span>
+          Galeri Kegiatan <span className="text-[#1DB954]">HMPS-TI SWU</span>
         </h1>
         <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed font-mono">
-          Dokumentasi foto dan rekaman jejak kegiatan resmi HMPSTI STMIK Widya Utama.
+          Dokumentasi foto dan rekaman jejak kegiatan resmi HMPS-TI STMIK Widya Utama.
         </p>
 
         {/* Search Bar & Category Filter Pills */}

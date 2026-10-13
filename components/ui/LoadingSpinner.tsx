@@ -126,7 +126,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/logo-hmpsti.webp"
-            alt="Logo HMPSTI STMIK Widya Utama"
+            alt="Logo HMPS-TI STMIK Widya Utama"
             style={{
               width: logoSize * 0.72,
               height: logoSize * 0.72,

@@ -28,7 +28,7 @@ export const DivisiPreviewSection: React.FC = () => {
       id: "bph",
       name: "BPH",
       short: "BPH",
-      desc: "Ketua, Wakil, Sekretaris, dan Bendahara pengambil kebijakan utama HMPSTI.",
+      desc: "Ketua, Wakil, Sekretaris, dan Bendahara pengambil kebijakan utama HMPS-TI.",
       badgeVariant: "spotify" as const,
       avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop",
     },
@@ -61,7 +61,7 @@ export const DivisiPreviewSection: React.FC = () => {
       name: "MEDKOMINFO",
       short: "MEDKOMINFO",
       tagline: "Branding Visual & Sosmed",
-      desc: "Desain grafis feeds, video dokumentasi, dan visual branding HMPSTI.",
+      desc: "Desain grafis feeds, video dokumentasi, dan visual branding HMPS-TI.",
       badgeVariant: "purple" as const,
       avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400&auto=format&fit=crop",
     },
@@ -81,10 +81,10 @@ export const DivisiPreviewSection: React.FC = () => {
         <div className="flex items-center justify-between">
           <div>
             <Badge variant="spotify" tilt="left">
-              6 DIVISI HMPSTI
+              6 DIVISI HMPS-TI
             </Badge>
             <h2 className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-              Divisi Kepengurusan <span className="text-[#1DB954]">HMPSTI SWU</span>
+              Divisi Kepengurusan <span className="text-[#1DB954]">HMPS-TI SWU</span>
             </h2>
           </div>
         </div>

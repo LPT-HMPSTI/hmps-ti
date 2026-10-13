@@ -408,9 +408,13 @@ export const AdminEditModal: React.FC<AdminEditModalProps> = ({
                             onChange={(e) => {
                               const file = e.target.files?.[0];
                               if (file) {
-                                handleDeviceFileUpload(file, (base64Url) => {
-                                  setEditModal({ ...editModal, item: { ...editModal.item, avatar: base64Url } });
+                                handleDeviceFileUpload(file, (url) => {
+                                  setEditModal((prev) => ({
+                                    ...prev,
+                                    item: { ...prev.item, avatar: url },
+                                  }));
                                 });
+                                e.target.value = "";
                               }
                             }}
                             className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-2 text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#1DB954] file:text-black file:font-bold file:text-xs hover:file:bg-[#1ed760] cursor-pointer"
@@ -570,9 +574,13 @@ export const AdminEditModal: React.FC<AdminEditModalProps> = ({
                             onChange={(e) => {
                               const file = e.target.files?.[0];
                               if (file) {
-                                handleDeviceFileUpload(file, (base64Url) => {
-                                  setEditModal({ ...editModal, item: { ...editModal.item, avatar: base64Url } });
+                                handleDeviceFileUpload(file, (url) => {
+                                  setEditModal((prev) => ({
+                                    ...prev,
+                                    item: { ...prev.item, avatar: url },
+                                  }));
                                 });
+                                e.target.value = "";
                               }
                             }}
                             className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-2 text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#1DB954] file:text-black file:font-bold file:text-xs hover:file:bg-[#1ed760] cursor-pointer"
@@ -641,7 +649,7 @@ export const AdminEditModal: React.FC<AdminEditModalProps> = ({
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                     <div>
                       <CyberSelect
                         label="Kategori Karya"
@@ -667,6 +675,16 @@ export const AdminEditModal: React.FC<AdminEditModalProps> = ({
                         value={editModal.item.author_nim || ""}
                         onChange={(e) => setEditModal({ ...editModal, item: { ...editModal.item, author_nim: e.target.value } })}
                         placeholder="e.g. 220101010"
+                        className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-mono text-slate-400 mb-1">Email Pembuat</label>
+                      <input
+                        type="email"
+                        value={editModal.item.author_email || ""}
+                        onChange={(e) => setEditModal({ ...editModal, item: { ...editModal.item, author_email: e.target.value } })}
+                        placeholder="e.g. mahasiswa@..."
                         className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white font-mono"
                       />
                     </div>

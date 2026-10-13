@@ -147,7 +147,7 @@ export const DivisionHero: React.FC<DivisionHeroProps> = ({
   };
 
   const handleMoreClick = () => {
-    triggerReaction(`${division.short} HMPSTI SWU!`);
+    triggerReaction(`${division.short} HMPS-TI SWU!`);
   };
 
   const handleToggleShuffle = () => {
@@ -322,7 +322,7 @@ export const DivisionHero: React.FC<DivisionHeroProps> = ({
                     }`}
                   >
                     <CheckCircle size={14} className="fill-black text-white" />
-                    {activeLeaderIndex === 0 ? "Ketua Umum HMPSTI" : "Wakil Ketua Umum"}
+                    {activeLeaderIndex === 0 ? "Ketua Umum HMPS-TI" : "Wakil Ketua Umum"}
                   </span>
                   <span className="text-xs font-mono text-slate-400 uppercase tracking-wider">
                     {division.short} SWU

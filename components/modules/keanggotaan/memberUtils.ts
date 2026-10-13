@@ -36,7 +36,7 @@ export function normalizeMemberStatus(status: string, role: string) {
 // Prioritas pengurutan hierarkis anggota:
 // 1. Pengurus Aktif & BPH (Ketua, Wakil, Sekretaris, Bendahara)
 // 2. Pengurus Aktif Divisi (LPT, Medkom, PSDM, Humas, KWU, dll -> Kadiv dulu baru Staff)
-// 3. Alumni HMPS-TI (Tahun Angkatan Terbaru ke Lama)
+// 3. Alumni HMPSTI (Tahun Angkatan Terbaru ke Lama)
 // 4. Dosen Penanggung Jawab
 export function getMemberSortPriority(m: any) {
   const role = (m.role || "").toLowerCase();
@@ -89,7 +89,7 @@ export function getMemberSortPriority(m: any) {
     return { categoryRank: 2, divisionRank: divRank, roleRank, name: m.name || "" };
   }
 
-  // Kategori 3: Alumni HMPS-TI (Diurutkan angkatan terbaru dulu)
+  // Kategori 3: Alumni HMPSTI (Diurutkan angkatan terbaru dulu)
   const isAlumni = status.includes("alumni") || role.includes("alumni") || role.includes("ex-");
   if (isAlumni) {
     const cohortNum = parseInt(m.cohort || "2020", 10) || 2020;

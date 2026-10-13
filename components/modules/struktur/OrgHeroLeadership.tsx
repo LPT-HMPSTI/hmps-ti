@@ -66,7 +66,7 @@ export const OrgHeroLeadership: React.FC<OrgHeroLeadershipProps> = ({
   };
 
   const handleMoreClick = () => {
-    triggerReaction(":D HMPSTI SWU!");
+    triggerReaction(":D HMPS-TI SWU!");
   };
 
   const handleToggleShuffle = () => {
@@ -228,7 +228,7 @@ export const OrgHeroLeadership: React.FC<OrgHeroLeadershipProps> = ({
 
               {/* Metadata Line */}
               <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-slate-400 border-t border-white/10 pt-3">
-                <span className="text-white font-bold">Kabinet HMPSTI SWU</span>
+                <span className="text-white font-bold">Kabinet HMPS-TI SWU</span>
                 <span>•</span>
                 <span className="text-[#1DB954] font-bold">Periode {currentPeriod}</span>
                 <span>•</span>

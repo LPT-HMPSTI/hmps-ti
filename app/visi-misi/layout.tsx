@@ -3,11 +3,11 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Visi & Misi Organisasi",
   description:
-    "Visi, misi, prinsip kerja, dan arah strategis HMPSTI STMIK Widya Utama dalam mewujudkan himpunan mahasiswa yang inovatif dan berdaya saing global.",
+    "Visi, misi, prinsip kerja, dan arah strategis HMPS-TI STMIK Widya Utama dalam mewujudkan himpunan mahasiswa yang inovatif dan berdaya saing global.",
   openGraph: {
-    title: "Visi & Misi | HMPSTI SWU",
+    title: "Visi & Misi | HMPS-TI SWU",
     description:
-      "Visi dan arah strategis HMPSTI STMIK Widya Utama dalam mewujudkan himpunan mahasiswa yang inovatif.",
+      "Visi dan arah strategis HMPS-TI STMIK Widya Utama dalam mewujudkan himpunan mahasiswa yang inovatif.",
   },
 };
 

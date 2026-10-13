@@ -12,7 +12,7 @@ export const LoginHeader: React.FC = () => {
       <div className="flex justify-center mb-1">
         <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/15 bg-white/5 p-2 shadow-lg backdrop-blur-md">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-hmpsti.webp" alt="Logo Resmi HMPSTI" className="h-full w-full object-contain drop-shadow" />
+          <img src="/logo-hmpsti.webp" alt="Logo Resmi HMPS-TI" className="h-full w-full object-contain drop-shadow" />
         </div>
       </div>
       <div className="flex justify-center">
@@ -20,7 +20,7 @@ export const LoginHeader: React.FC = () => {
           AKSES TERBATAS
         </Badge>
       </div>
-      <h1 className="text-xl font-bold text-white tracking-tight">Login Admin HMPSTI</h1>
+      <h1 className="text-xl font-bold text-white tracking-tight">Login Admin HMPS-TI</h1>
       <p className="text-xs text-slate-400">
         Masukkan kata sandi otorisasi untuk masuk ke backoffice.
       </p>

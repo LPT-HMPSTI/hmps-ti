@@ -164,7 +164,7 @@ export const DirectLinkDrawer: React.FC<DirectLinkDrawerProps> = ({ isOpen, onCl
 
             {/* Footer Notice */}
             <div className="mt-auto border-t border-white/10 pt-4 text-center text-xs text-slate-500">
-              <p>HMPSTI STMIK Widya Utama © {settings.current_period || "2026"}</p>
+              <p>HMPS-TI STMIK Widya Utama © {settings.current_period || "2026"}</p>
             </div>
           </motion.div>
         </>

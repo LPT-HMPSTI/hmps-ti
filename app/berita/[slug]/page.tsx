@@ -143,7 +143,7 @@ export default function DetailBeritaPage() {
       {/* Article Header */}
       <div className="space-y-4">
         <div className="flex items-center gap-3 font-mono text-xs text-[#1DB954] font-bold">
-          <span>// {isEventArticle(article) ? "EVENT HMPSTI" : article.category || "Berita"}</span>
+          <span>// {isEventArticle(article) ? "EVENT HMPS-TI" : article.category || "Berita"}</span>
           <span>•</span>
           <span className="text-cyan-400">Official Release</span>
         </div>

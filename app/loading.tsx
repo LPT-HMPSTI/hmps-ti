@@ -11,7 +11,7 @@ export default function Loading() {
     <div className="w-full min-h-screen bg-[#0B0D14] flex items-center justify-center">
       <LoadingSpinner
         size={275}
-        label="Memuat Halaman HMPSTI SWU..."
+        label="Memuat Halaman HMPS-TI SWU..."
       />
     </div>
   );

@@ -51,7 +51,7 @@ export async function POST(req: Request) {
       <div style="font-family: Arial, sans-serif; max-width: 650px; margin: 0 auto; background-color: #0B0D14; color: #FFFFFF; padding: 25px; border-radius: 16px; border: 1px solid #1DB954;">
         <div style="text-align: center; padding-bottom: 20px; border-bottom: 1px solid #222;">
           <h2 style="color: #1DB954; margin: 0; font-size: 24px;">🚀 Pengajuan Karya Baru Mahasiswa</h2>
-          <p style="color: #B3B3B3; font-size: 14px; margin-top: 5px;">HMPSTI SWU Showcase Submission</p>
+          <p style="color: #B3B3B3; font-size: 14px; margin-top: 5px;">HMPS-TI SWU Showcase Submission</p>
         </div>
 
         <div style="margin-top: 20px;">
@@ -114,7 +114,7 @@ export async function POST(req: Request) {
         }
 
         <div style="margin-top: 30px; text-align: center; padding-top: 15px; border-top: 1px solid #222; font-size: 12px; color: #777;">
-          Pesan ini dikirim otomatis via Formulir Pengajuan Karya Website HMPSTI STMIK Widya Utama.
+          Pesan ini dikirim otomatis via Formulir Pengajuan Karya Website HMPS-TI STMIK Widya Utama.
         </div>
       </div>
     `;
@@ -132,7 +132,7 @@ export async function POST(req: Request) {
 
     // Send email using Resend
     const { data, error } = await resend.emails.send({
-      from: "HMPSTI Showcase <onboarding@resend.dev>",
+      from: "HMPS-TI Showcase <onboarding@resend.dev>",
       to: ["hmpstiswu@gmail.com"],
       replyTo: sender_email,
       subject: `[SUBMISSION KARYA] ${title} - ${author_name}`,

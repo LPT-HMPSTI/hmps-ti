@@ -83,7 +83,7 @@ export const MemberHero: React.FC<MemberHeroProps> = ({
                 <div className="h-24 w-24 sm:h-30 sm:w-30 rounded-full border border-white/5 flex items-center justify-center">
                   <div className="h-14 w-14 sm:h-18 sm:w-18 rounded-full border-2 border-black bg-gradient-to-br from-[#1DB954] via-[#0e6f33] to-[#053d1b] flex flex-col items-center justify-center shadow-inner">
                     <span className="text-[7px] sm:text-[8px] font-mono font-black text-black tracking-widest uppercase">
-                      HMPSTI
+                      HMPS-TI
                     </span>
                     <div className="h-3 w-3 sm:h-3.5 sm:w-3.5 rounded-full bg-black border border-white/30 my-0.5" />
                     <span className="text-[5px] sm:text-[6px] font-mono font-bold text-black/80">
@@ -116,7 +116,7 @@ export const MemberHero: React.FC<MemberHeroProps> = ({
             <div className="space-y-0.5">
               <div className="flex items-center gap-1.5 text-black font-mono font-black text-[11px] uppercase tracking-wider">
                 <Music size={13} />
-                <span>HMPSTI {settings.current_period}</span>
+                <span>HMPS-TI {settings.current_period}</span>
               </div>
               <h2 className="text-xl sm:text-2xl font-black text-black leading-tight tracking-tight">
                 MEMBER DIRECTORY
@@ -142,7 +142,7 @@ export const MemberHero: React.FC<MemberHeroProps> = ({
           </div>
 
           <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
-            Direktori Anggota <span className="text-[#1DB954]">HMPSTI</span>
+            Direktori Anggota <span className="text-[#1DB954]">HMPS-TI</span>
           </h1>
 
           <p className="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">
@@ -152,7 +152,7 @@ export const MemberHero: React.FC<MemberHeroProps> = ({
           {/* Streamlined Stats Bar */}
           <div className="flex items-center justify-center md:justify-start gap-2 text-xs font-mono text-slate-300 flex-wrap pt-0.5">
             <span className="font-bold text-white flex items-center gap-1">
-              HMPSTI SWU
+              HMPS-TI SWU
             </span>
             <span>•</span>
             <span className="text-[#1DB954] font-bold">{filteredCount} Anggota Terdaftar</span>

@@ -268,6 +268,7 @@ erDiagram
         string author_name
         string author_role
         string author_nim
+        string author_email
         string author_avatar
         string cover_image
         string demo_url

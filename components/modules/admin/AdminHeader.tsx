@@ -18,14 +18,14 @@ export const AdminHeader: React.FC<AdminHeaderProps> = () => {
           <div className="mb-2 flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/5 p-1.5 shadow-md">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo-hmpsti.webp" alt="Logo HMPSTI" className="h-full w-full object-contain" />
+              <img src="/logo-hmpsti.webp" alt="Logo HMPS-TI" className="h-full w-full object-contain" />
             </div>
             <Badge variant="spotify" tilt="left">
               ADMIN CMS CONSOLE
             </Badge>
           </div>
           <h1 className="text-3xl font-extrabold text-white sm:text-5xl">
-            Control Center <span className="text-[#1DB954]">HMPSTI SWU</span>
+            Control Center <span className="text-[#1DB954]">HMPS-TI SWU</span>
           </h1>
           <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
             Kelola informasi penting, struktur divisi, direktori keanggotaan, berita, karya mahasiswa, visi misi, galeri, dan aspirasi secara real-time.

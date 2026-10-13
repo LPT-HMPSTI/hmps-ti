@@ -22,6 +22,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { CyberSelect } from "@/components/ui/CyberSelect";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { uploadImageToR2 } from "@/lib/uploadToR2";
 
 const CATEGORY_OPTIONS = [
   "WEB APP",
@@ -58,37 +59,18 @@ export default function SubmitKaryaPage() {
   const [selectedFileName, setSelectedFileName] = useState("");
 
   const handleDeviceFileUpload = async (file: File) => {
-    if (file.size > 5 * 1024 * 1024) {
-      alert("Ukuran file terlalu besar! Maksimal 5MB.");
-      return;
-    }
-
     setSelectedFileName(file.name);
     setIsUploading(true);
-    setUploadProgress("Mengunggah gambar...");
+    setUploadProgress("Mengunggah gambar ke server...");
 
     try {
-      const fd = new FormData();
-      fd.append("file", file);
-
-      const res = await fetch("/api/upload-image", {
-        method: "POST",
-        body: fd,
-      });
-
-      const data = await res.json();
-
-      if (res.ok && data.success) {
-        setFormData((prev) => ({ ...prev, cover_image: data.url }));
-        setUploadProgress("Berhasil diunggah!");
-      } else {
-        setUploadProgress("");
-        alert(data.error || "Gagal mengunggah gambar.");
-      }
-    } catch (err) {
+      const url = await uploadImageToR2(file, "showcase");
+      setFormData((prev) => ({ ...prev, cover_image: url }));
+      setUploadProgress("Berhasil diunggah!");
+    } catch (err: any) {
       console.error("Upload error:", err);
       setUploadProgress("");
-      alert("Gagal mengunggah gambar. Periksa koneksi internet.");
+      alert(err.message || "Gagal mengunggah gambar. Periksa koneksi internet.");
     } finally {
       setIsUploading(false);
     }
@@ -157,7 +139,7 @@ export default function SubmitKaryaPage() {
               FORMULIR PENGAJUAN
             </Badge>
             <span className="text-xs font-mono text-slate-400 hidden sm:inline">
-              • Ditinjau oleh Tim Admin HMPSTI SWU
+              • Ditinjau oleh Tim Admin HMPS-TI SWU
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight mt-2">
@@ -178,7 +160,7 @@ export default function SubmitKaryaPage() {
               Karyamu Berhasil Dikirim! 🎉
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Terima kasih! Detail karya milikmu telah terkirim ke email resmi pengurus HMPSTI STMIK Widya Utama (<span className="text-[#1DB954] font-mono">hmpstiswu@gmail.com</span>). Tim admin kami akan meninjau dan mempublikasikannya di showcase setelah verifikasi.
+              Terima kasih! Detail karya milikmu telah terkirim ke email resmi pengurus HMPS-TI STMIK Widya Utama (<span className="text-[#1DB954] font-mono">hmpstiswu@gmail.com</span>). Tim admin kami akan meninjau dan mempublikasikannya di showcase setelah verifikasi.
             </p>
           </div>
 
@@ -217,7 +199,7 @@ export default function SubmitKaryaPage() {
         <GlassCard glowColor="spotify" className="p-6 sm:p-8 space-y-6">
           <div className="border-b border-white/10 pb-4">
             <p className="text-xs text-slate-300 leading-relaxed">
-              Isikan formulir di bawah ini dengan lengkap. Karya yang kamu kirimkan akan diteruskan ke tim pengurus HMPSTI SWU untuk diverifikasi dan diterbitkan di etalase karya website resmi.
+              Isikan formulir di bawah ini dengan lengkap. Karya yang kamu kirimkan akan diteruskan ke tim pengurus HMPS-TI SWU untuk diverifikasi dan diterbitkan di etalase karya website resmi.
             </p>
           </div>
 

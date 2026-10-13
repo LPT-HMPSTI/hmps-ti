@@ -184,6 +184,7 @@ CREATE TABLE IF NOT EXISTS public.student_projects (
     author_name TEXT NOT NULL,
     author_role TEXT DEFAULT 'Mahasiswa TI',
     author_nim TEXT,
+    author_email TEXT,
     author_avatar TEXT,
     cover_image TEXT,
     demo_url TEXT,
@@ -459,3 +460,4 @@ ALTER TABLE public.gallery_items ADD COLUMN IF NOT EXISTS photos TEXT[] DEFAULT 
 ALTER TABLE public.gallery_items ADD COLUMN IF NOT EXISTS drive_url TEXT;
 ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS email TEXT;
 ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS sender_email TEXT;
+ALTER TABLE public.student_projects ADD COLUMN IF NOT EXISTS author_email TEXT;

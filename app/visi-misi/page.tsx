@@ -16,7 +16,7 @@ import {
 
 /**
  * Halaman Identitas Organisasi Kabinet HMPSTI STMIK Widya Utama.
- * Mengorkestrasi makna logo HMPS-TI, visi utama (dengan efek typewriter), dan pilar misi organisasi.
+ * Mengorkestrasi makna logo HMPSTI, visi utama (dengan efek typewriter), dan pilar misi organisasi.
  */
 export default function VisiMisiPage() {
   const [visionData, setVisionData] = useState(fallbackVisionMissions);

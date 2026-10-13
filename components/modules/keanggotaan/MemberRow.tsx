@@ -123,7 +123,7 @@ export const MemberRow: React.FC<MemberRowProps> = ({
         {/* Column 3: Role & Division */}
         <div className="col-span-3 min-w-0">
           <p className="text-xs font-mono font-bold text-slate-200 truncate">
-            {member.role || "Anggota HMPSTI"}
+            {member.role || "Anggota HMPS-TI"}
           </p>
           <p className="text-[10px] font-mono text-slate-400 truncate uppercase">
             {member.division || "STMIK WIDYA UTAMA"}

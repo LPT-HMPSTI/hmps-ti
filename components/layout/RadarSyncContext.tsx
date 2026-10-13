@@ -47,7 +47,7 @@ export const RadarSyncProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     {
       id: "news-2",
       title: "Tim Mahasiswa SWU Raih Juara 1 Hackathon IoT & AI tingkat Nasional",
-      category: "Divisi Humas • HMPSTI SWU",
+      category: "Divisi Humas • HMPS-TI SWU",
       subtitle: "Karya inovasi Smart Campus Environment Sensor buatan mahasiswa SWU",
       date: "Jumat, 28 Agustus 2026",
       thumbnail: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=400&auto=format&fit=crop",
@@ -111,7 +111,7 @@ export const RadarSyncProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             id: newsItem.id,
             title: newsItem.title,
             category: newsItem.author_name || "Divisi LPT",
-            subtitle: newsItem.excerpt || "Berita terbaru HMPSTI SWU",
+            subtitle: newsItem.excerpt || "Berita terbaru HMPS-TI SWU",
             date: formatDateIndonesian(newsItem.created_at || newsItem.date),
             thumbnail: newsItem.cover_image || "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=400&auto=format&fit=crop",
             link: `/berita/${newsItem.slug || newsItem.id}`,
@@ -155,7 +155,7 @@ export const RadarSyncProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             id: newsItem.id,
             title: newsItem.title,
             category: newsItem.author_name || "Divisi LPT",
-            subtitle: newsItem.excerpt || "Berita terbaru HMPSTI SWU",
+            subtitle: newsItem.excerpt || "Berita terbaru HMPS-TI SWU",
             date: formatDateIndonesian(newsItem.created_at || newsItem.date),
             thumbnail: newsItem.cover_image || "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=400&auto=format&fit=crop",
             link: `/berita/${newsItem.slug || newsItem.id}`,
@@ -170,14 +170,14 @@ export const RadarSyncProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             itemsList.push({
               id: upEv.id,
               title: upEv.title,
-              category: upEv.author_name || "Divisi HMPSTI",
+              category: upEv.author_name || "Divisi HMPS-TI",
               subtitle: upEv.excerpt || "Agenda kegiatan mendatang",
               date: formatDateIndonesian(upEv.event_date),
               thumbnail: upEv.cover_image || "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=400&auto=format&fit=crop",
               link: `/berita/${upEv.slug || upEv.id}`,
               badgeText: "UPCOMING",
               badgeVariant: "cyan",
-              author: upEv.author_name || "Divisi HMPSTI",
+              author: upEv.author_name || "Divisi HMPS-TI",
             });
           });
 
@@ -197,14 +197,14 @@ export const RadarSyncProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           itemsList.push({
             id: upEv.id,
             title: upEv.title,
-            category: upEv.author_name || "Divisi HMPSTI",
+            category: upEv.author_name || "Divisi HMPS-TI",
             subtitle: upEv.excerpt || "Agenda kegiatan mendatang",
             date: formatDateIndonesian(upEv.event_date),
             thumbnail: upEv.cover_image || "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=400&auto=format&fit=crop",
             link: `/berita/${upEv.slug || upEv.id}`,
             badgeText: "UPCOMING",
             badgeVariant: "cyan",
-            author: upEv.author_name || "Divisi HMPSTI",
+            author: upEv.author_name || "Divisi HMPS-TI",
           });
         });
 

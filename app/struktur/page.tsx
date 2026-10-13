@@ -42,7 +42,7 @@ const DIVISION_CONFIGS: DivisionItemConfig[] = [
     name: "Divisi Kewirausahaan",
     fullname: "Kewirausahaan & Kemandirian Finansial",
     variantColor: "#F97316",
-    desc: "Mengembangkan produk merchandise resmi HMPSTI, program fund-raising kreatif, serta jiwa wirausaha mahasiswa TI.",
+    desc: "Mengembangkan produk merchandise resmi HMPS-TI, program fund-raising kreatif, serta jiwa wirausaha mahasiswa TI.",
   },
   {
     slug: "medkominfo",
@@ -50,7 +50,7 @@ const DIVISION_CONFIGS: DivisionItemConfig[] = [
     name: "Divisi Medkominfo",
     fullname: "Media, Komunikasi & Informasi",
     variantColor: "#A855F7",
-    desc: "Mengelola branding publik, media sosial resmi, desain visual, serta saluran informasi digital HMPSTI SWU.",
+    desc: "Mengelola branding publik, media sosial resmi, desain visual, serta saluran informasi digital HMPS-TI SWU.",
   },
   {
     slug: "humas",

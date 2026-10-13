@@ -32,7 +32,7 @@ export const NewsHero: React.FC<NewsHeroProps> = ({
           PORTAL BERITA & AGENDA {currentPeriod}
         </Badge>
         <h1 className="text-3xl font-extrabold text-white sm:text-5xl">
-          Portal Berita & <span className="text-[#1DB954]">Agenda HMPSTI</span>
+          Portal Berita & <span className="text-[#1DB954]">Agenda HMPS-TI</span>
         </h1>
         <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
           Pusat informasi resmi terkini mengenai kegiatan, workshop, agenda himpunan, dan pengumuman akademik Teknik Informatika STMIK Widya Utama.

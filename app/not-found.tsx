@@ -12,12 +12,12 @@ export default function NotFound() {
         <div className="pointer-events-none absolute -top-20 -left-20 h-48 w-48 rounded-full bg-[#1DB954]/10 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-20 -right-20 h-48 w-48 rounded-full bg-cyan-500/10 blur-3xl" />
 
-        {/* Logo HMPSTI */}
+        {/* Logo HMPS-TI */}
         <div className="relative flex justify-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/logo-hmpsti.webp"
-            alt="Logo Resmi HMPSTI STMIK Widya Utama"
+            alt="Logo Resmi HMPS-TI STMIK Widya Utama"
             className="h-28 w-28 object-contain drop-shadow-[0_0_25px_rgba(29,185,84,0.3)] transition-transform hover:scale-105"
           />
         </div>

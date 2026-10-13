@@ -25,6 +25,7 @@ export interface NewProjectState {
   content: string;
   author_name: string;
   author_nim: string;
+  author_email: string;
   tech_stack: string | string[];
   github_url: string;
   demo_url: string;
@@ -92,9 +93,9 @@ export const KaryaTab: React.FC<KaryaTabProps> = ({
           Tambah Showcase Karya
         </h3>
         <form onSubmit={onCreateProject} className="space-y-4 sm:space-y-4.5">
-          {/* Row 1: Judul Proyek, Kategori, Nama Pembuat, NIM */}
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 sm:gap-4.5 items-end">
-            <div className="sm:col-span-1">
+          {/* Row 1: Judul Proyek & Kategori */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-4.5 items-end">
+            <div className="sm:col-span-2">
               <label className="block text-xs font-mono text-slate-400 mb-1.5 sm:mb-2">
                 Judul Proyek *
               </label>
@@ -121,8 +122,11 @@ export const KaryaTab: React.FC<KaryaTabProps> = ({
                 placeholder="Pilih Kategori Karya..."
               />
             </div>
+          </div>
 
-            <div className="sm:col-span-1">
+          {/* Row 2: Pengembang Karya (Nama, NIM, Email) */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-4.5 items-end">
+            <div>
               <label className="block text-xs font-mono text-slate-400 mb-1.5 sm:mb-2">
                 Nama Pembuat Proyek *
               </label>
@@ -138,7 +142,7 @@ export const KaryaTab: React.FC<KaryaTabProps> = ({
               />
             </div>
 
-            <div className="sm:col-span-1">
+            <div>
               <label className="block text-xs font-mono text-slate-400 mb-1.5 sm:mb-2">
                 NIM Pembuat
               </label>
@@ -149,6 +153,21 @@ export const KaryaTab: React.FC<KaryaTabProps> = ({
                   onNewProjectChange({ ...newProject, author_nim: e.target.value })
                 }
                 placeholder="e.g. 220101010"
+                className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white font-mono"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-mono text-slate-400 mb-1.5 sm:mb-2">
+                Email Pembuat
+              </label>
+              <input
+                type="email"
+                value={newProject.author_email || ""}
+                onChange={(e) =>
+                  onNewProjectChange({ ...newProject, author_email: e.target.value })
+                }
+                placeholder="e.g. mahasiswa@mhs.stmik-widya-utama.ac.id"
                 className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-white font-mono"
               />
             </div>
@@ -454,9 +473,16 @@ export const KaryaTab: React.FC<KaryaTabProps> = ({
                 </div>
 
                 <div className="text-[11px] font-mono text-slate-400 border-t border-white/10 pt-3 mt-1 flex items-center justify-between">
-                  <span className="truncate max-w-[150px]">
-                    {p.author_name || p.author || "Mahasiswa TI"}
-                  </span>
+                  <div className="flex flex-col truncate max-w-[160px]">
+                    <span className="truncate text-white font-medium">
+                      {p.author_name || p.author || "Mahasiswa TI"}
+                    </span>
+                    {p.author_email && (
+                      <span className="text-[10px] text-slate-400 truncate font-mono" title={p.author_email}>
+                        {p.author_email}
+                      </span>
+                    )}
+                  </div>
                   <div className="flex items-center gap-2 shrink-0">
                     {p.orbit_url && (
                       <a

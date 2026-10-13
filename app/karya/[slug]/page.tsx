@@ -15,6 +15,8 @@ import {
   Heart,
   Play,
   ArrowRight,
+  Orbit,
+  Mail,
 } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -57,7 +59,7 @@ export default function DetailKaryaPage() {
   const [reactionBadge, setReactionBadge] = useState<string | null>(null);
   const [settings, setSettings] = useState(fallbackSiteSettings);
   const [allProjects, setAllProjects] = useState<any[]>(fallbackProjects);
-  
+
   // Instant matching from seed data to eliminate flash of wrong item on initial render
   const [project, setProject] = useState<any>(() => {
     return fallbackProjects.find((p: any) => p.slug === rawSlug || p.id === rawSlug) || null;
@@ -117,8 +119,8 @@ export default function DetailKaryaPage() {
   const techList = Array.isArray(project.tech_stack)
     ? project.tech_stack
     : typeof project.tech_stack === "string" && project.tech_stack.length > 0
-    ? project.tech_stack.split(",").map((s: string) => s.trim())
-    : [];
+      ? project.tech_stack.split(",").map((s: string) => s.trim())
+      : [];
 
   const fullContent = project.content || project.full_description || project.description || "";
   const contentParagraphs =
@@ -182,11 +184,10 @@ export default function DetailKaryaPage() {
           <div className="relative flex items-center">
             <button
               onClick={handleToggleLike}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 border-black font-mono text-xs font-bold transition-all cursor-pointer shadow-[2px_2px_0px_0px_#000000] ${
-                isLiked
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 border-black font-mono text-xs font-bold transition-all cursor-pointer shadow-[2px_2px_0px_0px_#000000] ${isLiked
                   ? "bg-[#1DB954] text-black scale-105"
                   : "bg-white/[0.05] text-slate-300 border-white/20 hover:border-[#1DB954] hover:text-white"
-              }`}
+                }`}
             >
               <Heart size={14} className={isLiked ? "fill-black text-black" : "text-[#1DB954]"} />
               <span>{isLiked ? "Disukai" : "Sukai Karya"}</span>
@@ -235,7 +236,7 @@ export default function DetailKaryaPage() {
           {/* Action Hub Card */}
           <GlassCard glowColor="spotify" className="p-6 space-y-4">
             <h3 className="text-sm font-bold text-white border-b border-white/10 pb-3 flex items-center justify-between">
-              <span>Tautan Aksi Proyek</span>              
+              <span>Tautan Aksi Proyek</span>
             </h3>
             <p className="text-xs text-slate-400 leading-relaxed">
               Akses live demo aplikasi atau tinjau repositori kode sumber resmi proyek.
@@ -267,6 +268,25 @@ export default function DetailKaryaPage() {
                 >
                   Demo Belum Tersedia
                 </Button>
+              )}
+
+              {project.orbit_url && (
+                <a
+                  href={project.orbit_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full block"
+                >
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    icon={<Orbit size={14} />}
+                    iconPosition="left"
+                    className="w-full justify-center"
+                  >
+                    Buka Profil Orbit
+                  </Button>
+                </a>
               )}
 
               {project.github_url && (
@@ -312,13 +332,25 @@ export default function DetailKaryaPage() {
             <h3 className="text-xs font-mono uppercase text-[#FFD700] font-bold tracking-wider">
               // Pengembang Karya
             </h3>
-            <div className="space-y-1 pt-1">
+            <div className="space-y-1.5 pt-1">
               <h4 className="text-base font-bold text-white">{project.author_name || "Mahasiswa TI"}</h4>
               {project.author_role && (
                 <p className="text-xs text-[#1DB954] font-mono font-medium">{project.author_role}</p>
               )}
               {project.author_nim && (
                 <p className="text-xs text-slate-400 font-mono">NIM: {project.author_nim}</p>
+              )}
+              {project.author_email && (
+                <div className="pt-1.5 flex items-center gap-2 text-xs text-slate-300">
+                  <Mail size={13} className="text-[#FFD700] shrink-0" />
+                  <a
+                    href={`mailto:${project.author_email}`}
+                    className="hover:text-cyan-400 hover:underline truncate transition-colors font-mono"
+                    title={`Kirim email ke ${project.author_email}`}
+                  >
+                    {project.author_email}
+                  </a>
+                </div>
               )}
             </div>
             <div className="text-[11px] font-mono text-slate-400 border-t border-white/10 pt-3">

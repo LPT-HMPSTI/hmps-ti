@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { CircleNotch } from "@phosphor-icons/react";
 import { slugify } from "@/lib/utils";
+import { uploadImageToR2, deleteImageFromR2 } from "@/lib/uploadToR2";
 import {
   fetchSiteSettings,
   updateSiteSettings,
@@ -329,6 +330,7 @@ export default function AdminDashboardPage() {
     content: string;
     author_name: string;
     author_nim: string;
+    author_email: string;
     tech_stack: string | string[];
     github_url: string;
     demo_url: string;
@@ -341,6 +343,7 @@ export default function AdminDashboardPage() {
     content: "",
     author_name: "",
     author_nim: "",
+    author_email: "",
     tech_stack: "Next.js, TypeScript, Tailwind",
     github_url: "",
     demo_url: "",
@@ -473,39 +476,71 @@ export default function AdminDashboardPage() {
     );
   }
 
-  // File Reader Helper for Device Image Upload (with Canvas Compression)
-  const handleDeviceFileUpload = (file: File, callback: (base64Url: string) => void) => {
+  // Helper untuk menentukan folder penyimpanan R2 berdasarkan konteks tab/modal
+  const getUploadFolder = (): string => {
+    if (editModal.isOpen && editModal.type) {
+      switch (editModal.type) {
+        case "berita":
+          return "news";
+        case "struktur":
+          return "structure";
+        case "keanggotaan":
+          return "members";
+        case "karya":
+          return "projects";
+        case "galeri":
+          return "gallery";
+        default:
+          return "admin";
+      }
+    }
+
+    switch (activeTab) {
+      case "berita":
+        return "news";
+      case "struktur":
+        return "structure";
+      case "keanggotaan":
+        return "members";
+      case "karya":
+        return "projects";
+      case "galeri":
+        return "gallery";
+      case "foto-divisi":
+        return "divisions";
+      case "settings":
+        return "cabinet";
+      default:
+        return "admin";
+    }
+  };
+
+  // Upload Handler untuk seluruh elemen form admin langsung ke Cloudflare R2
+  const handleDeviceFileUpload = async (
+    file: File,
+    callback: (publicUrl: string) => void,
+    customFolder?: string
+  ) => {
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const result = e.target?.result as string;
-      if (!result) return;
-      
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        let width = img.width;
-        let height = img.height;
-        const maxDim = 1200;
-        if (width > maxDim || height > maxDim) {
-          if (width > height) {
-            height = Math.round((height * maxDim) / width);
-            width = maxDim;
-          } else {
-            width = Math.round((width * maxDim) / height);
-            height = maxDim;
-          }
-        }
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext("2d");
-        ctx?.drawImage(img, 0, 0, width, height);
-        const compressedBase64 = canvas.toDataURL("image/jpeg", 0.85);
-        callback(compressedBase64);
-      };
-      img.src = result;
-    };
-    reader.readAsDataURL(file);
+
+    if (file.size > 5 * 1024 * 1024) {
+      showNotify("Ukuran file terlalu besar! Maksimal 5MB.");
+      return;
+    }
+
+    const folder = customFolder || getUploadFolder();
+    startProcessing("Mengunggah gambar ke server...");
+
+    try {
+      const publicUrl = await uploadImageToR2(file, folder);
+      callback(publicUrl);
+      showNotify("Gambar berhasil diunggah ke server!");
+    } catch (err: any) {
+      console.error("Gagal unggah ke server:", err);
+      showNotify(err.message || "Gagal mengunggah gambar ke server.");
+    } finally {
+      stopProcessing();
+    }
   };
 
   // Handle Save Settings
@@ -524,6 +559,14 @@ export default function AdminDashboardPage() {
     const slug = slugs[index];
     const slide = cabinetSlides[index];
     if (!slide) return;
+
+    // Bersihkan foto lama di R2 jika URL diganti
+    const currentLoaded = await fetchCabinetSlidePhotos();
+    const oldSlide = currentLoaded.find((s) => s.slug === slug);
+    if (oldSlide?.url && oldSlide.url !== slide.url) {
+      deleteImageFromR2(oldSlide.url);
+    }
+
     startProcessing(`Menyimpan Foto Slideshow ${index + 1}...`);
     await updateCabinetSlidePhoto(slug, slide.name, slide.url);
     stopProcessing();
@@ -646,6 +689,12 @@ export default function AdminDashboardPage() {
     startProcessing("Memperbarui Data Berita...");
     const item = editModal.item;
     const isEvt = item.is_event || eventCategoryOptions.includes(item.category);
+
+    // Hapus berkas gambar lama di R2 jika cover diganti
+    const originalNews = newsList.find((n) => n.id === item.id);
+    if (originalNews?.cover_image && originalNews.cover_image !== item.cover_image) {
+      deleteImageFromR2(originalNews.cover_image);
+    }
 
     const payload = {
       ...item,
@@ -812,6 +861,13 @@ export default function AdminDashboardPage() {
     e.preventDefault();
     startProcessing("Memperbarui Data Pengurus & Keanggotaan...");
     const item = prepareDivMemberTablePayload(editModal.item);
+
+    // Bersihkan avatar lama di R2 jika diganti
+    const original = divisionMembers.find((m) => m.id === item.id);
+    if (original?.avatar && original.avatar !== item.avatar) {
+      deleteImageFromR2(original.avatar);
+    }
+
     const res = await updateDivisionMember(item.id, item);
     setEditModal({ isOpen: false, type: null, item: null });
 
@@ -840,6 +896,12 @@ export default function AdminDashboardPage() {
   };
 
   const handleSaveDivisionPhoto = async (slug: string, name: string, url: string) => {
+    // Bersihkan foto divisi lama di R2 jika URL diganti
+    const oldUrl = divisionPhotos[slug];
+    if (oldUrl && oldUrl !== url) {
+      deleteImageFromR2(oldUrl);
+    }
+
     startProcessing(`Menyimpan Foto Bersama ${name}...`);
     await updateDivisionPhoto(slug, name, url);
     stopProcessing();
@@ -901,6 +963,13 @@ export default function AdminDashboardPage() {
     e.preventDefault();
     startProcessing("Memperbarui Data Anggota...");
     const item = prepareMemberTablePayload(editModal.item);
+
+    // Bersihkan avatar lama di R2 jika diganti
+    const original = membersList.find((m) => m.id === item.id);
+    if (original?.avatar && original.avatar !== item.avatar) {
+      deleteImageFromR2(original.avatar);
+    }
+
     const res = await updateMember(item.id, item);
     setEditModal({ isOpen: false, type: null, item: null });
     stopProcessing();
@@ -934,6 +1003,7 @@ export default function AdminDashboardPage() {
         content: "",
         author_name: "",
         author_nim: "",
+        author_email: "",
         tech_stack: "Next.js, TypeScript, Tailwind",
         github_url: "",
         demo_url: "",
@@ -954,6 +1024,13 @@ export default function AdminDashboardPage() {
     startProcessing("Memperbarui Karya...");
     try {
       const item = editModal.item;
+
+      // Bersihkan cover image lama di R2 jika diganti
+      const original = projectsList.find((p) => p.id === item.id);
+      if (original?.cover_image && original.cover_image !== item.cover_image) {
+        deleteImageFromR2(original.cover_image);
+      }
+
       const stackArray =
         typeof item.tech_stack === "string"
           ? item.tech_stack.split(",").map((s: string) => s.trim())
@@ -1026,6 +1103,17 @@ export default function AdminDashboardPage() {
 
     startProcessing("Memperbarui Foto Galeri...");
     try {
+      // Bersihkan foto-foto lama yang dihapus/diganti dari R2
+      const original = galleryList.find((g) => g.id === item.id);
+      if (original) {
+        const oldPhotos = [original.url, ...(original.photos || [])].filter(Boolean);
+        const newPhotos = [primaryUrl, ...validPhotos].filter(Boolean);
+        const toDelete = oldPhotos.filter((p) => !newPhotos.includes(p));
+        if (toDelete.length > 0) {
+          deleteImageFromR2(toDelete);
+        }
+      }
+
       await updateGalleryItem(item.id, {
         ...item,
         url: primaryUrl,
@@ -1264,7 +1352,10 @@ export default function AdminDashboardPage() {
           onSearchChange={setSearchQuery}
           onOpenEditModal={openEditNewsModal}
           onDeleteArticle={(n) =>
-            promptDelete(n.title, () => deleteNewsArticle(n.id))
+            promptDelete(n.title, () => {
+              if (n.cover_image) deleteImageFromR2(n.cover_image);
+              return deleteNewsArticle(n.id);
+            })
           }
         />
       )}
@@ -1275,7 +1366,16 @@ export default function AdminDashboardPage() {
           onNewDivMemberChange={setNewDivMember}
           avatarUploadMode={avatarUploadMode}
           onAvatarUploadModeChange={setAvatarUploadMode}
-          onDeviceFileUpload={handleDeviceFileUpload}
+          onDeviceFileUpload={(file, callback) => {
+            handleDeviceFileUpload(
+              file,
+              (url) => {
+                callback(url);
+                setNewDivMember((prev) => ({ ...prev, avatar: url }));
+              },
+              "structure"
+            );
+          }}
           onCreateDivMember={handleCreateDivMember}
           divisionMembers={filteredDivMembers}
           searchQuery={searchQuery}
@@ -1284,7 +1384,10 @@ export default function AdminDashboardPage() {
             setEditModal({ isOpen: true, type: "struktur", item: m })
           }
           onDeleteMember={(m) =>
-            promptDelete(m.name, () => deleteDivisionMember(m.id))
+            promptDelete(m.name, () => {
+              if (m.avatar) deleteImageFromR2(m.avatar);
+              return deleteDivisionMember(m.id);
+            })
           }
         />
       )}
@@ -1321,7 +1424,16 @@ export default function AdminDashboardPage() {
           onNewMemberChange={setNewMember}
           avatarUploadMode={avatarUploadMode}
           onAvatarUploadModeChange={setAvatarUploadMode}
-          onDeviceFileUpload={handleDeviceFileUpload}
+          onDeviceFileUpload={(file, callback) => {
+            handleDeviceFileUpload(
+              file,
+              (url) => {
+                callback(url);
+                setNewMember((prev) => ({ ...prev, avatar: url }));
+              },
+              "members"
+            );
+          }}
           onCreateMember={handleCreateMember}
           membersList={filteredMembers}
           searchQuery={searchQuery}
@@ -1330,7 +1442,10 @@ export default function AdminDashboardPage() {
             setEditModal({ isOpen: true, type: "keanggotaan", item: m })
           }
           onDeleteMember={(m) =>
-            promptDelete(m.name, () => deleteMember(m.id))
+            promptDelete(m.name, () => {
+              if (m.avatar) deleteImageFromR2(m.avatar);
+              return deleteMember(m.id);
+            })
           }
         />
       )}
@@ -1362,7 +1477,10 @@ export default function AdminDashboardPage() {
             setEditModal({ isOpen: true, type: "karya", item: p })
           }
           onDeleteProject={(p) =>
-            promptDelete(p.title, () => deleteStudentProject(p.id))
+            promptDelete(p.title, () => {
+              if (p.cover_image) deleteImageFromR2(p.cover_image);
+              return deleteStudentProject(p.id);
+            })
           }
         />
       )}
@@ -1393,7 +1511,11 @@ export default function AdminDashboardPage() {
             });
           }}
           onDeleteGallery={(g) =>
-            promptDelete(g.title, () => deleteGalleryItem(g.id))
+            promptDelete(g.title, () => {
+              const allPhotos = [g.url, ...(g.photos || [])].filter(Boolean);
+              if (allPhotos.length > 0) deleteImageFromR2(allPhotos);
+              return deleteGalleryItem(g.id);
+            })
           }
         />
       )}

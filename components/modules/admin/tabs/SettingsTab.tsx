@@ -260,7 +260,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                     onChange={(e) =>
                       onCabinetSlideChange?.(idx, "name", e.target.value)
                     }
-                    placeholder={`Contoh: Kabinet HMPSTI SWU 2026`}
+                    placeholder={`Contoh: Kabinet HMPS-TI SWU 2026`}
                     className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white focus:border-[#1DB954] focus:outline-none"
                   />
                 </div>

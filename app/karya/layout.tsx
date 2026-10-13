@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     "Kumpulan portofolio produk digital, aplikasi web, mobile, IoT, dan riset teknologi karya mahasiswa Teknik Informatika STMIK Widya Utama.",
   openGraph: {
-    title: "Showcase Karya Mahasiswa | HMPSTI SWU",
+    title: "Showcase Karya Mahasiswa | HMPS-TI SWU",
     description:
       "Kumpulan portofolio produk digital, aplikasi web, mobile, IoT, dan riset teknologi karya mahasiswa Teknik Informatika STMIK Widya Utama.",
   },

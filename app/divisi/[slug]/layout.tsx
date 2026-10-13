@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 const divisionTitles: Record<string, { name: string; desc: string }> = {
   bph: {
     name: "Badan Pengurus Harian (BPH)",
-    desc: "Sentral manajemen, tata kelola, perumusan visi, dan pengambil kebijakan strategis HMPSTI SWU.",
+    desc: "Sentral manajemen, tata kelola, perumusan visi, dan pengambil kebijakan strategis HMPS-TI SWU.",
   },
   psdm: {
     name: "Divisi PSDM",
@@ -36,14 +36,14 @@ export async function generateMetadata({
   const key = (slug || "bph").toLowerCase();
   const info = divisionTitles[key] || {
     name: `Divisi ${key.toUpperCase()}`,
-    desc: "Profil divisi kepengurusan HMPSTI STMIK Widya Utama.",
+    desc: "Profil divisi kepengurusan HMPS-TI STMIK Widya Utama.",
   };
 
   return {
     title: info.name,
     description: info.desc,
     openGraph: {
-      title: `${info.name} | HMPSTI SWU`,
+      title: `${info.name} | HMPS-TI SWU`,
       description: info.desc,
     },
   };

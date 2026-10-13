@@ -148,7 +148,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDirectLink }) => {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/logo-hmpsti.webp"
-                alt="Logo Resmi HMPSTI SWU"
+                alt="Logo Resmi HMPS-TI SWU"
                 className="h-full w-full object-contain drop-shadow transition-transform duration-300 group-hover:scale-110"
               />
               {/* Pulse dot */}

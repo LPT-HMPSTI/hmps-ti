@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Dashboard Backoffice Admin",
-  description: "Panel manajemen konten dan kontrol operasional website HMPSTI SWU.",
+  description: "Panel manajemen konten dan kontrol operasional website HMPS-TI SWU.",
   robots: {
     index: false,
     follow: false,

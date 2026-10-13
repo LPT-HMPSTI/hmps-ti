@@ -249,7 +249,7 @@ const MemberLightbox: React.FC<MemberLightboxProps> = ({
           ))
         ) : (
           <div className="flex items-center gap-1.5 text-xs font-mono text-slate-400">
-            <CheckCircle size={14} className="text-[#1DB954]" /> Pengurus Aktif HMPSTI SWU
+            <CheckCircle size={14} className="text-[#1DB954]" /> Pengurus Aktif HMPS-TI SWU
           </div>
         )}
       </div>
@@ -397,7 +397,7 @@ const MemberLightbox: React.FC<MemberLightboxProps> = ({
                 </div>
 
                 <p className="text-xs text-slate-300 leading-relaxed">
-                  Pengurus aktif HMPSTI STMIK Widya Utama Purwokerto yang berperan dalam pengembangan program kerja dan inovasi {divisionName}.
+                  Pengurus aktif HMPS-TI STMIK Widya Utama Purwokerto yang berperan dalam pengembangan program kerja dan inovasi {divisionName}.
                 </p>
               </div>
 

@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     "Pangkalan data direktori profil mahasiswa aktif dan jejaring alumni Teknik Informatika STMIK Widya Utama Purwokerto.",
   openGraph: {
-    title: "Direktori Keanggotaan & Alumni | HMPSTI SWU",
+    title: "Direktori Keanggotaan & Alumni | HMPS-TI SWU",
     description:
       "Pangkalan data direktori profil mahasiswa aktif dan alumni Teknik Informatika STMIK Widya Utama.",
   },

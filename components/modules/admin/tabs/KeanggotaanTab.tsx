@@ -201,9 +201,10 @@ export const KeanggotaanTab: React.FC<KeanggotaanTabProps> = ({
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (file) {
-                        onDeviceFileUpload(file, (base64Url) => {
-                          onNewMemberChange({ ...newMember, avatar: base64Url });
+                        onDeviceFileUpload(file, (url) => {
+                          onNewMemberChange({ ...newMember, avatar: url });
                         });
+                        e.target.value = "";
                       }
                     }}
                     className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-2 text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#1DB954] file:text-black file:font-bold file:text-xs hover:file:bg-[#1ed760] cursor-pointer"

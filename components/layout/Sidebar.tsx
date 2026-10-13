@@ -65,13 +65,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenDirectLink }) => {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/logo-hmpsti.webp"
-              alt="Logo Resmi HMPSTI SWU"
+              alt="Logo Resmi HMPS-TI SWU"
               className="h-full w-full object-contain drop-shadow"
             />
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-mono font-extrabold tracking-wider text-white text-base">HMPSTI</span>
+              <span className="font-mono font-extrabold tracking-wider text-white text-base">HMPS-TI</span>
               <span className="text-[10px] font-mono font-bold text-[#1DB954]">SWU</span>
             </div>
             <p className="text-[10px] tracking-tight text-slate-400">STMIK Widya Utama</p>
@@ -109,7 +109,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenDirectLink }) => {
         {/* Divisi HIMA Header */}
         <div>
           <div className="flex items-center justify-between mb-2.5 px-1">
-            <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-slate-400">Divisi HMPSTI</span>
+            <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-slate-400">Divisi HMPS-TI</span>
             <span className="text-[9px] font-mono font-medium text-[#1DB954] bg-[#1DB954]/10 px-1.5 py-0.5 rounded border border-[#1DB954]/20">Developing...</span>
           </div>
 

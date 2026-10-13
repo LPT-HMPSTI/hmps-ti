@@ -29,7 +29,7 @@ export async function generateMetadata({
   if (!article) {
     return {
       title: "Artikel Tidak Ditemukan",
-      description: "Artikel yang dicari tidak ditemukan di portal HMPSTI SWU.",
+      description: "Artikel yang dicari tidak ditemukan di portal HMPS-TI SWU.",
     };
   }
 
@@ -37,14 +37,14 @@ export async function generateMetadata({
   const description =
     article.excerpt ||
     (article.content ? article.content.substring(0, 160) : "") ||
-    "Warta kegiatan resmi HMPSTI STMIK Widya Utama.";
+    "Warta kegiatan resmi HMPS-TI STMIK Widya Utama.";
   const image = article.cover_image || "/og-image.jpg";
 
   return {
     title,
     description,
     openGraph: {
-      title: `${title} | HMPSTI SWU`,
+      title: `${title} | HMPS-TI SWU`,
       description,
       type: "article",
       publishedTime: article.created_at || article.date,
@@ -59,7 +59,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: `${title} | HMPSTI SWU`,
+      title: `${title} | HMPS-TI SWU`,
       description,
       images: [image],
     },

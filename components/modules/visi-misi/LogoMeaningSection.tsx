@@ -83,7 +83,7 @@ const logoMeanings: LogoMeaningItem[] = [
 ];
 
 /**
- * Komponen Makna Logo HMPS-TI dalam 1 Card Utama Spotify Neubrutalism.
+ * Komponen Makna Logo HMPSTI dalam 1 Card Utama Spotify Neubrutalism.
  */
 export const LogoMeaningSection: React.FC = () => {
   return (

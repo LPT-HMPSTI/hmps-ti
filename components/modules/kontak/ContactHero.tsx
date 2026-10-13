@@ -21,7 +21,7 @@ export const ContactHero: React.FC<ContactHeroProps> = ({ currentPeriod }) => {
           Kontak & <span className="text-[#1DB954]">Aspirasi Mahasiswa</span>
         </h1>
         <p className="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed font-mono">
-          Sampaikan masukan, kritik, maupun aspirasi Anda secara terbuka atau anonim untuk kemajuan HMPSTI STMIK Widya Utama.
+          Sampaikan masukan, kritik, maupun aspirasi Anda secara terbuka atau anonim untuk kemajuan HMPS-TI STMIK Widya Utama.
         </p>
       </div>
     </div>

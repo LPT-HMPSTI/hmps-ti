@@ -163,7 +163,7 @@ export default function KaryaPage() {
             Mau Karyamu Kami Post?
           </h2>
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-xl mx-auto">
-            Punya produk software, mobile app, riset AI, atau proyek IoT buatanmu yang ingin dipamerkan di etalase resmi HMPSTI SWU? Kirimkan detail karyamu sekarang untuk ditinjau oleh tim admin!
+            Punya produk software, mobile app, riset AI, atau proyek IoT buatanmu yang ingin dipamerkan di etalase resmi HMPS-TI SWU? Kirimkan detail karyamu sekarang untuk ditinjau oleh tim admin!
           </p>
 
           <div className="pt-2">

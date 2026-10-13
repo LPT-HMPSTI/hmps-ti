@@ -29,7 +29,7 @@ export async function generateMetadata({
   if (!project) {
     return {
       title: "Karya Tidak Ditemukan",
-      description: "Karya inovasi mahasiswa tidak ditemukan di showcase HMPSTI SWU.",
+      description: "Karya inovasi mahasiswa tidak ditemukan di showcase HMPS-TI SWU.",
     };
   }
 
@@ -43,7 +43,7 @@ export async function generateMetadata({
     title,
     description,
     openGraph: {
-      title: `${title} | HMPSTI SWU`,
+      title: `${title} | HMPS-TI SWU`,
       description,
       type: "website",
       images: [
@@ -57,7 +57,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: `${title} | HMPSTI SWU`,
+      title: `${title} | HMPS-TI SWU`,
       description,
       images: [image],
     },
