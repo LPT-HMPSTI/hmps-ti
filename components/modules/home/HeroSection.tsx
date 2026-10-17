@@ -159,10 +159,12 @@ export const HeroSection: React.FC = () => {
         </p>
 
         {/* Tag Badges */}
-        <div className="flex flex-wrap items-center justify-center gap-2.5 pt-0.5 animate-hero-fade" style={{ animationDelay: "300ms", paddingBottom: "20px" }}>
-          <Badge variant="cyan" tilt="left">Smart</Badge>
-          <Badge variant="yellow" tilt="right">Winner</Badge>
-          <Badge variant="spotify" tilt="left">Universe</Badge>
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-0.5 animate-hero-fade" style={{ animationDelay: "300ms", paddingBottom: "20px" }}>
+          <Badge variant="cyan" tilt="left" className="px-3.5 py-1.5 text-xs sm:text-[13px]">Merangkai</Badge>
+          <Badge variant="yellow" tilt="right" className="px-3.5 py-1.5 text-xs sm:text-[13px]">Peradaban</Badge>
+          <Badge variant="strawberry" tilt="left" className="px-3.5 py-1.5 text-xs sm:text-[13px]">Untuk</Badge>
+          <Badge variant="spotify" tilt="right" className="px-3.5 py-1.5 text-xs sm:text-[13px]">Masa</Badge>
+          <Badge variant="purple" tilt="left" className="px-3.5 py-1.5 text-xs sm:text-[13px]">Depan</Badge>
         </div>
 
         {/* Action Buttons with Micro-interactions */}
