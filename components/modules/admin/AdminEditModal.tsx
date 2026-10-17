@@ -1010,7 +1010,7 @@ export const AdminEditModal: React.FC<AdminEditModalProps> = ({
                                         }}
                                       />
                                     </label>
-                                    <span className="text-[10px] font-mono text-slate-500">Maks 5MB</span>
+                                    <span className="text-[10px] font-mono text-slate-500">Maks 10MB</span>
                                   </div>
                                 </div>
                               </div>

@@ -96,10 +96,10 @@ export async function POST(req: Request) {
       );
     }
 
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
+    // Validate file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
       return NextResponse.json(
-        { success: false, error: "Ukuran file terlalu besar. Maksimal 5MB." },
+        { success: false, error: "Ukuran file terlalu besar. Maksimal 10MB." },
         { status: 400 }
       );
     }

@@ -18,7 +18,7 @@ const ALLOWED_IMAGE_TYPES = [
   "image/svg+xml",
 ];
 
-const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
 
 /**
  * Unggah file gambar ke Cloudflare R2.
@@ -44,7 +44,7 @@ export async function uploadImageToR2(
   // Validasi ukuran file
   if (file.size > MAX_FILE_SIZE_BYTES) {
     throw new Error(
-      "Ukuran file terlalu besar! Maksimal ukuran file adalah 5MB."
+      "Ukuran file terlalu besar! Maksimal ukuran file adalah 10MB."
     );
   }
 

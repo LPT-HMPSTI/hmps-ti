@@ -523,8 +523,8 @@ export default function AdminDashboardPage() {
   ) => {
     if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) {
-      showNotify("Ukuran file terlalu besar! Maksimal 5MB.");
+    if (file.size > 10 * 1024 * 1024) {
+      showNotify("Ukuran file terlalu besar! Maksimal 10MB.");
       return;
     }
 
