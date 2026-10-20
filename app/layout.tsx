@@ -58,12 +58,21 @@ export const metadata: Metadata = {
     description:
       "Portal Resmi Himpunan Mahasiswa Teknik Informatika STMIK Widya Utama Purwokerto. Pusat Berita, Karya Mahasiswa, & Direct Portal Akses Kampus.",
     siteName: "HMPS-TI STMIK Widya Utama",
+    images: [
+      {
+        url: `${siteUrl}/logo-hmpsti.webp`,
+        width: 1200,
+        height: 630,
+        alt: "HMPS-TI STMIK Widya Utama — Portal Resmi Himpunan Mahasiswa Teknik Informatika",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "HMPS-TI STMIK Widya Utama | Official Portal & Student Hub",
     description:
       "Portal Resmi Himpunan Mahasiswa Teknik Informatika STMIK Widya Utama Purwokerto. Pusat Berita, Karya Mahasiswa, & Direct Portal Akses Kampus.",
+    images: [`${siteUrl}/logo-hmpsti.webp`],
   },
   robots: {
     index: true,
@@ -104,6 +113,50 @@ export default function RootLayout({
             strategy="afterInteractive"
           />
         )}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  "@id": `${siteUrl}/#organization`,
+                  "name": "HMPS-TI STMIK Widya Utama",
+                  "alternateName": ["HMTI SWU", "HMPS-TI SWU", "Himpunan Mahasiswa Teknik Informatika STMIK Widya Utama"],
+                  "url": siteUrl,
+                  "logo": {
+                    "@type": "ImageObject",
+                    "url": `${siteUrl}/logo-hmpsti.webp`,
+                    "width": 512,
+                    "height": 512,
+                  },
+                  "parentOrganization": {
+                    "@type": "CollegeOrUniversity",
+                    "name": "STMIK Widya Utama Purwokerto",
+                    "url": "https://stmik-widya-utama.ac.id",
+                  },
+                  "sameAs": [
+                    "https://www.instagram.com/hmps_ti_swu",
+                    "https://github.com/hmps-ti-swu",
+                  ],
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": `${siteUrl}/#website`,
+                  "url": siteUrl,
+                  "name": "HMPS-TI STMIK Widya Utama",
+                  "description":
+                    "Portal Resmi Himpunan Mahasiswa Teknik Informatika STMIK Widya Utama Purwokerto. Pusat Berita, Karya Mahasiswa, & Direct Portal Akses Kampus.",
+                  "publisher": {
+                    "@id": `${siteUrl}/#organization`,
+                  },
+                  "inLanguage": "id-ID",
+                },
+              ],
+            }),
+          }}
+        />
         <AppShell>{children}</AppShell>
       </body>
     </html>

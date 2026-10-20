@@ -37,7 +37,7 @@ export async function generateMetadata({
   const description =
     project.description ||
     "Portofolio inovasi teknologi mahasiswa STMIK Widya Utama.";
-  const image = project.thumbnail_url || project.cover_image || "/og-image.jpg";
+  const image = project.thumbnail_url || project.cover_image || "/logo-hmpsti.webp";
 
   return {
     title,
@@ -64,6 +64,99 @@ export async function generateMetadata({
   };
 }
 
-export default function DetailKaryaLayout({ children }: Props) {
-  return children;
+export default async function DetailKaryaLayout({
+  children,
+  params,
+}: Props) {
+  const { slug } = await params;
+  const siteUrl = (
+    process.env.NEXT_PUBLIC_SITE_URL || "https://hmpsti-swu.vercel.app"
+  ).replace(/\/$/, "");
+
+  let project: any = fallbackProjects.find(
+    (p) => p.slug === slug || p.id === slug
+  );
+
+  if (!project) {
+    try {
+      const list = await fetchProjectsList();
+      project = list.find((p: any) => p.slug === slug || p.id === slug);
+    } catch {
+      // fallback
+    }
+  }
+
+  const title = project?.title || "Detail Karya Mahasiswa";
+  const description =
+    project?.description ||
+    "Portofolio inovasi teknologi mahasiswa STMIK Widya Utama.";
+  const image =
+    project?.thumbnail_url || project?.cover_image || "/logo-hmpsti.webp";
+  const fullImageUrl = image.startsWith("http")
+    ? image
+    : `${siteUrl}${image.startsWith("/") ? "" : "/"}${image}`;
+  const projectUrl = `${siteUrl}/karya/${encodeURIComponent(slug)}`;
+
+  const projectJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": projectUrl,
+    },
+    "name": title,
+    "headline": title,
+    "description": description,
+    "image": [fullImageUrl],
+    "datePublished": project?.created_at || new Date().toISOString(),
+    "author": {
+      "@type": "Person",
+      "name": project?.author_name || "Mahasiswa Teknik Informatika",
+    },
+    "provider": {
+      "@type": "Organization",
+      "name": "HMPS-TI STMIK Widya Utama",
+      "url": siteUrl,
+    },
+    ...(project?.demo_url ? { "url": project.demo_url } : {}),
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Beranda",
+        "item": siteUrl,
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Karya",
+        "item": `${siteUrl}/karya`,
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": title,
+        "item": projectUrl,
+      },
+    ],
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(projectJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      {children}
+    </>
+  );
 }
