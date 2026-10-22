@@ -125,7 +125,7 @@ export default function DetailKaryaPage() {
   const fullContent = project.content || project.full_description || project.description || "";
   const contentParagraphs =
     typeof fullContent === "string"
-      ? fullContent.split("\n\n")
+      ? fullContent.split("\n\n").filter((p: string) => p.trim() !== "")
       : ["Proyek inovasi teknologi mahasiswa STMIK Widya Utama Purwokerto."];
 
   // Related projects in the same showcase
@@ -225,7 +225,7 @@ export default function DetailKaryaPage() {
         {/* Left Column: Direct Blog Content without wrapping card (8 cols) */}
         <div className="lg:col-span-8 space-y-6 text-slate-300 text-sm sm:text-base leading-relaxed font-sans">
           {contentParagraphs.map((paragraph: string, idx: number) => (
-            <p key={idx} className="leading-relaxed">
+            <p key={idx} className="leading-relaxed whitespace-pre-wrap">
               {paragraph}
             </p>
           ))}

@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, MessageSquare, Radio, ShieldCheck } from "lucide-react";
+import { MessageSquare, Radio } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { useRadarSync } from "./RadarSyncContext";
@@ -22,38 +22,46 @@ export const BottomPlayerBar: React.FC<BottomPlayerBarProps> = ({ onOpenDirectLi
       <div className="mx-auto flex h-full max-w-7xl items-center justify-between gap-4">
         {/* Left Section: Synchronized Single / Carousel Display */}
         <AnimatePresence mode="wait">
-          <motion.div
-            key={currentItem.id + currentIndex}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-            className="flex items-center gap-3 min-w-0 flex-1 max-w-md"
-          >
-            <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[#1DB954]/40 overflow-hidden shadow-[0_0_15px_rgba(29,185,84,0.3)]">
-              <img
-                src={currentItem.thumbnail}
-                alt={currentItem.title}
-                className="h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-black/30" />
-              <Radio size={18} className="absolute text-[#1DB954] animate-pulse" />
-            </div>
+          {currentItem && (
+            <motion.div
+              key={currentItem.id + currentIndex}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="flex items-center min-w-0 flex-1 max-w-md"
+            >
+              <Link
+                href={currentItem.link || "/berita"}
+                className="group flex items-center gap-3 min-w-0 w-full hover:opacity-90 transition-opacity cursor-pointer"
+                title={`Buka ${currentItem.title}`}
+              >
+                <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[#1DB954]/40 overflow-hidden shadow-[0_0_15px_rgba(29,185,84,0.3)] group-hover:scale-105 transition-transform">
+                  <img
+                    src={currentItem.thumbnail}
+                    alt={currentItem.title}
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/30" />
+                  <Radio size={18} className="absolute text-[#1DB954] animate-pulse" />
+                </div>
 
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <h4 className="truncate text-xs font-bold text-white sm:text-sm">
-                  {currentItem.title}
-                </h4>
-                <Badge variant={currentItem.badgeVariant} tilt="left" pulse className="hidden sm:inline-flex shrink-0">
-                  {currentItem.badgeText}
-                </Badge>
-              </div>
-              <p className="truncate text-[11px] text-slate-400">
-                {currentItem.author} • STMIK Widya Utama
-              </p>
-            </div>
-          </motion.div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <h4 className="truncate text-xs font-bold text-white sm:text-sm group-hover:text-[#1DB954] transition-colors">
+                      {currentItem.title}
+                    </h4>
+                    <Badge variant={currentItem.badgeVariant} tilt="left" pulse className="hidden sm:inline-flex shrink-0">
+                      {currentItem.badgeText}
+                    </Badge>
+                  </div>
+                  <p className="truncate text-[11px] text-slate-400">
+                    {currentItem.author} • STMIK Widya Utama
+                  </p>
+                </div>
+              </Link>
+            </motion.div>
+          )}
         </AnimatePresence>
 
         {/* Center Section: Ticker / Organization Stats Bar */}
@@ -77,16 +85,6 @@ export const BottomPlayerBar: React.FC<BottomPlayerBarProps> = ({ onOpenDirectLi
               Aspirasi
             </Button>
           </Link>
-
-          {/* Developing */}
-          {/* <Button
-            variant="spotify"
-            size="sm"
-            icon={<ExternalLink size={14} strokeWidth={1.5} />}
-            onClick={onOpenDirectLink}
-          >
-            Direct Portal
-          </Button> */}
         </div>
       </div>
     </footer>

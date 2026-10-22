@@ -148,6 +148,8 @@ export default function AdminDashboardPage() {
 
   // Foto Bersama Divisi State (for DivisionPhotosTab)
   const [divisionPhotos, setDivisionPhotos] = useState<Record<string, string>>({});
+  // Tracks URLs as originally loaded from the DB, so we can delete the correct old R2 object
+  const [originalDivisionPhotos, setOriginalDivisionPhotos] = useState<Record<string, string>>({});
   const [isSavingDivisionPhotos, setIsSavingDivisionPhotos] = useState(false);
 
   // Berita & Event Form State
@@ -463,6 +465,7 @@ export default function AdminDashboardPage() {
 
     const dpData = await fetchDivisionPhotos();
     setDivisionPhotos(dpData || {});
+    setOriginalDivisionPhotos(dpData || {});
 
     const uData = await fetchAdminUsers();
     setAdminUsersList(uData || []);
@@ -701,6 +704,7 @@ export default function AdminDashboardPage() {
       is_event: isEvt,
       category: item.category || (isEvt ? "Workshop" : "Informasi"),
       event_date: isEvt ? (item.event_date ? new Date(item.event_date).toISOString() : item.created_at) : null,
+      ...(item.created_at ? { created_at: new Date(item.created_at).toISOString() } : {}),
     };
 
     await updateNewsArticle(item.id, payload);
@@ -896,14 +900,18 @@ export default function AdminDashboardPage() {
   };
 
   const handleSaveDivisionPhoto = async (slug: string, name: string, url: string) => {
-    // Bersihkan foto divisi lama di R2 jika URL diganti
-    const oldUrl = divisionPhotos[slug];
+    // Bersihkan foto divisi lama di R2 jika URL diganti.
+    // Gunakan originalDivisionPhotos (URL dari DB) bukan divisionPhotos (form state)
+    // karena divisionPhotos sudah diupdate saat upload file baru.
+    const oldUrl = originalDivisionPhotos[slug];
     if (oldUrl && oldUrl !== url) {
       deleteImageFromR2(oldUrl);
     }
 
     startProcessing(`Menyimpan Foto Bersama ${name}...`);
     await updateDivisionPhoto(slug, name, url);
+    // Update originalDivisionPhotos agar sinkron setelah berhasil disimpan
+    setOriginalDivisionPhotos((prev) => ({ ...prev, [slug]: url }));
     stopProcessing();
     showNotify(`Foto bersama ${name} berhasil disimpan!`);
   };

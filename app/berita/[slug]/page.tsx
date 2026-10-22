@@ -124,7 +124,7 @@ export default function DetailBeritaPage() {
 
   const contentParagraphs =
     typeof article.content === "string"
-      ? article.content.split("\n\n")
+      ? article.content.split("\n\n").filter((p: string) => p.trim() !== "")
       : Array.isArray(article.content)
       ? article.content
       : [article.excerpt || article.content];
@@ -215,7 +215,7 @@ export default function DetailBeritaPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-4">
         <div className="lg:col-span-8 space-y-6 text-slate-300 text-sm sm:text-base leading-relaxed font-sans">
           {contentParagraphs.map((paragraph: string, idx: number) => (
-            <p key={idx} className="leading-relaxed">
+            <p key={idx} className="leading-relaxed whitespace-pre-wrap">
               {paragraph}
             </p>
           ))}

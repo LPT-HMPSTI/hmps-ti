@@ -190,12 +190,11 @@ export const AdminEditModal: React.FC<AdminEditModalProps> = ({
                           label="Tanggal Event *"
                         />
                       ) : (
-                        <div className="space-y-1">
-                          <label className="block text-xs font-mono text-slate-400">Tanggal Terbit</label>
-                          <div className="rounded-xl border border-white/10 bg-white/[0.02] p-3 text-xs font-mono font-bold text-center">
-                            Hari Ini
-                          </div>
-                        </div>
+                        <CyberDateTimePicker
+                          value={editModal.item.created_at || ""}
+                          onChange={(val) => setEditModal({ ...editModal, item: { ...editModal.item, created_at: val } })}
+                          label="Tanggal Terbit *"
+                        />
                       )}
                     </div>
 
@@ -210,6 +209,19 @@ export const AdminEditModal: React.FC<AdminEditModalProps> = ({
                       />
                     </div>
                   </div>
+
+                  {editModal.item.is_event && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
+                      <CyberDateTimePicker
+                        value={editModal.item.created_at || ""}
+                        onChange={(val) => setEditModal({ ...editModal, item: { ...editModal.item, created_at: val } })}
+                        label="Tanggal Terbit / Publikasi Rilis"
+                      />
+                      <p className="text-xs font-mono text-slate-400 pb-2">
+                        // Tanggal rilis artikel event di portal berita
+                      </p>
+                    </div>
+                  )}
 
                   {/* Cover Image Upload (Dual Mode: Sejajar secara Horizontal & Sneakpeek Preview) */}
                   <div className="space-y-1">

@@ -37,7 +37,6 @@ export type CreateNewsPayload = Omit<NewsArticle, "id" | "created_at" | "likes_c
   likes_count?: number;
 };
 
-/**
- * Payload form ketika mengedit artikel berita yang sudah ada.
- */
-export type UpdateNewsPayload = Partial<CreateNewsPayload>;
+export type UpdateNewsPayload = Partial<CreateNewsPayload> & {
+  created_at?: string;
+};
