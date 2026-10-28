@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { optimizedImage } from "@/lib/imagekit-url";
 import { motion } from "framer-motion";
 import { Calendar, Clock, ArrowUpRight, Play, Heart } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -62,11 +63,15 @@ export const NewsCard: React.FC<NewsCardProps> = ({
           <div className="relative mb-4 aspect-video w-full rounded-xl overflow-hidden shadow-lg border border-white/10 bg-black/40">
             <img
               src={
-                news.cover_image ||
-                (news as any).coverImage ||
+                optimizedImage(
+                  news.cover_image || (news as any).coverImage,
+                  "card"
+                ) ||
                 "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=800&auto=format&fit=crop"
               }
               alt={news.title}
+              loading="lazy"
+              decoding="async"
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { fallbackNews } from "@/constants";
 import { fetchNewsList } from "@/services";
+import { optimizedImage } from "@/lib/imagekit-url";
 
 interface Props {
   children: React.ReactNode;
@@ -38,7 +39,8 @@ export async function generateMetadata({
     article.excerpt ||
     (article.content ? article.content.substring(0, 160) : "") ||
     "Warta kegiatan resmi HMPS-TI STMIK Widya Utama.";
-  const image = article.cover_image || "/logo-hmpsti.webp";
+  const rawImage = article.cover_image || "/logo-hmpsti.webp";
+  const image = optimizedImage(rawImage, "og");
 
   return {
     title,
@@ -93,7 +95,8 @@ export default async function DetailBeritaLayout({
     article?.excerpt ||
     (article?.content ? article.content.substring(0, 160) : "") ||
     "Warta kegiatan resmi HMPS-TI STMIK Widya Utama.";
-  const image = article?.cover_image || "/logo-hmpsti.webp";
+  const rawImage = article?.cover_image || "/logo-hmpsti.webp";
+  const image = optimizedImage(rawImage, "og");
   const fullImageUrl = image.startsWith("http")
     ? image
     : `${siteUrl}${image.startsWith("/") ? "" : "/"}${image}`;

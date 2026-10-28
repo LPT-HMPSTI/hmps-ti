@@ -4,6 +4,7 @@ import React from "react";
 import { ListMusic } from "lucide-react";
 import { DivisionMember } from "@/types";
 import { OrgSocialButtons } from "@/components/modules/struktur/OrgSocialButtons";
+import { optimizedImage } from "@/lib/imagekit-url";
 
 export interface DivisionLeadershipSectionProps {
   members: DivisionMember[];
@@ -90,8 +91,10 @@ export const DivisionLeadershipSection: React.FC<DivisionLeadershipSectionProps>
               <div className="w-full h-full rounded-full overflow-hidden border-2 border-white/10 group-hover:border-[#1DB954]/50 bg-black transition-all duration-300 shadow-lg group-hover:shadow-[0_0_24px_rgba(29,185,84,0.3)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={member.avatar || PLACEHOLDER_IMAGE}
+                  src={optimizedImage(member.avatar, "card") || PLACEHOLDER_IMAGE}
                   alt={member.name}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
                 />
               </div>

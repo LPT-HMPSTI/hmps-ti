@@ -25,6 +25,7 @@ import { fetchProjectsList, fetchSiteSettings, getLocalLikeState, toggleDatabase
 import { fallbackSiteSettings, fallbackProjects } from "@/constants";
 import { formatDateIndonesian } from "@/lib/utils/dateParser";
 import { SkeletonDetail } from "@/components/ui/Skeleton";
+import { optimizedImage } from "@/lib/imagekit-url";
 
 // Cute Playful Neubrutalist Tech Tag Helper
 const getCuteTechBadgeStyle = (index: number) => {
@@ -124,8 +125,14 @@ export default function DetailKaryaPage() {
 
   const fullContent = project.content || project.full_description || project.description || "";
   const contentParagraphs =
-    typeof fullContent === "string"
-      ? fullContent.split("\n\n").filter((p: string) => p.trim() !== "")
+    typeof fullContent === "string" && fullContent.trim().length > 0
+      ? fullContent
+          .replace(/\r\n/g, "\n")
+          .replace(/\r/g, "\n")
+          .trim()
+          .split(/\n\s*\n+/)
+          .map((p: string) => p.trim())
+          .filter((p: string) => p.length > 0)
       : ["Proyek inovasi teknologi mahasiswa STMIK Widya Utama Purwokerto."];
 
   // Related projects in the same showcase
@@ -213,8 +220,9 @@ export default function DetailKaryaPage() {
       {/* Hero Showcase Cover Image */}
       <div className="relative aspect-video sm:aspect-[21/9] w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-black/40">
         <img
-          src={project.cover_image || project.coverImage || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=1200&auto=format&fit=crop"}
+          src={optimizedImage(project.cover_image || project.coverImage, "detail") || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=1200&auto=format&fit=crop"}
           alt={project.title}
+          decoding="async"
           className="h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0B0D14] via-transparent to-transparent opacity-50" />
@@ -225,7 +233,7 @@ export default function DetailKaryaPage() {
         {/* Left Column: Direct Blog Content without wrapping card (8 cols) */}
         <div className="lg:col-span-8 space-y-6 text-slate-300 text-sm sm:text-base leading-relaxed font-sans">
           {contentParagraphs.map((paragraph: string, idx: number) => (
-            <p key={idx} className="leading-relaxed whitespace-pre-wrap">
+            <p key={idx} className="leading-relaxed whitespace-pre-line">
               {paragraph}
             </p>
           ))}
@@ -430,8 +438,10 @@ export default function DetailKaryaPage() {
                     {/* Image Container (Default Cursor, only Play button is clickable) */}
                     <div className="relative aspect-video w-full rounded-xl overflow-hidden mb-3 bg-black/40 border border-white/10">
                       <img
-                        src={rel.cover_image || rel.coverImage || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=600&auto=format&fit=crop"}
+                        src={optimizedImage(rel.cover_image || rel.coverImage, "card") || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=600&auto=format&fit=crop"}
                         alt={rel.title}
+                        loading="lazy"
+                        decoding="async"
                         className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                       <div className="absolute top-2 left-2 pointer-events-none z-10">

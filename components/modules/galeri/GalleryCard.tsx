@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Calendar, Maximize2, Images, FolderOpen } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { GalleryItem } from "@/types";
+import { optimizedImage } from "@/lib/imagekit-url";
 
 export interface GalleryCardProps {
   item: GalleryItem;
@@ -35,8 +36,10 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({
       className="group relative cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-[#121520] aspect-video"
     >
       <img
-        src={coverUrl}
+        src={optimizedImage(coverUrl, "card")}
         alt={item.title}
+        loading="lazy"
+        decoding="async"
         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity" />

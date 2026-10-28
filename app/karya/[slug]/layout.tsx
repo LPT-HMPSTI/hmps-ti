@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { fallbackProjects } from "@/constants";
 import { fetchProjectsList } from "@/services";
+import { optimizedImage } from "@/lib/imagekit-url";
 
 interface Props {
   children: React.ReactNode;
@@ -37,7 +38,8 @@ export async function generateMetadata({
   const description =
     project.description ||
     "Portofolio inovasi teknologi mahasiswa STMIK Widya Utama.";
-  const image = project.thumbnail_url || project.cover_image || "/logo-hmpsti.webp";
+  const rawImage = project.thumbnail_url || project.cover_image || "/logo-hmpsti.webp";
+  const image = optimizedImage(rawImage, "og");
 
   return {
     title,
@@ -90,8 +92,9 @@ export default async function DetailKaryaLayout({
   const description =
     project?.description ||
     "Portofolio inovasi teknologi mahasiswa STMIK Widya Utama.";
-  const image =
+  const rawImage =
     project?.thumbnail_url || project?.cover_image || "/logo-hmpsti.webp";
+  const image = optimizedImage(rawImage, "og");
   const fullImageUrl = image.startsWith("http")
     ? image
     : `${siteUrl}${image.startsWith("/") ? "" : "/"}${image}`;

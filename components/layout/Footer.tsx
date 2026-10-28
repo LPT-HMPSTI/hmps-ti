@@ -54,7 +54,7 @@ export const Footer: React.FC = () => {
 
             <div className="flex items-center gap-3 pt-2">
               <a
-                href="https://github.com/LPT-HMPS-TI"
+                href="https://github.com/LPT-HMPSTI"
                 target="_blank"
                 rel="noreferrer"
                 className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-slate-400 transition-colors hover:border-cyan-400/40 hover:bg-white/[0.08] hover:text-cyan-400"

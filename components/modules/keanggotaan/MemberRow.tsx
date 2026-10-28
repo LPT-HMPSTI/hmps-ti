@@ -6,6 +6,7 @@ import { User, Play, Pause, Heart } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { normalizeMemberStatus, getNeubrutalistSocialStyle } from "./memberUtils";
+import { optimizedImage } from "@/lib/imagekit-url";
 
 export interface MemberRowProps {
   member: any;
@@ -98,8 +99,10 @@ export const MemberRow: React.FC<MemberRowProps> = ({
           <div className="relative h-10 w-10 rounded-lg border border-white/15 bg-[#181B26] overflow-hidden shrink-0 flex items-center justify-center shadow-md">
             {member.avatar ? (
               <img
-                src={member.avatar}
+                src={optimizedImage(member.avatar, "thumb")}
                 alt={member.name}
+                loading="lazy"
+                decoding="async"
                 className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-300"
               />
             ) : (
@@ -193,7 +196,13 @@ export const MemberRow: React.FC<MemberRowProps> = ({
           <div className="flex items-center gap-3 min-w-0">
             <div className="relative h-11 w-11 rounded-lg border border-white/15 bg-[#181B26] overflow-hidden shrink-0 flex items-center justify-center">
               {member.avatar ? (
-                <img src={member.avatar} alt={member.name} className="h-full w-full object-cover" />
+                <img
+                  src={optimizedImage(member.avatar, "thumb")}
+                  alt={member.name}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover"
+                />
               ) : (
                 <User size={18} className="text-[#1DB954]" />
               )}

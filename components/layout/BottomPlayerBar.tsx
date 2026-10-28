@@ -7,6 +7,7 @@ import { MessageSquare, Radio } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { useRadarSync } from "./RadarSyncContext";
+import { optimizedImage } from "@/lib/imagekit-url";
 
 interface BottomPlayerBarProps {
   onOpenDirectLink: () => void;
@@ -38,8 +39,10 @@ export const BottomPlayerBar: React.FC<BottomPlayerBarProps> = ({ onOpenDirectLi
               >
                 <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[#1DB954]/40 overflow-hidden shadow-[0_0_15px_rgba(29,185,84,0.3)] group-hover:scale-105 transition-transform">
                   <img
-                    src={currentItem.thumbnail}
+                    src={optimizedImage(currentItem.thumbnail, "thumb")}
                     alt={currentItem.title}
+                    loading="lazy"
+                    decoding="async"
                     className="h-full w-full object-cover"
                   />
                   <div className="absolute inset-0 bg-black/30" />

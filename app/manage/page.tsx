@@ -567,7 +567,7 @@ export default function AdminDashboardPage() {
     const currentLoaded = await fetchCabinetSlidePhotos();
     const oldSlide = currentLoaded.find((s) => s.slug === slug);
     if (oldSlide?.url && oldSlide.url !== slide.url) {
-      deleteImageFromR2(oldSlide.url);
+      await deleteImageFromR2(oldSlide.url);
     }
 
     startProcessing(`Menyimpan Foto Slideshow ${index + 1}...`);
@@ -696,7 +696,7 @@ export default function AdminDashboardPage() {
     // Hapus berkas gambar lama di R2 jika cover diganti
     const originalNews = newsList.find((n) => n.id === item.id);
     if (originalNews?.cover_image && originalNews.cover_image !== item.cover_image) {
-      deleteImageFromR2(originalNews.cover_image);
+      await deleteImageFromR2(originalNews.cover_image);
     }
 
     const payload = {
@@ -869,7 +869,7 @@ export default function AdminDashboardPage() {
     // Bersihkan avatar lama di R2 jika diganti
     const original = divisionMembers.find((m) => m.id === item.id);
     if (original?.avatar && original.avatar !== item.avatar) {
-      deleteImageFromR2(original.avatar);
+      await deleteImageFromR2(original.avatar);
     }
 
     const res = await updateDivisionMember(item.id, item);
@@ -896,6 +896,12 @@ export default function AdminDashboardPage() {
 
   // Handlers Foto Bersama Divisi
   const handleDivisionPhotoChange = (slug: string, newUrl: string) => {
+    const prevPendingUrl = divisionPhotos[slug];
+    const origUrl = originalDivisionPhotos[slug];
+    // Jika ada file sementara yang diupload di sesi ini tapi belum disimpan ke DB, hapus dari R2
+    if (prevPendingUrl && prevPendingUrl !== origUrl && prevPendingUrl !== newUrl) {
+      deleteImageFromR2(prevPendingUrl);
+    }
     setDivisionPhotos((prev) => ({ ...prev, [slug]: newUrl }));
   };
 
@@ -905,7 +911,7 @@ export default function AdminDashboardPage() {
     // karena divisionPhotos sudah diupdate saat upload file baru.
     const oldUrl = originalDivisionPhotos[slug];
     if (oldUrl && oldUrl !== url) {
-      deleteImageFromR2(oldUrl);
+      await deleteImageFromR2(oldUrl);
     }
 
     startProcessing(`Menyimpan Foto Bersama ${name}...`);
@@ -929,8 +935,13 @@ export default function AdminDashboardPage() {
     ];
     for (const div of list) {
       const url = divisionPhotos[div.slug] || "";
+      const oldUrl = originalDivisionPhotos[div.slug];
+      if (oldUrl && oldUrl !== url) {
+        await deleteImageFromR2(oldUrl);
+      }
       await updateDivisionPhoto(div.slug, div.name, url);
     }
+    setOriginalDivisionPhotos({ ...divisionPhotos });
     setIsSavingDivisionPhotos(false);
     stopProcessing();
     showNotify("Seluruh foto bersama 6 divisi berhasil disimpan!");
@@ -975,7 +986,7 @@ export default function AdminDashboardPage() {
     // Bersihkan avatar lama di R2 jika diganti
     const original = membersList.find((m) => m.id === item.id);
     if (original?.avatar && original.avatar !== item.avatar) {
-      deleteImageFromR2(original.avatar);
+      await deleteImageFromR2(original.avatar);
     }
 
     const res = await updateMember(item.id, item);
@@ -1036,7 +1047,7 @@ export default function AdminDashboardPage() {
       // Bersihkan cover image lama di R2 jika diganti
       const original = projectsList.find((p) => p.id === item.id);
       if (original?.cover_image && original.cover_image !== item.cover_image) {
-        deleteImageFromR2(original.cover_image);
+        await deleteImageFromR2(original.cover_image);
       }
 
       const stackArray =
@@ -1118,7 +1129,7 @@ export default function AdminDashboardPage() {
         const newPhotos = [primaryUrl, ...validPhotos].filter(Boolean);
         const toDelete = oldPhotos.filter((p) => !newPhotos.includes(p));
         if (toDelete.length > 0) {
-          deleteImageFromR2(toDelete);
+          await deleteImageFromR2(toDelete);
         }
       }
 
@@ -1360,8 +1371,8 @@ export default function AdminDashboardPage() {
           onSearchChange={setSearchQuery}
           onOpenEditModal={openEditNewsModal}
           onDeleteArticle={(n) =>
-            promptDelete(n.title, () => {
-              if (n.cover_image) deleteImageFromR2(n.cover_image);
+            promptDelete(n.title, async () => {
+              if (n.cover_image) await deleteImageFromR2(n.cover_image);
               return deleteNewsArticle(n.id);
             })
           }
@@ -1392,8 +1403,8 @@ export default function AdminDashboardPage() {
             setEditModal({ isOpen: true, type: "struktur", item: m })
           }
           onDeleteMember={(m) =>
-            promptDelete(m.name, () => {
-              if (m.avatar) deleteImageFromR2(m.avatar);
+            promptDelete(m.name, async () => {
+              if (m.avatar) await deleteImageFromR2(m.avatar);
               return deleteDivisionMember(m.id);
             })
           }
@@ -1450,8 +1461,8 @@ export default function AdminDashboardPage() {
             setEditModal({ isOpen: true, type: "keanggotaan", item: m })
           }
           onDeleteMember={(m) =>
-            promptDelete(m.name, () => {
-              if (m.avatar) deleteImageFromR2(m.avatar);
+            promptDelete(m.name, async () => {
+              if (m.avatar) await deleteImageFromR2(m.avatar);
               return deleteMember(m.id);
             })
           }
@@ -1485,8 +1496,8 @@ export default function AdminDashboardPage() {
             setEditModal({ isOpen: true, type: "karya", item: p })
           }
           onDeleteProject={(p) =>
-            promptDelete(p.title, () => {
-              if (p.cover_image) deleteImageFromR2(p.cover_image);
+            promptDelete(p.title, async () => {
+              if (p.cover_image) await deleteImageFromR2(p.cover_image);
               return deleteStudentProject(p.id);
             })
           }
@@ -1519,9 +1530,9 @@ export default function AdminDashboardPage() {
             });
           }}
           onDeleteGallery={(g) =>
-            promptDelete(g.title, () => {
+            promptDelete(g.title, async () => {
               const allPhotos = [g.url, ...(g.photos || [])].filter(Boolean);
-              if (allPhotos.length > 0) deleteImageFromR2(allPhotos);
+              if (allPhotos.length > 0) await deleteImageFromR2(allPhotos);
               return deleteGalleryItem(g.id);
             })
           }

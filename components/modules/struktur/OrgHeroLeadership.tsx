@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { DivisionMember } from "@/types";
 import { OrgSocialButtons } from "./OrgSocialButtons";
+import { optimizedImage } from "@/lib/imagekit-url";
 
 export interface OrgHeroLeadershipProps {
   ketua: DivisionMember;
@@ -105,8 +106,9 @@ export const OrgHeroLeadership: React.FC<OrgHeroLeadershipProps> = ({
               }`}
             >
               <img
-                src={ketua?.avatar || PLACEHOLDER_IMAGE}
+                src={optimizedImage(ketua?.avatar, "card") || PLACEHOLDER_IMAGE}
                 alt={ketua?.name}
+                decoding="async"
                 className="h-full w-full object-cover object-top"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
@@ -150,8 +152,9 @@ export const OrgHeroLeadership: React.FC<OrgHeroLeadershipProps> = ({
               }`}
             >
               <img
-                src={wakil?.avatar || PLACEHOLDER_IMAGE}
+                src={optimizedImage(wakil?.avatar, "card") || PLACEHOLDER_IMAGE}
                 alt={wakil?.name}
+                decoding="async"
                 className="h-full w-full object-cover object-top"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />

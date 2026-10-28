@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/Button";
 import { fetchNewsList, fetchSiteSettings } from "@/services";
 import { fallbackSiteSettings } from "@/constants";
 import { parseAnyDate, isTodayDate, isHotNewsDate, getDaysFromToday, formatDateIndonesian } from "@/lib/utils/dateParser";
+import { optimizedImage } from "@/lib/imagekit-url";
 
 export const BentoHighlightsSection: React.FC = () => {
   const [newsData, setNewsData] = useState<any[]>([]);
@@ -120,8 +121,10 @@ export const BentoHighlightsSection: React.FC = () => {
                       className="md:col-span-5 aspect-square relative rounded-xl overflow-hidden shadow-xl border border-white/10"
                     >
                       <img
-                        src={currentNews.cover_image || currentNews.coverImage || "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=800&auto=format&fit=crop"}
+                        src={optimizedImage(currentNews.cover_image || currentNews.coverImage, "card") || "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=800&auto=format&fit=crop"}
                         alt={currentNews.title}
+                        loading="lazy"
+                        decoding="async"
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
@@ -253,8 +256,10 @@ export const BentoHighlightsSection: React.FC = () => {
                       >
                         <div className="h-11 w-11 shrink-0 rounded-lg overflow-hidden border border-white/10 relative">
                           <img
-                            src={ev.cover_image || ev.coverImage || "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=200&auto=format&fit=crop"}
+                            src={optimizedImage(ev.cover_image || ev.coverImage, "thumb") || "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=200&auto=format&fit=crop"}
                             alt={ev.title}
+                            loading="lazy"
+                            decoding="async"
                             className="h-full w-full object-cover"
                           />
                         </div>

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { ArrowsOut, X } from "@phosphor-icons/react";
 import { fetchCabinetSlidePhotos, CabinetSlide } from "@/services";
+import { optimizedImage } from "@/lib/imagekit-url";
 
 const SLIDE_INTERVAL_MS = 4000;
 
@@ -78,8 +79,9 @@ export const CabinetPhotoSection: React.FC = () => {
               <div key={`${slide.slug}-${idx}`} className="w-full h-full flex-shrink-0 relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={slide.url}
+                  src={optimizedImage(slide.url, "hero")}
                   alt={slide.name || "Foto Bersama Seluruh Pengurus & Anggota HMPS-TI SWU"}
+                  decoding="async"
                   className="w-full h-full object-cover object-center"
                 />
               </div>
@@ -146,8 +148,9 @@ export const CabinetPhotoSection: React.FC = () => {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={current.url}
+              src={optimizedImage(current.url, "hero")}
               alt={current.name || "Foto Bersama Seluruh Anggota HMPS-TI SWU Full"}
+              decoding="async"
               className="w-full h-full max-h-[82vh] object-contain mx-auto"
             />
             {current.name && (

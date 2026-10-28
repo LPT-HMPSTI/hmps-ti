@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { fetchProjectsList } from "@/services";
 import { StudentProject } from "@/types";
+import { optimizedImage } from "@/lib/imagekit-url";
 
 const getCategoryBadgeVariant = (cat: string) => {
   const c = (cat || "").toUpperCase();
@@ -69,8 +70,10 @@ export const KaryaPreviewSection: React.FC = () => {
                   <div>
                     <div className="relative mb-4 aspect-square w-full rounded-xl overflow-hidden shadow-lg border border-white/10 bg-black/40">
                       <img
-                        src={cover}
+                        src={optimizedImage(cover, "card")}
                         alt={proj.title}
+                        loading="lazy"
+                        decoding="async"
                         className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />

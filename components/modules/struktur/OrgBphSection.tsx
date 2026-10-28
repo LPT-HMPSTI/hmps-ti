@@ -4,6 +4,7 @@ import React from "react";
 import { ListMusic } from "lucide-react";
 import { DivisionMember } from "@/types";
 import { OrgSocialButtons } from "./OrgSocialButtons";
+import { optimizedImage } from "@/lib/imagekit-url";
 
 export interface OrgBphSectionProps {
   remainingBPH: DivisionMember[];
@@ -54,8 +55,10 @@ export const OrgBphSection: React.FC<OrgBphSectionProps> = ({
 
               <div className="h-11 w-11 rounded-lg overflow-hidden border border-white/15 bg-black shrink-0">
                 <img
-                  src={bph.avatar || PLACEHOLDER_IMAGE}
+                  src={optimizedImage(bph.avatar, "thumb") || PLACEHOLDER_IMAGE}
                   alt={bph.name}
+                  loading="lazy"
+                  decoding="async"
                   className="h-full w-full object-cover object-top"
                 />
               </div>

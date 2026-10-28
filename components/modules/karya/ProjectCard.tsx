@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Github, ExternalLink, Play, Heart } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { StudentProject } from "@/types";
+import { optimizedImage } from "@/lib/imagekit-url";
 
 export interface ProjectCardProps {
   project: StudentProject;
@@ -69,11 +70,15 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
           <div className="relative mb-4 aspect-video w-full rounded-xl overflow-hidden shadow-lg border border-white/10 bg-black/40">
             <img
               src={
-                project.cover_image ||
-                (project as any).coverImage ||
+                optimizedImage(
+                  project.cover_image || (project as any).coverImage,
+                  "card"
+                ) ||
                 "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=800&auto=format&fit=crop"
               }
               alt={project.title}
+              loading="lazy"
+              decoding="async"
               className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />

@@ -7,6 +7,7 @@ import { ArrowRight, Play } from "lucide-react";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Badge } from "@/components/ui/Badge";
 import { fetchDivisionPhotos } from "@/services";
+import { optimizedImage } from "@/lib/imagekit-url";
 
 export const DivisiPreviewSection: React.FC = () => {
   const [divisionPhotos, setDivisionPhotos] = useState<Record<string, string>>({});
@@ -104,8 +105,10 @@ export const DivisiPreviewSection: React.FC = () => {
                     <div className="relative mx-auto mb-3 h-20 w-20">
                       <div className="h-full w-full rounded-full overflow-hidden border-2 border-white/10 group-hover:border-[#1DB954] transition-all duration-300">
                         <img
-                          src={divisionPhotos[div.id] || div.avatar}
+                          src={optimizedImage(divisionPhotos[div.id] || div.avatar, "thumb")}
                           alt={div.name}
+                          loading="lazy"
+                          decoding="async"
                           className="h-full w-full object-cover group-hover:scale-105 transition-transform"
                         />
                       </div>

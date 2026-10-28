@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Play, Pause, Heart, Radio, Music } from "lucide-react";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { getLocalLikeState, toggleDatabaseLike } from "@/services";
+import { optimizedImage } from "@/lib/imagekit-url";
 
 export interface BphMember {
   id: string;
@@ -198,8 +199,9 @@ const renderSocials = () => {
               {/* Square Album Cover */}
               <div className="relative h-20 w-20 rounded-xl overflow-hidden border border-white/20 shadow-lg bg-black shrink-0">
                 <img
-                  src={member.avatar || PLACEHOLDER_IMAGE}
+                  src={optimizedImage(member.avatar, "card") || PLACEHOLDER_IMAGE}
                   alt={member.name}
+                  decoding="async"
                   className="h-full w-full object-cover object-top"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = PLACEHOLDER_IMAGE;

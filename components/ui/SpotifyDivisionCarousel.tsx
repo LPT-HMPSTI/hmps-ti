@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { getLocalLikeState, toggleDatabaseLike } from "@/services";
+import { optimizedImage } from "@/lib/imagekit-url";
 
 export interface DivisionMember {
   id: string;
@@ -285,8 +286,9 @@ const renderSocials = (m: DivisionMember) => {
                 <div className="relative group">
                   <div className="relative aspect-square w-40 sm:w-48 rounded-xl overflow-hidden border border-white/15 shadow-2xl bg-black">
                     <img
-                      src={activeMember.avatar || PLACEHOLDER_IMAGE}
+                      src={optimizedImage(activeMember.avatar, "card") || PLACEHOLDER_IMAGE}
                       alt={activeMember.name}
+                      decoding="async"
                       className="h-full w-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = PLACEHOLDER_IMAGE;

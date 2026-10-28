@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Calendar, ChevronLeft, ChevronRight, ExternalLink, FolderOpen, Images } from "lucide-react";
+import { optimizedImage } from "@/lib/imagekit-url";
 
 export interface LightboxImage {
   title: string;
@@ -113,12 +114,13 @@ export const Lightbox: React.FC<LightboxProps> = ({ isOpen, onClose, image }) =>
               <AnimatePresence mode="wait">
                 <motion.img
                   key={currentIndex}
-                  src={activePhotoUrl}
+                  src={optimizedImage(activePhotoUrl, "detail")}
                   alt={`${image.title} - Foto ${currentIndex + 1}`}
                   initial={{ opacity: 0, scale: 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 1.02 }}
                   transition={{ duration: 0.25, ease: "easeOut" }}
+                  decoding="async"
                   className="h-full w-full object-contain sm:object-cover bg-black"
                 />
               </AnimatePresence>
@@ -174,8 +176,10 @@ export const Lightbox: React.FC<LightboxProps> = ({ isOpen, onClose, image }) =>
                       title={`Lihat Foto ${idx + 1}`}
                     >
                       <img
-                        src={photoUrl}
+                        src={optimizedImage(photoUrl, "thumb")}
                         alt={`Thumbnail ${idx + 1}`}
+                        loading="lazy"
+                        decoding="async"
                         className="h-full w-full object-cover"
                       />
                       <div

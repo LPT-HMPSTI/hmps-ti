@@ -12,6 +12,7 @@ import { GlassCard } from "@/components/ui/GlassCard";
 import { fetchNewsList, getLocalLikeState, toggleDatabaseLike } from "@/services";
 import { fallbackNews } from "@/constants";
 import { SkeletonDetail } from "@/components/ui/Skeleton";
+import { optimizedImage } from "@/lib/imagekit-url";
 
 const isEventArticle = (item: any) => {
   if (!item) return false;
@@ -122,12 +123,19 @@ export default function DetailBeritaPage() {
 
   const currentLikes = article.likes_count ?? (isLiked ? 1 : 0);
 
+  const rawContent = article.content || article.excerpt || "";
   const contentParagraphs =
-    typeof article.content === "string"
-      ? article.content.split("\n\n").filter((p: string) => p.trim() !== "")
-      : Array.isArray(article.content)
-      ? article.content
-      : [article.excerpt || article.content];
+    typeof rawContent === "string"
+      ? rawContent
+          .replace(/\r\n/g, "\n")
+          .replace(/\r/g, "\n")
+          .trim()
+          .split(/\n\s*\n+/)
+          .map((p: string) => p.trim())
+          .filter((p: string) => p.length > 0)
+      : Array.isArray(rawContent)
+      ? rawContent
+      : [String(rawContent)];
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto space-y-8">
@@ -204,8 +212,9 @@ export default function DetailBeritaPage() {
       {/* Hero Cover Image */}
       <div className="relative aspect-video w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
         <img
-          src={article.cover_image || article.coverImage || "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=1200&auto=format&fit=crop"}
+          src={optimizedImage(article.cover_image || article.coverImage, "detail") || "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=1200&auto=format&fit=crop"}
           alt={article.title}
+          decoding="async"
           className="h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0B0D14] via-transparent to-transparent opacity-40" />
@@ -215,7 +224,7 @@ export default function DetailBeritaPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-4">
         <div className="lg:col-span-8 space-y-6 text-slate-300 text-sm sm:text-base leading-relaxed font-sans">
           {contentParagraphs.map((paragraph: string, idx: number) => (
-            <p key={idx} className="leading-relaxed whitespace-pre-wrap">
+            <p key={idx} className="leading-relaxed whitespace-pre-line">
               {paragraph}
             </p>
           ))}

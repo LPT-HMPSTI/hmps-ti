@@ -18,6 +18,7 @@ import {
   Camera,
   X,
 } from "lucide-react";
+import { optimizedImage } from "@/lib/imagekit-url";
 import { DivisionMember } from "@/types";
 import { OrgSocialButtons } from "@/components/modules/struktur/OrgSocialButtons";
 
@@ -171,8 +172,9 @@ export const DivisionHero: React.FC<DivisionHeroProps> = ({
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={groupPhoto}
+          src={optimizedImage(groupPhoto, "hero")}
           alt={`Foto Bersama Divisi ${division.name}`}
+          decoding="async"
           className="w-full h-full object-cover object-center sm:object-[center_35%] opacity-45 sm:opacity-60 filter saturate-115 contrast-105 scale-100 group-hover/hero:scale-105 transition-all duration-1000 ease-out"
         />
         {/* Spotify Asymmetric Gradient: deep solid dark on the left for text contrast, open transparency on the right to reveal group members */}
@@ -222,8 +224,9 @@ export const DivisionHero: React.FC<DivisionHeroProps> = ({
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={leader1?.avatar || PLACEHOLDER_IMAGE}
+                  src={optimizedImage(leader1?.avatar, "card") || PLACEHOLDER_IMAGE}
                   alt={leader1?.name}
+                  decoding="async"
                   className="h-full w-full object-cover object-top"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
@@ -268,8 +271,9 @@ export const DivisionHero: React.FC<DivisionHeroProps> = ({
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={leader2?.avatar || PLACEHOLDER_IMAGE}
+                  src={optimizedImage(leader2?.avatar, "card") || PLACEHOLDER_IMAGE}
                   alt={leader2?.name}
+                  decoding="async"
                   className="h-full w-full object-cover object-top"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
@@ -622,8 +626,9 @@ export const DivisionHero: React.FC<DivisionHeroProps> = ({
                   <div className="relative w-full rounded-xl sm:rounded-2xl overflow-hidden bg-black/80 border border-white/10 flex items-center justify-center shadow-2xl">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={groupPhoto}
+                      src={optimizedImage(groupPhoto, "hero")}
                       alt={`Foto Bersama Seluruh Anggota Divisi ${division.name}`}
+                      decoding="async"
                       className="w-full max-h-[70vh] object-contain"
                     />
                   </div>
@@ -650,8 +655,10 @@ export const DivisionHero: React.FC<DivisionHeroProps> = ({
                               {member.avatar ? (
                                 // eslint-disable-next-line @next/next/no-img-element
                                 <img
-                                  src={member.avatar}
+                                  src={optimizedImage(member.avatar, "thumb")}
                                   alt={member.name}
+                                  loading="lazy"
+                                  decoding="async"
                                   className="w-full h-full object-cover"
                                 />
                               ) : (
