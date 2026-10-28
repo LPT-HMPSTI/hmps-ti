@@ -11,7 +11,7 @@ export const divisionOptions: string[] = [
   "LPT",
   "PSDM",
   "HUMAS",
-  "KWU",
+  "KKM",
   "MEDKOMINFO",
   "BPH",
 ];
@@ -37,7 +37,7 @@ export const getDivisionName = (slug: string): string => {
       return "HUMAS";
     case "kwu":
     case "kewirausahaan":
-      return "KWU";
+      return "KKM";
     default:
       return "BPH";
   }
@@ -61,7 +61,7 @@ export const getDivisionBadgeProps = (
       return { variant: "yellow", label: "LPT" };
     case "kwu":
     case "kewirausahaan":
-      return { variant: "orange", label: "KWU" };
+      return { variant: "orange", label: "KKM" };
     case "medkominfo":
     case "medkom":
       return { variant: "purple", label: "MEDKOMINFO" };
@@ -112,7 +112,7 @@ export const cleanDivisionName = (name: string): string => {
   const clean = name.replace(/^Divisi\s+/i, "").trim();
   const upper = clean.toUpperCase();
   if (upper === "MEDKOM") return "MEDKOMINFO";
-  if (upper === "KEWIRAUSAHAAN") return "KWU";
+  if (upper === "KEWIRAUSAHAAN") return "KKM";
   return clean;
 };
 

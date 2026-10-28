@@ -13,6 +13,7 @@ import { fetchNewsList, getLocalLikeState, toggleDatabaseLike } from "@/services
 import { fallbackNews } from "@/constants";
 import { SkeletonDetail } from "@/components/ui/Skeleton";
 import { optimizedImage } from "@/lib/imagekit-url";
+import { LinkifiedText } from "@/components/ui/LinkifiedText";
 
 const isEventArticle = (item: any) => {
   if (!item) return false;
@@ -225,7 +226,7 @@ export default function DetailBeritaPage() {
         <div className="lg:col-span-8 space-y-6 text-slate-300 text-sm sm:text-base leading-relaxed font-sans">
           {contentParagraphs.map((paragraph: string, idx: number) => (
             <p key={idx} className="leading-relaxed whitespace-pre-line">
-              {paragraph}
+              <LinkifiedText text={paragraph} />
             </p>
           ))}
         </div>

@@ -21,7 +21,7 @@ const divisionStandardList = [
   { slug: "bph", name: "BPH", targetId: "hero-leadership" },
   { slug: "psdm", name: "PSDM", targetId: "divisi-psdm" },
   { slug: "lpt", name: "LPT", targetId: "divisi-lpt" },
-  { slug: "kwu", name: "KWU", targetId: "divisi-kwu" },
+  { slug: "kwu", name: "KKM", targetId: "divisi-kwu" },
   { slug: "medkominfo", name: "MEDKOMINFO", targetId: "divisi-medkominfo" },
   { slug: "humas", name: "HUMAS", targetId: "divisi-humas" },
 ];

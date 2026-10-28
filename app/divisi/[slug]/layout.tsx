@@ -10,7 +10,7 @@ const divisionTitles: Record<string, { name: string; desc: string }> = {
     desc: "Kaderisasi, pengembangan softskill, upgrading kapasitas pengurus, dan iklim keakraban internal anggota.",
   },
   lpt: {
-    name: "Divisi LPT (Litbang)",
+    name: "Divisi LPT (Literasi dan Pengembangan Teknologi)",
     desc: "Pengembangan riset teknologi, pelatihan coding mahasiswa, dan inovasi piranti lunak himpunan.",
   },
   medkominfo: {
@@ -22,7 +22,7 @@ const divisionTitles: Record<string, { name: string; desc: string }> = {
     desc: "Jembatan komunikasi eksternal kampus, kemitraan industri, sponsorship, dan relasi antar himpunan.",
   },
   kwu: {
-    name: "Divisi KWU (Kewirausahaan)",
+    name: "Divisi KKM (Kewirausahaan dan Kesejahteraan Mahasiswa)",
     desc: "Pengembangan kemandirian finansial himpunan melalui official merchandise dan inkubasi usaha kreatif mahasiswa.",
   },
 };

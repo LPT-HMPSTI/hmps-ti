@@ -24,7 +24,7 @@ export const fallbackDivisionPhotos: Record<string, { name: string; url: string;
     themeColor: "#00F2FE",
   },
   kwu: {
-    name: "Kewirausahaan & Bisnis Mandiri (KWU)",
+    name: "Kewirausahaan & Kesejahteraan Mahasiswa (KKM)",
     url: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1600&auto=format&fit=crop",
     themeColor: "#F59E0B",
   },
@@ -34,7 +34,7 @@ export const fallbackDivisionPhotos: Record<string, { name: string; url: string;
     themeColor: "#FF007F",
   },
   humas: {
-    name: "Hubungan Masyarakat & Kemitraan",
+    name: "Hubungan Masyarakat",
     url: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1600&auto=format&fit=crop",
     themeColor: "#3B82F6",
   },

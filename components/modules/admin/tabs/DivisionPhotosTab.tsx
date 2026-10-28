@@ -38,8 +38,8 @@ export const DIVISIONS_LIST: DivisionPhotoConfig[] = [
   },
   {
     slug: "kwu",
-    name: "Kewirausahaan & Bisnis Mandiri (KWU)",
-    short: "KWU",
+    name: "Kewirausahaan & Kesejahteraan Mahasiswa (KKM)",
+    short: "KKM",
     themeColor: "#F59E0B",
     desc: "Merchandise resmi, pengelolaan dana usaha, dan technopreneur",
   },
@@ -52,7 +52,7 @@ export const DIVISIONS_LIST: DivisionPhotoConfig[] = [
   },
   {
     slug: "humas",
-    name: "Hubungan Masyarakat & Kemitraan",
+    name: "Hubungan Masyarakat",
     short: "HUMAS",
     themeColor: "#3B82F6",
     desc: "Diplomasi ormawa kampus, kemitraan eksternal, dan pengabdian",
@@ -115,7 +115,7 @@ export const DivisionPhotosTab: React.FC<DivisionPhotosTabProps> = ({
               Foto Bersama Seluruh Divisi
             </h2>
             <p className="text-xs text-slate-400 max-w-2xl">
-              Formulir khusus untuk memperbarui foto dokumentasi resmi bersama seluruh divisi (BPH, PSDM, LPT, KWU, MEDKOMINFO, HUMAS).
+              Formulir khusus untuk memperbarui foto dokumentasi resmi bersama seluruh divisi (BPH, PSDM, LPT, KKM, MEDKOMINFO, HUMAS).
               Foto ini langsung disinkronkan ke halaman profil divisi masing-masing.
             </p>
           </div>

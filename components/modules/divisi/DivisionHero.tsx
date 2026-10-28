@@ -63,7 +63,7 @@ const DEFAULT_GROUP_PHOTO =
 /**
  * Hero Section Divisi Organisasi HMPSTI STMIK Widya Utama.
  * - Untuk BPH: Menggunakan Dual Leadership Carousel (Ketua Umum & Wakil Ketua).
- * - Untuk PSDM, LPT, MEDKOMINFO, KWU, HUMAS: Menggunakan Single-Album Spotify Header
+ * - Untuk PSDM, LPT, MEDKOMINFO, KKM, HUMAS: Menggunakan Single-Album Spotify Header
  *   (Cover album Koordinator tunggal, piringan vinyl, identitas koordinator, dan background foto bersama divisi yang transparan).
  */
 export const DivisionHero: React.FC<DivisionHeroProps> = ({
@@ -375,7 +375,7 @@ export const DivisionHero: React.FC<DivisionHeroProps> = ({
           </div>
         </div>
       ) : (
-        /* ==================== SPOTIFY EDITORIAL BANNER LAYOUT (PSDM, LPT, MEDKOMINFO, KWU, HUMAS) ==================== */
+        /* ==================== SPOTIFY EDITORIAL BANNER LAYOUT (PSDM, LPT, MEDKOMINFO, KKM, HUMAS) ==================== */
         <div className="space-y-6 relative z-10 max-w-5xl py-2">
           {/* Top Tag / Album Badge */}
           <div className="flex items-center gap-2.5 flex-wrap">

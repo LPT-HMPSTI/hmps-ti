@@ -151,7 +151,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <Link href="/divisi/kwu" className="transition-colors hover:text-cyan-300">
-                  KWU
+                  KKM
                 </Link>
               </li>
               <li>

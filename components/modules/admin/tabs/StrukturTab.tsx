@@ -125,7 +125,7 @@ export const StrukturTab: React.FC<StrukturTabProps> = ({
                 { label: "LPT", value: "lpt" },
                 { label: "MEDKOMINFO", value: "medkominfo" },
                 { label: "HUMAS", value: "humas" },
-                { label: "KWU", value: "kwu" },
+                { label: "KKM", value: "kwu" },
               ]}
               placeholder="Pilih Divisi..."
             />

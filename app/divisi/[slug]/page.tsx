@@ -67,8 +67,8 @@ const divisionMetaMap: Record<string, DivisionMeta> = {
   },
   kwu: {
     slug: "kwu",
-    name: "Kewirausahaan & Bisnis Mandiri (KWU)",
-    short: "KWU",
+    name: "Kewirausahaan & Kesejahteraan Mahasiswa (KKM)",
+    short: "KKM",
     tagline: "Penggalangan Dana, Merchandise Resmi & Kemandirian Finansial",
     desc: "Pengelolaan usaha mandiri himpunan, penjualan merchandise eksklusif (Jaket Himpunan, Kaos), serta kemitraan sponsorship.",
     themeColor: "#F59E0B",
@@ -95,7 +95,7 @@ const divisionMetaMap: Record<string, DivisionMeta> = {
   },
   humas: {
     slug: "humas",
-    name: "Hubungan Masyarakat & Kemitraan",
+    name: "Hubungan Masyarakat",
     short: "HUMAS",
     tagline: "Kemitraan Eksternal, Studi Banding & Pengabdian Masyarakat",
     desc: "Menghubungkan HMPS-TI SWU dengan birokrasi kampus, himpunan universitas lain, serta kegiatan sosial pengabdian masyarakat.",

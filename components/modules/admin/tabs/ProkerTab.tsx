@@ -24,7 +24,7 @@ const divisionSelectOptions = [
   { label: "BPH", value: "bph" },
   { label: "PSDM", value: "psdm" },
   { label: "LPT", value: "lpt" },
-  { label: "KWU", value: "kwu" },
+  { label: "KKM", value: "kwu" },
   { label: "MEDKOMINFO", value: "medkominfo" },
   { label: "HUMAS", value: "humas" },
 ];
@@ -40,7 +40,7 @@ const divisionFilterPills = [
   { id: "bph", label: "BPH" },
   { id: "psdm", label: "PSDM" },
   { id: "lpt", label: "LPT" },
-  { id: "kwu", label: "KWU" },
+  { id: "kwu", label: "KKM" },
   { id: "medkominfo", label: "MEDKOMINFO" },
   { id: "humas", label: "HUMAS" },
 ];

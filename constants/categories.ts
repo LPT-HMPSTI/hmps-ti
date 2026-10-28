@@ -111,8 +111,8 @@ export const DIVISIONS: DivisionMeta[] = [
   },
   {
     slug: "kwu",
-    name: "Kewirausahaan",
-    shortName: "KWU",
+    name: "Kewirausahaan dan Kesejahteraan Mahasiswa",
+    shortName: "KKM",
     color: "from-rose-400 to-red-500",
     accent: "#F43F5E",
     description: "Pengembangan kemandirian finansial organisasi, merchandise resmi, dan inkubasi technopreneurship mahasiswa.",

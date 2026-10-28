@@ -180,7 +180,7 @@ export const fallbackDivisionMembers = [
     likes_count: 0,
   },
 
-  // LPT (Litbang)
+  // LPT (Literasi dan Pengembangan Teknologi)
   {
     id: "lpt-1",
     name: "Phasa",
@@ -224,18 +224,18 @@ export const fallbackDivisionMembers = [
     likes_count: 0,
   },
 
-  // KWU (Kewirausahaan)
+  // KKM (Kewirausahaan dan Kesejahteraan Mahasiswa)
   {
     id: "kwu-1",
     name: "Gilang Ramadhan",
-    role: "Koordinator Divisi KWU",
+    role: "Koordinator Divisi KKM",
     nim: "220101034",
     division_slug: "kwu",
     avatar: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=400&auto=format&fit=crop",
     github_url: "https://github.com",
     linkedin_url: "https://linkedin.com",
     instagram_url: "https://instagram.com",
-    tag: "KOORDINATOR KWU",
+    tag: "KOORDINATOR KKM",
     period: "2026",
     likes_count: 0,
   },
@@ -249,7 +249,7 @@ export const fallbackDivisionMembers = [
     github_url: "https://github.com",
     linkedin_url: "https://linkedin.com",
     instagram_url: "https://instagram.com",
-    tag: "STAFF KWU",
+    tag: "STAFF KKM",
     period: "2026",
     likes_count: 0,
   },
@@ -263,7 +263,7 @@ export const fallbackDivisionMembers = [
     github_url: "https://github.com",
     linkedin_url: "https://linkedin.com",
     instagram_url: "https://instagram.com",
-    tag: "STAFF KWU",
+    tag: "STAFF KKM",
     period: "2026",
     likes_count: 0,
   },
@@ -432,7 +432,7 @@ export const fallbackMembers = [
     nim: "200101033",
     cohort: "2020",
     status: "ALUMNI",
-    role: "Ex-Kadiv Litbang (Cloud Architect)",
+    role: "Ex-Kadiv LPT (Cloud Architect)",
     variant: "yellow",
     avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop",
     github_url: "https://github.com",
@@ -616,7 +616,7 @@ export const fallbackWorkPrograms: WorkProgram[] = [
     created_at: "2026-02-15T08:00:00.000Z",
   },
 
-  // KWU
+  // KKM
   {
     id: "wp-kwu-1",
     division_slug: "kwu",
@@ -646,7 +646,7 @@ export const fallbackWorkPrograms: WorkProgram[] = [
     description: "Penyediaan makanan ringan dan alat tulis berbasis kejujuran di sekretariat himpunan.",
     status: "BERJALAN",
     execution_date: "Harian",
-    pic: "Divisi KWU",
+    pic: "Divisi KKM",
     target_audience: "Warga Kampus SWU",
     created_at: "2026-02-01T08:00:00.000Z",
   },

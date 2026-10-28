@@ -18,7 +18,7 @@ import {
   DivisionItemConfig,
 } from "@/components/modules/struktur";
 
-// Department definitions & grouping (sesuai urutan katalog navbar: BPH -> PSDM -> LPT -> KWU -> MEDKOMINFO -> HUMAS)
+// Department definitions & grouping (sesuai urutan katalog navbar: BPH -> PSDM -> LPT -> KKM -> MEDKOMINFO -> HUMAS)
 const DIVISION_CONFIGS: DivisionItemConfig[] = [
   {
     slug: "psdm",
@@ -39,8 +39,8 @@ const DIVISION_CONFIGS: DivisionItemConfig[] = [
   {
     slug: "kwu",
     aliases: ["kwu", "kewirausahaan"],
-    name: "Divisi Kewirausahaan",
-    fullname: "Kewirausahaan & Kemandirian Finansial",
+    name: "Divisi KKM",
+    fullname: "Kewirausahaan & Kesejahteraan Mahasiswa",
     variantColor: "#F97316",
     desc: "Mengembangkan produk merchandise resmi HMPS-TI, program fund-raising kreatif, serta jiwa wirausaha mahasiswa TI.",
   },

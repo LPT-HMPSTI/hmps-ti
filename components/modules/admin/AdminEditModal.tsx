@@ -322,6 +322,9 @@ export const AdminEditModal: React.FC<AdminEditModalProps> = ({
                       onChange={(e) => setEditModal({ ...editModal, item: { ...editModal.item, content: e.target.value } })}
                       className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs sm:text-sm text-white focus:border-[#1DB954] focus:outline-none leading-relaxed font-sans min-h-[220px]"
                     />
+                    <p className="mt-1 text-[11px] font-mono text-slate-400">
+                      💡 <span className="text-white/80">Tips:</span> Tautan situs (<code className="text-[#1DB954]">https://...</code> atau <code className="text-[#1DB954]">www...</code>) atau <code className="text-[#1DB954]">[Nama Link](https://...)</code> otomatis menjadi hyperlink aktif.
+                    </p>
                   </div>
 
                   <Button variant="spotify" size="md" className="w-full" icon={<FloppyDisk size={16} weight="bold" />}>
@@ -365,7 +368,7 @@ export const AdminEditModal: React.FC<AdminEditModalProps> = ({
                           { value: "lpt", label: "LPT" },
                           { value: "medkominfo", label: "MEDKOMINFO" },
                           { value: "humas", label: "HUMAS" },
-                          { value: "kwu", label: "KWU" },
+                          { value: "kwu", label: "KKM" },
                         ]}
                         value={editModal.item.division_slug || "bph"}
                         onChange={(val) => setEditModal({ ...editModal, item: { ...editModal.item, division_slug: val } })}
@@ -1086,7 +1089,7 @@ export const AdminEditModal: React.FC<AdminEditModalProps> = ({
                           { value: "bph", label: "BPH" },
                           { value: "psdm", label: "PSDM" },
                           { value: "lpt", label: "LPT" },
-                          { value: "kwu", label: "KWU" },
+                          { value: "kwu", label: "KKM" },
                           { value: "medkominfo", label: "MEDKOMINFO" },
                           { value: "humas", label: "HUMAS" },
                         ]}

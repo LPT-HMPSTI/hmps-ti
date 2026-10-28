@@ -35,7 +35,7 @@ export function normalizeMemberStatus(status: string, role: string) {
 
 // Prioritas pengurutan hierarkis anggota:
 // 1. Pengurus Aktif & BPH (Ketua, Wakil, Sekretaris, Bendahara)
-// 2. Pengurus Aktif Divisi (LPT, Medkom, PSDM, Humas, KWU, dll -> Kadiv dulu baru Staff)
+// 2. Pengurus Aktif Divisi (LPT, Medkom, PSDM, Humas, KKM, dll -> Kadiv dulu baru Staff)
 // 3. Alumni HMPSTI (Tahun Angkatan Terbaru ke Lama)
 // 4. Dosen Penanggung Jawab
 export function getMemberSortPriority(m: any) {
@@ -64,7 +64,7 @@ export function getMemberSortPriority(m: any) {
     return { categoryRank: 1, divisionRank: 1, roleRank: bphRoleRank, name: m.name || "" };
   }
 
-  // Kategori 2: Pengurus Aktif Divisi (LPT, Medkom, PSDM, Humas, KWU, dll)
+  // Kategori 2: Pengurus Aktif Divisi (LPT, Medkom, PSDM, Humas, KKM, dll)
   const isPengurus =
     status.includes("pengurus") ||
     role.includes("kadiv") ||

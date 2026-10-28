@@ -30,7 +30,7 @@ export const MAIN_NAV_LINKS = [
       { name: "LPT", href: "/divisi/lpt", color: "from-cyan-400 to-emerald-400" },
       { name: "MEDKOMINFO", href: "/divisi/medkominfo", color: "from-purple-500 to-cyan-400" },
       { name: "HUMAS", href: "/divisi/humas", color: "from-blue-400 to-emerald-400" },
-      { name: "KWU", href: "/divisi/kwu", color: "from-amber-400 to-emerald-500" },
+      { name: "KKM", href: "/divisi/kwu", color: "from-amber-400 to-emerald-500" },
     ],
   },
   {

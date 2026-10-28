@@ -183,7 +183,7 @@ export default function AdminDashboardPage() {
     "LPT",
     "PSDM",
     "HUMAS",
-    "KWU",
+    "KKM",
     "MEDKOMINFO",
     "BPH",
   ];
@@ -206,7 +206,7 @@ export default function AdminDashboardPage() {
         return "HUMAS";
       case "kwu":
       case "kewirausahaan":
-        return "KWU";
+        return "KKM";
       default:
         return "BPH";
     }
@@ -225,7 +225,7 @@ export default function AdminDashboardPage() {
         return { variant: "yellow" as const, label: "LPT" };
       case "kwu":
       case "kewirausahaan":
-        return { variant: "orange" as const, label: "KWU" };
+        return { variant: "orange" as const, label: "KKM" };
       case "medkominfo":
       case "medkom":
         return { variant: "purple" as const, label: "MEDKOMINFO" };
@@ -267,7 +267,7 @@ export default function AdminDashboardPage() {
     let clean = name.replace(/^Divisi\s+/i, "").trim();
     const upper = clean.toUpperCase();
     if (upper === "MEDKOM") return "MEDKOMINFO";
-    if (upper === "KEWIRAUSAHAAN") return "KWU";
+    if (upper === "KEWIRAUSAHAAN") return "KKM";
     return clean;
   };
 
@@ -929,9 +929,9 @@ export default function AdminDashboardPage() {
       { slug: "bph", name: "Badan Pengurus Harian (BPH)" },
       { slug: "psdm", name: "Pengembangan Sumber Daya Mahasiswa" },
       { slug: "lpt", name: "Lembaga Pengembangan Teknologi (LPT)" },
-      { slug: "kwu", name: "Kewirausahaan & Bisnis Mandiri (KWU)" },
+      { slug: "kwu", name: "Kewirausahaan & Kesejahteraan Mahasiswa (KKM)" },
       { slug: "medkominfo", name: "Media Komunikasi & Informasi" },
-      { slug: "humas", name: "Hubungan Masyarakat & Kemitraan" },
+      { slug: "humas", name: "Hubungan Masyarakat" },
     ];
     for (const div of list) {
       const url = divisionPhotos[div.slug] || "";

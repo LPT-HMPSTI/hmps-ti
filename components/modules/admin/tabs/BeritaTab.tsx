@@ -334,6 +334,9 @@ export const BeritaTab: React.FC<BeritaTabProps> = ({
               placeholder="Tuliskan seluruh narasi berita atau detail lengkap event di sini secara leluasa..."
               className="w-full rounded-xl border border-white/10 bg-white/[0.04] p-4 text-xs sm:text-sm text-white focus:border-[#1DB954] focus:outline-none leading-relaxed font-sans min-h-[320px]"
             />
+            <p className="mt-1.5 text-[11px] font-mono text-slate-400">
+              💡 <span className="text-white/80">Tips:</span> Tautan situs (misal: <code className="text-[#1DB954]">https://...</code> atau <code className="text-[#1DB954]">www...</code>) atau format <code className="text-[#1DB954]">[Nama Link](https://...)</code> akan otomatis menjadi hyperlink aktif saat dipublikasikan. Tekan Enter untuk baris baru.
+            </p>
           </div>
 
           <div className="pt-4 mt-5 border-t border-white/10 flex items-center justify-between">

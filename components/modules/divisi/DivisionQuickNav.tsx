@@ -14,7 +14,7 @@ const divisionList = [
   { slug: "bph", name: "BPH" },
   { slug: "psdm", name: "PSDM" },
   { slug: "lpt", name: "LPT" },
-  { slug: "kwu", name: "KWU" },
+  { slug: "kwu", name: "KKM" },
   { slug: "medkominfo", name: "MEDKOMINFO" },
   { slug: "humas", name: "HUMAS" },
 ];

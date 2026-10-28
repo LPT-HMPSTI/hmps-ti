@@ -51,8 +51,8 @@ export const DivisiPreviewSection: React.FC = () => {
     },
     {
       id: "kwu",
-      name: "KWU",
-      short: "KWU",
+      name: "KKM",
+      short: "KKM",
       desc: "Usaha mandiri himpunan, merchandise resmi, dan kemitraan Sponsorship.",
       badgeVariant: "orange" as const,
       avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=400&auto=format&fit=crop",

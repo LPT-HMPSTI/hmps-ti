@@ -45,7 +45,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onOpenDirectLink }) => {
     { name: "LPT", href: "/divisi/lpt", short: "LPT", color: "from-cyan-400 to-emerald-400" },
     { name: "MEDKOMINFO", href: "/divisi/medkominfo", short: "MEDKOMINFO", color: "from-purple-500 to-cyan-400" },
     { name: "HUMAS", href: "/divisi/humas", short: "HUMAS", color: "from-blue-400 to-emerald-400" },
-    { name: "KWU", href: "/divisi/kwu", short: "KWU", color: "from-amber-400 to-emerald-500" },
+    { name: "KKM", href: "/divisi/kwu", short: "KKM", color: "from-amber-400 to-emerald-500" },
   ];
 
   const campusPortals = [

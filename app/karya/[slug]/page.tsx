@@ -26,6 +26,7 @@ import { fallbackSiteSettings, fallbackProjects } from "@/constants";
 import { formatDateIndonesian } from "@/lib/utils/dateParser";
 import { SkeletonDetail } from "@/components/ui/Skeleton";
 import { optimizedImage } from "@/lib/imagekit-url";
+import { LinkifiedText } from "@/components/ui/LinkifiedText";
 
 // Cute Playful Neubrutalist Tech Tag Helper
 const getCuteTechBadgeStyle = (index: number) => {
@@ -234,7 +235,7 @@ export default function DetailKaryaPage() {
         <div className="lg:col-span-8 space-y-6 text-slate-300 text-sm sm:text-base leading-relaxed font-sans">
           {contentParagraphs.map((paragraph: string, idx: number) => (
             <p key={idx} className="leading-relaxed whitespace-pre-line">
-              {paragraph}
+              <LinkifiedText text={paragraph} />
             </p>
           ))}
         </div>
